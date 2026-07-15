@@ -1,0 +1,1200 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>循證醫學導航 × 團購OS | Evidence-Based Medical & Shopping System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --navy: #1A2B5F;
+            --gold: #C9960C;
+            --teal: #0A7A72;
+            --light-gray: #F5F5F5;
+            --dark-text: #1A1A1A;
+            --border-color: #E0E0E0;
+            --price-color: #D32F2F;
+        }
+        
+        body {
+            font-family: 'Microsoft JhengHei', 'PingFang TC', sans-serif;
+            background: white;
+            color: var(--dark-text);
+            line-height: 1.8;
+        }
+        
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--navy) 0%, var(--teal) 100%);
+            color: white;
+            padding: 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header-left h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        .header-left p {
+            font-size: 13px;
+            opacity: 0.9;
+        }
+        
+        .header-right {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+        
+        .cart-badge {
+            background: var(--price-color);
+            color: white;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .cart-badge:hover {
+            transform: scale(1.1);
+        }
+        
+        .cart-total {
+            background: rgba(255,255,255,0.2);
+            padding: 8px 14px;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+        
+        /* Controls */
+        .controls {
+            background: white;
+            padding: 15px 20px;
+            border-bottom: 2px solid var(--border-color);
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        
+        .search-box {
+            flex: 1;
+            min-width: 200px;
+            padding: 8px 12px;
+            border: 2px solid var(--teal);
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        .filter-btn {
+            padding: 8px 16px;
+            border: 2px solid var(--navy);
+            background: white;
+            color: var(--navy);
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 13px;
+            transition: all 0.3s;
+        }
+        
+        .filter-btn:hover, .filter-btn.active {
+            background: var(--navy);
+            color: white;
+        }
+        
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* Module */
+        .module {
+            background: white;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+        
+        .module:hover {
+            border-color: var(--gold);
+            box-shadow: 0 4px 12px rgba(201, 150, 12, 0.15);
+        }
+        
+        .module-header {
+            background: linear-gradient(90deg, var(--navy) 0%, var(--teal) 100%);
+            color: white;
+            padding: 16px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        
+        .module-header:hover {
+            background: linear-gradient(90deg, #0F1E45 0%, #055C53 100%);
+        }
+        
+        .toggle-icon {
+            font-size: 20px;
+            transition: transform 0.3s;
+        }
+        
+        .module.expanded .toggle-icon {
+            transform: rotate(180deg);
+        }
+        
+        .module-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            background: var(--light-gray);
+        }
+        
+        .module.expanded .module-content {
+            max-height: 5000px;
+            overflow: visible;
+        }
+        
+        .content-inner {
+            padding: 20px;
+        }
+        
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 0;
+            border-bottom: 2px solid var(--border-color);
+            margin-bottom: 16px;
+            background: var(--light-gray);
+            padding: 0 16px;
+        }
+        
+        .tab {
+            padding: 12px 16px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 13px;
+            color: #666;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .tab:hover {
+            color: var(--navy);
+            background: white;
+        }
+        
+        .tab.active {
+            color: white;
+            background: var(--navy);
+            border-bottom-color: var(--gold);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        /* Section */
+        .section {
+            background: white;
+            padding: 16px;
+            margin-bottom: 12px;
+            border-left: 4px solid var(--gold);
+            border-radius: 4px;
+        }
+        
+        .section-title {
+            font-size: 15px;
+            color: var(--navy);
+            font-weight: bold;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .tts-btn {
+            background: var(--teal);
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .tts-btn:hover {
+            background: var(--navy);
+        }
+        
+        .evidence-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            background: var(--gold);
+            color: white;
+            border-radius: 3px;
+            font-size: 11px;
+            font-weight: bold;
+            margin-left: 8px;
+        }
+        
+        .evidence-1 { background: #D32F2F; }
+        .evidence-2 { background: #F57C00; }
+        .evidence-3 { background: #FBC02D; }
+        .evidence-4 { background: #7CB342; }
+        .evidence-5 { background: #388E3C; }
+        
+        .text-content {
+            font-size: 14px;
+            line-height: 1.8;
+            color: var(--dark-text);
+            margin-bottom: 10px;
+        }
+        
+        .flow-box {
+            background: #E8F5E9;
+            padding: 12px;
+            border-radius: 4px;
+            font-size: 13px;
+            margin: 8px 0;
+            border-left: 3px solid var(--teal);
+            font-family: 'Courier New', monospace;
+        }
+        
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+            margin: 8px 0;
+        }
+        
+        .comparison-table th {
+            background: var(--navy);
+            color: white;
+            padding: 8px;
+            text-align: left;
+            border: 1px solid var(--navy);
+        }
+        
+        .comparison-table td {
+            padding: 8px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .comparison-table tr:nth-child(even) {
+            background: var(--light-gray);
+        }
+        
+        .stars {
+            display: inline-flex;
+            gap: 2px;
+            font-size: 12px;
+        }
+        
+        .star {
+            color: var(--gold);
+        }
+        
+        .star.empty {
+            color: #CCCCCC;
+        }
+        
+        /* Product Grid */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+            margin-top: 12px;
+        }
+        
+        .product-card {
+            background: white;
+            border: 2px solid var(--border-color);
+            border-radius: 6px;
+            padding: 14px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .product-card:hover {
+            border-color: var(--teal);
+            box-shadow: 0 4px 12px rgba(10, 122, 114, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .product-id {
+            background: var(--navy);
+            color: white;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 11px;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 6px;
+        }
+        
+        .product-name {
+            font-weight: bold;
+            font-size: 14px;
+            color: var(--navy);
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+        
+        .product-price {
+            font-size: 18px;
+            color: var(--price-color);
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        
+        .product-price::before {
+            content: "NT$ ";
+            font-size: 14px;
+            margin-right: 4px;
+        }
+        
+        .product-benefit {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 8px;
+            line-height: 1.6;
+            background: var(--light-gray);
+            padding: 6px;
+            border-radius: 3px;
+        }
+        
+        .product-actions {
+            display: flex;
+            gap: 6px;
+        }
+        
+        .add-btn {
+            flex: 1;
+            padding: 8px;
+            background: var(--teal);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 12px;
+            transition: all 0.3s;
+        }
+        
+        .add-btn:hover {
+            background: var(--navy);
+        }
+        
+        .myship-link {
+            flex: 1;
+            padding: 8px;
+            background: var(--gold);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 12px;
+            text-decoration: none;
+            text-align: center;
+        }
+        
+        .myship-link:hover {
+            background: #B08609;
+        }
+        
+        /* Cart Modal */
+        .cart-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .cart-modal.active {
+            display: flex;
+        }
+        
+        .cart-content {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+        }
+        
+        .cart-header {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--navy);
+            margin-bottom: 16px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 12px;
+            position: relative;
+        }
+        
+        .cart-close {
+            position: absolute;
+            right: 0;
+            top: 0;
+            background: var(--price-color);
+            color: white;
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .cart-close:hover {
+            background: #B71C1C;
+        }
+        
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background: var(--light-gray);
+            border-radius: 4px;
+            margin-bottom: 8px;
+            font-size: 13px;
+        }
+        
+        .cart-item-name {
+            flex: 1;
+            font-weight: bold;
+            color: var(--navy);
+        }
+        
+        .cart-item-price {
+            color: var(--price-color);
+            font-weight: bold;
+            margin-right: 8px;
+        }
+        
+        .cart-item-remove {
+            background: var(--price-color);
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 11px;
+            transition: all 0.3s;
+        }
+        
+        .cart-item-remove:hover {
+            background: #B71C1C;
+        }
+        
+        .cart-total-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 16px;
+            font-weight: bold;
+            color: white;
+            padding: 12px;
+            background: linear-gradient(90deg, var(--navy) 0%, var(--teal) 100%);
+            border-radius: 4px;
+            margin-top: 12px;
+        }
+        
+        .cart-empty {
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+        }
+        
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #999;
+            font-size: 12px;
+            border-top: 1px solid var(--border-color);
+            margin-top: 40px;
+        }
+        
+        .footer a {
+            color: var(--teal);
+            text-decoration: none;
+        }
+        
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        
+        .bilingual {
+            display: flex;
+            gap: 12px;
+            justify-content: space-between;
+            font-size: 13px;
+            margin: 8px 0;
+        }
+        
+        .bilingual-item {
+            flex: 1;
+        }
+        
+        .bilingual-label {
+            font-size: 11px;
+            color: var(--teal);
+            font-weight: bold;
+            margin-bottom: 3px;
+        }
+        
+        @media (max-width: 768px) {
+            .product-grid {
+                grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            }
+            
+            .header {
+                flex-direction: column;
+                gap: 12px;
+            }
+            
+            .header-right {
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header with Cart -->
+    <div class="header">
+        <div class="header-left">
+            <h1>🔬 循證醫學導航 × 團購OS</h1>
+            <p>Evidence-Based Medical & Shopping System | 三大醫學主題 × 43 精選產品</p>
+        </div>
+        <div class="header-right">
+            <div class="cart-total">
+                <span id="cartTotalPrice">NT$ 0</span>
+            </div>
+            <div class="cart-badge" onclick="toggleCart()">
+                🛒 <span id="cartCount">0</span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Controls -->
+    <div class="controls">
+        <input type="text" class="search-box" id="searchBox" placeholder="🔍 搜尋醫學主題或產品... Search...">
+        <button class="filter-btn active" data-filter="all">全部 All</button>
+        <button class="filter-btn" data-filter="acid">酸鹼 Acid-Base</button>
+        <button class="filter-btn" data-filter="redox">氧化還原 Redox</button>
+        <button class="filter-btn" data-filter="oral">口腔 Oral</button>
+    </div>
+    
+    <!-- Main Container -->
+    <div class="container">
+        
+        <!-- Module 1: Acid-Base Physiology -->
+        <div class="module" data-category="acid">
+            <div class="module-header" onclick="toggleModule(this)">
+                <span>📚 模組 1：酸鹼平衡生理學 + 代謝產品</span>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="module-content">
+                <div class="content-inner">
+                    <div class="tabs">
+                        <div class="tab active" onclick="switchTab(this, 'acid-overview')">概述 Overview</div>
+                        <div class="tab" onclick="switchTab(this, 'acid-parts')">分段 Breakdown</div>
+                        <div class="tab" onclick="switchTab(this, 'acid-update')">更新 Updates</div>
+                        <div class="tab" onclick="switchTab(this, 'acid-products')">🛒 推薦產品 Products</div>
+                    </div>
+                    
+                    <div id="acid-overview" class="tab-content active">
+                        <div class="section">
+                            <div class="section-title">
+                                本體層 The Essence
+                                <button class="tts-btn" onclick="speak('The key is not whether the body is acidic. The real issue is how the body maintains acid-base homeostasis.')">🔊 EN</button>
+                            </div>
+                            <div class="text-content">
+                                <div class="bilingual">
+                                    <div class="bilingual-item">
+                                        <div class="bilingual-label">繁體中文</div>
+                                        <div>真正重要的不是酸性體質。真正重要的是：人體如何維持酸鹼穩態。</div>
+                                    </div>
+                                    <div class="bilingual-item">
+                                        <div class="bilingual-label">English</div>
+                                        <div>The key is not acidic body. What matters is how the body maintains acid-base homeostasis.</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="section">
+                            <div class="section-title">真正控制者 True Controllers</div>
+                            <div class="flow-box">
+                                代謝 Metabolism
+                                ↓↓
+                                CO₂ 產生 CO2 Production
+                                ↓↓
+                                肺排除 CO2 Lung Excretion
+                                ↓↓
+                                HCO₃⁻調節 HCO3- Regulation
+                                ↓↓
+                                腎臟再吸收 Kidney Reabsorption
+                                ↓↓
+                                血液 pH Blood pH (7.35–7.45)
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="acid-parts" class="tab-content">
+                        <div class="section">
+                            <div class="section-title">
+                                第一部分：酸性體質 Part 1: Acidic Body
+                                <span class="evidence-badge evidence-1">證據 1/5 Evidence</span>
+                            </div>
+                            <div class="text-content">
+                                <strong>教材認為：</strong>酸性體質→慢性病<br>
+                                <strong>目前共識：</strong>沒有正式醫學診斷「酸性體質」。血液 pH 幾乎固定在 7.35～7.45。
+                            </div>
+                        </div>
+                        
+                        <div class="section">
+                            <div class="section-title">
+                                第六部分：自律神經 Part 6: Autonomic Nervous System
+                                <span class="evidence-badge evidence-5">證據 5/5 Evidence</span>
+                            </div>
+                            <div class="text-content">
+                                <strong>教材重視自律神經的作用 — 方向很好。</strong><br><br>
+                                最新版流程：壓力 → 交感神經↑ → 心跳↑ → 皮質醇↑ → 睡眠↓ → 免疫↓ → 修復↓
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="acid-update" class="tab-content">
+                        <div class="section">
+                            <div class="section-title">教材需要更新 What Needs Updating</div>
+                            <div class="flow-box">
+                                代謝失衡 + 慢性發炎 + 胰島素阻抗 + 睡眠不足 + 肥胖 + 壓力 + 感染 + 老化
+                                ↓
+                                慢性病 Chronic Disease
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="acid-products" class="tab-content">
+                        <div class="section">
+                            <div class="section-title">🛒 代謝 × 穩態 × 自律神經相關產品 (13 項)</div>
+                            <div class="product-grid" id="acid-grid"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Module 2: Redox Biology -->
+        <div class="module" data-category="redox">
+            <div class="module-header" onclick="toggleModule(this)">
+                <span>⚗️ 模組 2：氧化還原生物學 + 抗氧化產品</span>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="module-content">
+                <div class="content-inner">
+                    <div class="tabs">
+                        <div class="tab active" onclick="switchTab(this, 'redox-overview')">概述 Overview</div>
+                        <div class="tab" onclick="switchTab(this, 'redox-parts')">分段 Breakdown</div>
+                        <div class="tab" onclick="switchTab(this, 'redox-evidence')">證據 Evidence</div>
+                        <div class="tab" onclick="switchTab(this, 'redox-products')">🛒 推薦產品 Products</div>
+                    </div>
+                    
+                    <div id="redox-overview" class="tab-content active">
+                        <div class="section">
+                            <div class="section-title">
+                                本體層 The Essence
+                                <button class="tts-btn" onclick="speak('The true protagonist is redox homeostasis. Life must maintain electron flow, oxidation, reduction, and antioxidation simultaneously.')">🔊 EN</button>
+                            </div>
+                            <div class="text-content">
+                                <div class="bilingual">
+                                    <div class="bilingual-item">
+                                        <div class="bilingual-label">繁體中文</div>
+                                        <div>真正主角不是產品。真正主角是：氧化還原平衡。生命必須同時維持：電子流、氧化、還原、抗氧化。不是完全沒有自由基，而是自由基不能失控。</div>
+                                    </div>
+                                    <div class="bilingual-item">
+                                        <div class="bilingual-label">English</div>
+                                        <div>The key is not products but redox homeostasis. Life must maintain electron flow, oxidation, reduction, and antioxidation. Not zero free radicals, but controlled ROS.</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="section">
+                            <div class="section-title">真正流程 The True Process</div>
+                            <div class="flow-box">
+                                葡萄糖、脂肪酸、胺基酸
+                                ↓↓
+                                粒線體 Mitochondria
+                                ↓↓
+                                電子傳遞鏈 Electron Transport Chain
+                                ↓↓
+                                ATP + ROS (少量)
+                                ↓↓
+                                細胞訊號 Cell Signaling
+                                ↓↓
+                                NRF2, Glutathione, SOD, Catalase
+                                ↓↓
+                                Redox Balance
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="redox-parts" class="tab-content">
+                        <div class="section">
+                            <div class="section-title">
+                                第一部分：Warburg Effect
+                                <span class="evidence-badge evidence-5">證據 5/5 Evidence</span>
+                            </div>
+                            <div class="text-content">
+                                <strong>正確：</strong> Warburg 提出癌細胞大量進行糖解作用。<br>
+                                <strong>補充：</strong> 癌症包括：基因突變、表觀遺傳、免疫逃脫、腫瘤微環境、慢性發炎。
+                            </div>
+                        </div>
+                        
+                        <div class="section">
+                            <div class="section-title">
+                                第三部分：自由基 Part 3: Free Radicals
+                                <span class="evidence-badge evidence-5">證據 5/5 Evidence</span>
+                            </div>
+                            <div class="text-content">
+                                <strong>正常 ROS：</strong> 訊號、免疫、運動適應、傷口修復<br>
+                                <strong>過多 ROS：</strong> 造成氧化壓力 ❌
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="redox-evidence" class="tab-content">
+                        <div class="section">
+                            <div class="section-title">各項主張的證據等級</div>
+                            <table class="comparison-table">
+                                <tr>
+                                    <th>主題</th>
+                                    <th>證據</th>
+                                    <th>評估</th>
+                                </tr>
+                                <tr>
+                                    <td>Warburg Effect 存在</td>
+                                    <td><span class="stars"><span class="star">★★★★★</span></span></td>
+                                    <td>公認事實</td>
+                                </tr>
+                                <tr>
+                                    <td>粒線體產生 ATP</td>
+                                    <td><span class="stars"><span class="star">★★★★★</span></span></td>
+                                    <td>公認事實</td>
+                                </tr>
+                                <tr>
+                                    <td>ROS 過多造成氧化壓力</td>
+                                    <td><span class="stars"><span class="star">★★★★★</span></span></td>
+                                    <td>公認事實</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <div id="redox-products" class="tab-content">
+                        <div class="section">
+                            <div class="section-title">🛒 抗氧化 × 粒線體 × 代謝相關產品 (22 項)</div>
+                            <div class="product-grid" id="redox-grid"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Module 3: Oral Systems Biology -->
+        <div class="module" data-category="oral">
+            <div class="module-header" onclick="toggleModule(this)">
+                <span>🦷 模組 3：口腔系統生物學 + 牙周護理產品</span>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="module-content">
+                <div class="content-inner">
+                    <div class="tabs">
+                        <div class="tab active" onclick="switchTab(this, 'oral-overview')">概述 Overview</div>
+                        <div class="tab" onclick="switchTab(this, 'oral-parts')">分段 Breakdown</div>
+                        <div class="tab" onclick="switchTab(this, 'oral-summary')">總結 Summary</div>
+                        <div class="tab" onclick="switchTab(this, 'oral-products')">🛒 推薦產品 Products</div>
+                    </div>
+                    
+                    <div id="oral-overview" class="tab-content active">
+                        <div class="section">
+                            <div class="section-title">
+                                本體層 The Essence
+                                <button class="tts-btn" onclick="speak('Oral cavity is not just teeth. It is a micro-ecosystem. The true protagonist is chronic inflammation, dysbiosis, and immune response.')">🔊 EN</button>
+                            </div>
+                            <div class="text-content">
+                                <div class="bilingual">
+                                    <div class="bilingual-item">
+                                        <div class="bilingual-label">繁體中文</div>
+                                        <div>口腔不是牙齒。口腔是一個微生態系統。真正主角是：慢性發炎、菌相失衡、免疫反應。</div>
+                                    </div>
+                                    <div class="bilingual-item">
+                                        <div class="bilingual-label">English</div>
+                                        <div>Oral cavity is not just teeth—it's a micro-ecosystem. The key is not root canal but chronic inflammation, dysbiosis, and immunity.</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="section">
+                            <div class="section-title">真正流程 The True Pathway</div>
+                            <div class="flow-box">
+                                口腔菌相失衡 Oral Dysbiosis
+                                ↓↓
+                                牙菌斑 → 牙齦炎 → 牙周炎
+                                ↓↓
+                                局部慢性發炎 Local Inflammation
+                                ↓↓
+                                細菌 + 發炎介質進入血流
+                                ↓↓
+                                全身免疫活化
+                                ↓↓
+                                心臟病 × 糖尿病 × 妊娠併發症風險 ↑
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="oral-parts" class="tab-content">
+                        <div class="section">
+                            <div class="section-title">
+                                第二部分：牙周病
+                                <span class="evidence-badge evidence-5">證據 5/5 Evidence</span>
+                            </div>
+                            <div class="text-content">
+                                <strong>這是整張圖證據最強的部分。</strong><br><br>
+                                牙周病 → 慢性發炎 → 牙周囊袋 → 牙齦出血 → 細菌進入血液 → 全身免疫
+                            </div>
+                        </div>
+                        
+                        <div class="section">
+                            <div class="section-title">
+                                第三部分：牙周病與心血管
+                                <span class="evidence-badge evidence-5">證據 5/5 Evidence</span>
+                            </div>
+                            <table class="comparison-table">
+                                <tr>
+                                    <th>結果</th>
+                                    <th>風險</th>
+                                    <th>狀態</th>
+                                </tr>
+                                <tr>
+                                    <td>冠心病 CHD</td>
+                                    <td>↑ 較高</td>
+                                    <td>多項研究支持</td>
+                                </tr>
+                                <tr>
+                                    <td>中風 Stroke</td>
+                                    <td>↑ 較高</td>
+                                    <td>多項研究支持</td>
+                                </tr>
+                                <tr>
+                                    <td>糖尿病 Diabetes</td>
+                                    <td>↑ 雙向</td>
+                                    <td>關係已建立</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <div id="oral-summary" class="tab-content">
+                        <div class="section">
+                            <div class="section-title">口腔菌與全身疾病：證據評估</div>
+                            <table class="comparison-table">
+                                <tr>
+                                    <th>連結</th>
+                                    <th>證據</th>
+                                    <th>狀態</th>
+                                </tr>
+                                <tr>
+                                    <td>牙周病 ↔ 糖尿病</td>
+                                    <td><span class="stars"><span class="star">★★★★★</span></span></td>
+                                    <td>✅ 公認關係</td>
+                                </tr>
+                                <tr>
+                                    <td>牙周病 ↔ 心血管風險</td>
+                                    <td><span class="stars"><span class="star">★★★★★</span></span></td>
+                                    <td>✅ 公認風險因子</td>
+                                </tr>
+                                <tr>
+                                    <td>根管治療 → 慢性病</td>
+                                    <td><span class="stars"><span class="star">★</span></span></td>
+                                    <td>❌ 無共識</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <div id="oral-products" class="tab-content">
+                        <div class="section">
+                            <div class="section-title">🛒 口腔 × 牙周 × 益生菌相關產品 (8 項)</div>
+                            <div class="product-grid" id="oral-grid"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+    
+    <!-- Cart Modal -->
+    <div class="cart-modal" id="cartModal">
+        <div class="cart-content">
+            <div class="cart-header">
+                🛒 購物車 Shopping Cart
+                <button class="cart-close" onclick="toggleCart()">✕</button>
+            </div>
+            <div id="cartList"></div>
+            <div id="cartEmpty" class="cart-empty">購物車是空的 Cart is empty</div>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <div class="footer">
+        <p>🔬 循證醫學對話 × 團購系統 | Evidence-Based Medical & Shopping System</p>
+        <p>🛒 購買連結：<a href="https://myship.7-11.com.tw/general/detail/GM2407210007294" target="_blank">7-ELEVEN myship Anne Wang 團購店</a></p>
+        <p>📱 編制：王欣蓉 (Anne Wang) | 日期：2026-07-08</p>
+    </div>
+    
+    <script>
+        // Product Database
+        const products = [
+            // Acid-Base (13)
+            { id: 1, name: '防藍光護目鏡', price: 200, category: 'acid', benefit: '保護眼睛、支持睡眠品質' },
+            { id: 8, name: '牙痛寧草本噴劑', price: 159, category: ['acid', 'oral'], benefit: '草本配方、舒緩不適' },
+            { id: 10, name: '甘速淨｜代謝之王', price: 1500, category: 'acid', benefit: '專利代謝促進配方' },
+            { id: 11, name: 'N相模擬接地加工三插座', price: 100, category: 'acid', benefit: '接地科技、身體穩態' },
+            { id: 12, name: '插座測地線檢測儀', price: 199, category: 'acid', benefit: '檢測接地效果' },
+            { id: 13, name: '智能測電壓電筆', price: 79, category: 'acid', benefit: '家居環境監測' },
+            { id: 14, name: '健康接地枕頭套', price: 599, category: 'acid', benefit: '睡眠品質、自律神經平衡' },
+            { id: 30, name: '側柏葉烏斯曼固髮皂', price: 99, category: 'acid', benefit: '天然草本、代謝支持' },
+            { id: 33, name: '亞麻仁籽渣（2包一組）', price: 198, category: 'acid', benefit: '纖維支持、腸道健康' },
+            { id: 43, name: '鹼能活', price: 520, category: 'acid', benefit: '代謝支持、能量補給' },
+            { id: 46, name: '丁酸鈉複合包', price: 890, category: 'acid', benefit: '腸道健康、能量生成' },
+            { id: 52, name: '血循環', price: 1350, category: 'acid', benefit: '促進血液循環、穩態維持' },
+            { id: 57, name: '滋陰養肺方', price: 1350, category: 'acid', benefit: '呼吸系統支持' },
+            
+            // Redox (22)
+            { id: 2, name: 'EPA+DHA複方粉包', price: 1350, category: 'redox', benefit: 'Omega-3、抗氧化、粒線體' },
+            { id: 3, name: '空氣持妝粉底液', price: 99, category: 'redox', benefit: '肌膚抗氧化、美白' },
+            { id: 9, name: '晰晶亮凝膠', price: 999, category: 'redox', benefit: '眼部抗氧化' },
+            { id: 16, name: '亞麻仁油10罐', price: 3470, category: 'redox', benefit: 'Omega-3、代謝支持' },
+            { id: 17, name: '酵母鋅＋核酸', price: 550, category: 'redox', benefit: '免疫支持、代謝酶' },
+            { id: 24, name: '酷格美白祛斑嫩膚霜', price: 390, category: 'redox', benefit: '抗氧化美白' },
+            { id: 28, name: '心膚精油特價組', price: 1200, category: 'redox', benefit: '植物精油、抗氧化' },
+            { id: 35, name: '全酶', price: 880, category: 'redox', benefit: '代謝酶複合、消化' },
+            { id: 36, name: '潤節晶', price: 580, category: 'redox', benefit: '關節營養、代謝' },
+            { id: 38, name: 'EGCG複方', price: 560, category: 'redox', benefit: '綠茶抗氧化、細胞保護' },
+            { id: 39, name: '大補王', price: 1560, category: 'redox', benefit: '全面營養補給' },
+            { id: 40, name: '迷迭香滾珠瓶', price: 150, category: 'redox', benefit: '迷迭香精油、抗氧化' },
+            { id: 41, name: '薑黃素＋胡椒鹼', price: 620, category: 'redox', benefit: '強效抗氧化、炎症調理' },
+            { id: 42, name: '清思油滴35ml', price: 450, category: 'redox', benefit: '植物油+魚油、腦部支持' },
+            { id: 44, name: '植萃亮采', price: 485, category: 'redox', benefit: '植物多酚、抗氧化亮膚' },
+            { id: 47, name: '刺五加', price: 495, category: 'redox', benefit: '適應原、能量代謝' },
+            { id: 48, name: '大蒜素', price: 450, category: 'redox', benefit: '硫化物、免疫支持' },
+            { id: 49, name: '加強B群', price: 520, category: 'redox', benefit: '能量代謝、神經系統' },
+            { id: 50, name: '銀杏複方', price: 510, category: 'redox', benefit: '複合抗氧化、循環支持' },
+            { id: 53, name: '神經營養素', price: 540, category: 'redox', benefit: '神經代謝、能量' },
+            { id: 54, name: 'GABA', price: 540, category: 'redox', benefit: '神經平衡、壓力支持' },
+            { id: 55, name: '地龍蛋白複方', price: 550, category: 'redox', benefit: '蛋白活性、免疫調節' },
+            
+            // Oral (8)
+            { id: 4, name: '益生菌牙膏', price: 79, category: 'oral', benefit: '益生菌菌相平衡、牙齦健康' },
+            { id: 15, name: 'AIBAN假牙清潔片', price: 50, category: 'oral', benefit: '深層清潔、衛生' },
+            { id: 18, name: '抗鼻腔過敏凝膠', price: 120, category: 'oral', benefit: '上呼吸道支持' },
+            { id: 19, name: '滋碩鼻炎舒寧護理液', price: 250, category: 'oral', benefit: '鼻腔健康、菌相平衡' },
+            { id: 37, name: '日本口腔噴劑', price: 195, category: 'oral', benefit: '口腔淨化、清新' },
+            { id: 56, name: '牙齦微縮醫用牙膏', price: 120, category: 'oral', benefit: '牙齦護理、專業配方' },
+            { id: 29, name: '口腔淨化養護精油組', price: 1200, category: 'oral', benefit: '植物精油、口腔護理' },
+            { id: 58, name: '腸寶', price: 485, category: 'oral', benefit: '腸道菌相、全身免疫基礎' },
+        ];
+        
+        let cart = [];
+        
+        // TTS
+        function speak(text) {
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'en-US';
+                utterance.rate = 0.9;
+                speechSynthesis.speak(utterance);
+            }
+        }
+        
+        // Render Products
+        function renderProducts(category, containerId) {
+            const filtered = category === 'all' 
+                ? products 
+                : products.filter(p => 
+                    Array.isArray(p.category) ? p.category.includes(category) : p.category === category
+                  );
+            
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            
+            container.innerHTML = filtered.map(p => `
+                <div class="product-card">
+                    <span class="product-id">#${String(p.id).padStart(3, '0')}</span>
+                    <div class="product-name">${p.name}</div>
+                    <div class="product-price">${p.price}</div>
+                    <div class="product-benefit">${p.benefit}</div>
+                    <div class="product-actions">
+                        <button class="add-btn" onclick="addToCart(${p.id}, '${p.name}', ${p.price})">加入購物車</button>
+                        <a class="myship-link" href="https://myship.7-11.com.tw/general/detail/GM2407210007294" target="_blank">7-11</a>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        // Cart Functions
+        function addToCart(id, name, price) {
+            cart.push({ id, name, price });
+            updateCartUI();
+            alert(`✅ ${name} 已加入購物車！`);
+        }
+        
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCartUI();
+        }
+        
+        function updateCartUI() {
+            const count = cart.length;
+            const total = cart.reduce((sum, item) => sum + item.price, 0);
+            
+            document.getElementById('cartCount').textContent = count;
+            document.getElementById('cartTotalPrice').textContent = `NT$ ${total.toLocaleString()}`;
+            
+            const cartList = document.getElementById('cartList');
+            const cartEmpty = document.getElementById('cartEmpty');
+            
+            if (cart.length === 0) {
+                cartList.innerHTML = '';
+                cartEmpty.style.display = 'block';
+            } else {
+                cartEmpty.style.display = 'none';
+                cartList.innerHTML = cart.map((item, idx) => `
+                    <div class="cart-item">
+                        <span class="cart-item-name">${item.name}</span>
+                        <span class="cart-item-price">NT$ ${item.price}</span>
+                        <button class="cart-item-remove" onclick="removeFromCart(${idx})">移除</button>
+                    </div>
+                `).join('') + `
+                    <div class="cart-total-row">
+                        <span>總計 Total</span>
+                        <span>NT$ ${total.toLocaleString()}</span>
+                    </div>
+                `;
+            }
+        }
+        
+        function toggleCart() {
+            document.getElementById('cartModal').classList.toggle('active');
+        }
+        
+        function toggleModule(header) {
+            header.parentElement.classList.toggle('expanded');
+        }
+        
+        function switchTab(tabEl, contentId) {
+            const tabs = tabEl.parentElement.querySelectorAll('.tab');
+            const contents = tabEl.parentElement.nextElementSibling.querySelectorAll('.tab-content');
+            
+            tabs.forEach(t => t.classList.remove('active'));
+            contents.forEach(c => c.classList.remove('active'));
+            
+            tabEl.classList.add('active');
+            document.getElementById(contentId).classList.add('active');
+        }
+        
+        // Search
+        document.getElementById('searchBox').addEventListener('input', function(e) {
+            const query = e.target.value.toLowerCase();
+            const modules = document.querySelectorAll('.module');
+            
+            modules.forEach(module => {
+                if (query === '') {
+                    module.style.display = 'block';
+                } else {
+                    const text = module.innerText.toLowerCase();
+                    module.style.display = text.includes(query) ? 'block' : 'none';
+                }
+            });
+        });
+        
+        // Filter
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                
+                const filter = this.dataset.filter;
+                const modules = document.querySelectorAll('.module');
+                
+                modules.forEach(module => {
+                    if (filter === 'all') {
+                        module.style.display = 'block';
+                    } else {
+                        module.style.display = module.dataset.category === filter ? 'block' : 'none';
+                    }
+                });
+            });
+        });
+        
+        // Initialize
+        renderProducts('acid', 'acid-grid');
+        renderProducts('redox', 'redox-grid');
+        renderProducts('oral', 'oral-grid');
+        updateCartUI();
+    </script>
+</body>
+</html>
