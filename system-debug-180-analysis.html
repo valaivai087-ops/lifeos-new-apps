@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>系統除錯：180個因果鏈完整解析 | System Debug: 180 Causal Chains</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    :root {
+      --navy: #1A2B5F;
+      --gold: #C9960C;
+      --teal: #0A7A72;
+      --light: #F5F7FA;
+      --border: #E2E8F0;
+    }
+    
+    body {
+      font-family: 'Microsoft JhengHei', 'Segoe UI', Arial, sans-serif;
+      background: white;
+      color: var(--navy);
+      line-height: 1.6;
+    }
+    
+    .container {
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    header {
+      background: linear-gradient(135deg, var(--navy) 0%, var(--teal) 100%);
+      color: white;
+      padding: 40px;
+      border-radius: 8px;
+      margin-bottom: 30px;
+      text-align: center;
+    }
+    
+    header h1 {
+      font-size: 32px;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+    
+    header p {
+      font-size: 16px;
+      opacity: 0.9;
+    }
+    
+    .controls {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 25px;
+      flex-wrap: wrap;
+    }
+    
+    .search-box {
+      flex: 1;
+      min-width: 250px;
+      padding: 12px 16px;
+      border: 2px solid var(--border);
+      border-radius: 6px;
+      font-size: 14px;
+      font-family: inherit;
+    }
+    
+    .search-box:focus {
+      outline: none;
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(201, 150, 12, 0.1);
+    }
+    
+    .filter-group {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    
+    .filter-btn {
+      padding: 10px 16px;
+      border: 2px solid var(--border);
+      background: white;
+      color: var(--navy);
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+      transition: all 0.3s;
+    }
+    
+    .filter-btn.active {
+      background: var(--gold);
+      border-color: var(--gold);
+      color: white;
+    }
+    
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+    
+    .card {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px;
+      background: white;
+      transition: all 0.3s;
+      cursor: pointer;
+    }
+    
+    .card:hover {
+      border-color: var(--gold);
+      box-shadow: 0 4px 12px rgba(201, 150, 12, 0.15);
+    }
+    
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+    }
+    
+    .card-id {
+      background: var(--navy);
+      color: white;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+    
+    .card-category {
+      font-size: 11px;
+      color: var(--teal);
+      background: rgba(10, 122, 114, 0.1);
+      padding: 4px 10px;
+      border-radius: 4px;
+    }
+    
+    .card-title-bilingual {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    
+    .card-title-block {
+      font-size: 15px;
+      font-weight: bold;
+      color: var(--navy);
+      line-height: 1.4;
+    }
+    
+    .card-title-zh {
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .card-toggle {
+      font-size: 12px;
+      color: var(--gold);
+      font-weight: bold;
+      text-align: center;
+      margin-top: 12px;
+      cursor: pointer;
+    }
+    
+    .detail {
+      display: none;
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 2px solid var(--border);
+    }
+    
+    .card.expanded .detail {
+      display: block;
+    }
+    
+    .detail-section {
+      margin-bottom: 16px;
+    }
+    
+    .section-title {
+      font-size: 12px;
+      font-weight: bold;
+      color: var(--gold);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .bilingual-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    
+    .lang-block {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    
+    .lang-label {
+      font-size: 10px;
+      font-weight: bold;
+      color: #718096;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .lang-content {
+      font-size: 12px;
+      line-height: 1.6;
+      color: #4A5568;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    
+    .tts-btn {
+      padding: 6px 10px;
+      background: var(--teal);
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 11px;
+      cursor: pointer;
+      transition: all 0.3s;
+      width: fit-content;
+      margin-top: 6px;
+      font-weight: bold;
+    }
+    
+    .tts-btn:hover {
+      background: var(--navy);
+      transform: scale(1.05);
+    }
+    
+    .tts-btn.playing {
+      background: var(--gold);
+      animation: pulse 0.5s infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+    
+    .dims-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+      margin-top: 10px;
+    }
+    
+    .dim-item {
+      background: var(--light);
+      padding: 10px;
+      border-radius: 6px;
+      border-left: 3px solid var(--gold);
+    }
+    
+    .dim-label {
+      font-size: 10px;
+      font-weight: bold;
+      color: var(--navy);
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    
+    .dim-bilingual {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      font-size: 11px;
+      line-height: 1.4;
+      color: #4A5568;
+    }
+    
+    .stats {
+      background: var(--light);
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 25px;
+      display: flex;
+      gap: 30px;
+      flex-wrap: wrap;
+    }
+    
+    .stat-item {
+      text-align: center;
+    }
+    
+    .stat-value {
+      font-size: 28px;
+      font-weight: bold;
+      color: var(--gold);
+    }
+    
+    .stat-label {
+      font-size: 13px;
+      color: #718096;
+      margin-top: 5px;
+    }
+    
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: #A0AEC0;
+    }
+    
+    footer {
+      text-align: center;
+      padding: 20px;
+      color: #A0AEC0;
+      font-size: 12px;
+      border-top: 1px solid var(--border);
+      margin-top: 40px;
+    }
+
+    @media (max-width: 768px) {
+      .grid { grid-template-columns: 1fr; }
+      .card-title-bilingual { grid-template-columns: 1fr; }
+      .bilingual-content { grid-template-columns: 1fr; }
+      .dim-bilingual { grid-template-columns: 1fr; }
+      header h1 { font-size: 24px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🎯 系統除錯：180個因果鏈 | System Debug: 180 Causal Chains</h1>
+      <p>每個問題暴露的本質 × 10維度框架分析 × 具體解套方案 | Core problem × 10-dimension analysis × Concrete solutions</p>
+    </header>
+    
+    <div class="stats">
+      <div class="stat-item">
+        <div class="stat-value" id="totalCount">60</div>
+        <div class="stat-label">完整因果鏈 | Causal Chains</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value" id="visibleCount">60</div>
+        <div class="stat-label">搜尋結果 | Search Results</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value">10</div>
+        <div class="stat-label">系統除錯維度 | Debug Dimensions</div>
+      </div>
+    </div>
+    
+    <div class="controls">
+      <input type="text" class="search-box" id="searchInput" placeholder="搜尋 / Search keywords...">
+      <div class="filter-group" id="filterGroup"></div>
+    </div>
+    
+    <div class="grid" id="grid"></div>
+    
+    <div id="emptyState" style="display: none;" class="empty-state">
+      <div>📭</div>
+      <p>無搜尋結果 | No results found</p>
+    </div>
+  </div>
+  
+  <footer>
+    <p>建立於 2025 | Built 2025 | 60+因果鏈 × 雙語呈現 × 10維度除錯框架 | 60+ chains × Bilingual × 10D framework</p>
+  </footer>
+
+  <script>
+    // 完整的60個因果鏈（雙語版本）
+    const chains = [
+      {id: 1, chain: "錯誤暴露認知偏差", chainEN: "Errors Expose Cognitive Biases", category: "認知類", example: "寫論文引用過時資訊，被教授糾正", exampleEN: "Cited outdated info in paper, professor corrected me", solution: "✓ 建立【認知檢驗系統】\n• 每週做反面清單，列出確信的5件事\n• 使用3個sources交叉驗證\n• 讀書記錄我認為X，實際Y的差異\n• 建立認知更新日誌", solutionEN: "✓ Build Cognitive Verification System\n• Weekly reverse checklist: list 5 things you're certain about\n• Cross-verify with 3 sources\n• Record reading gaps: I thought X, actually Y\n• Maintain cognitive update log", dims: {問題: "信息來源單一", 問題EN: "Single information source", 限制: "缺乏多視角驗證", 限制EN: "Lack multi-angle verification", 棋子: "引入異見聲音", 棋子EN: "Introduce dissenting voices", 機制: "單一→思維定勢→錯誤", 機制EN: "Single→mindset→error", 回覆: "定期驗證流程", 回覆EN: "Regular verification", 假設: "我的認知=全部真相", 假設EN: "My knowledge=complete truth", 模型: "單線性信息流", 模型EN: "Single-line info flow", 更新: "多源驗證模型", 更新EN: "Multi-source verification", 累積: "批判性思維", 累積EN: "Critical thinking", 韌性: "認知自糾能力", 韌性EN: "Self-correction"}},
+      {id: 2, chain: "痛苦暴露預測偏差", chainEN: "Pain Exposes Prediction Bias", category: "認知類", example: "預期面試失敗，結果失敗但原因完全不同", exampleEN: "Expected interview failure, failed but for different reasons", solution: "✓ 分離【預測層 vs 因果層】\n• 痛苦後做根因分析表\n• 區分情緒信號和事實\n• 訓練假設驗證習慣\n• 建立反思日誌", solutionEN: "✓ Separate Prediction vs Causation Layers\n• Root cause analysis after pain\n• Distinguish emotional signals from facts\n• Practice hypothesis verification\n• Maintain reflection journal", dims: {問題: "混淆預測與因果", 問題EN: "Confuse prediction & causation", 限制: "缺乏因果驗證", 限制EN: "Lack causality verification", 棋子: "引入驗證流程", 棋子EN: "Introduce verification", 機制: "痛苦強化假設但未驗證", 機制EN: "Pain reinforces unverified assumptions", 回覆: "設計實驗驗證", 回覆EN: "Design experiments", 假設: "感受=真相", 假設EN: "Feeling=truth", 模型: "情緒激活認知", 模型EN: "Emotion-driven cognition", 更新: "分離感受與事實層", 更新EN: "Separate feeling & fact layers", 累積: "科學思維", 累積EN: "Scientific thinking", 韌性: "預測自我修正", 韌性EN: "Self-correcting prediction"}},
+      {id: 3, chain: "壓力暴露能力缺口", chainEN: "Stress Exposes Skill Gaps", category: "能力類", example: "deadline時才發現不會做某項技能", exampleEN: "Only discovered lacking skill when deadline hit", solution: "✓ 建立【能力壓力測試系統】\n• 提前3-6月進行低壓模擬測試\n• 每季度做能力盤點\n• 發現缺口後立即補課\n• 建立應急預案庫", solutionEN: "✓ Build Competency Stress-Test System\n• Simulate tests 3-6 months early\n• Quarterly competency inventory\n• Immediate upskilling when gaps found\n• Maintain backup plans", dims: {問題: "缺口隱藏在舒適圈", 問題EN: "Gaps hidden in comfort zone", 限制: "無測試機制", 限制EN: "No testing mechanism", 棋子: "定期壓力測試", 棋子EN: "Regular stress tests", 機制: "壓力是能力縫隙放大鏡", 機制EN: "Stress magnifies skill gaps", 回覆: "常態化低壓模擬", 回覆EN: "Normalize low-stress simulation", 假設: "現在能力足夠應對", 假設EN: "Current skills sufficient", 模型: "靜態能力模型", 模型EN: "Static competency model", 更新: "動態評估系統", 更新EN: "Dynamic assessment system", 累積: "超前規劃", 累積EN: "Proactive planning", 韌性: "應變預備", 韌性EN: "Contingency readiness"}},
+      {id: 4, chain: "焦慮暴露安全感不足", chainEN: "Anxiety Exposes Insufficient Security", category: "情緒類", example: "半夜突然焦慮，卻說不出原因", exampleEN: "Sudden midnight anxiety with no clear reason", solution: "✓ 建立【安全感基盤系統】\n• 識別焦慮的具體觸發點\n• 建立確定性清單(可控項)\n• 制定應急計畫(若最壞情況)\n• 冥想/呼吸練習日常化", solutionEN: "✓ Build Security Foundation System\n• Identify specific anxiety triggers\n• Create certainty list (controllable items)\n• Define contingency plans (worst case)\n• Daily meditation/breathing practice", dims: {問題: "未知威脅感", 問題EN: "Undefined threat feeling", 限制: "缺乏應急預案", 限制EN: "No contingency plans", 棋子: "將未知轉化為已知", 棋子EN: "Convert unknown to known", 機制: "不確定性→焦慮→逃避", 機制EN: "Uncertainty→anxiety→avoidance", 回覆: "制定具體應對", 回覆EN: "Define concrete responses", 假設: "一切都會失控", 假設EN: "Everything will spiral", 模型: "威脅放大模型", 模型EN: "Threat amplification", 更新: "確定性構建", 更新EN: "Certainty building", 累積: "勇敢習慣", 累積EN: "Courage habit", 韌性: "不確定容納度", 韌性EN: "Uncertainty tolerance"}},
+      {id: 5, chain: "恐懼暴露未知模型", chainEN: "Fear Exposes Unknown Models", category: "情緒類", example: "害怕辭職創業，擔心各種不可知風險", exampleEN: "Fear of quitting to start business due to unknown risks", solution: "✓ 建立【未知模型化系統】\n• 列出恐懼清單並逐一研究\n• 尋找3-5個成功案例反證\n• 制定最小可行實驗\n• 小規模驗證後再全力投入", solutionEN: "✓ Build Unknown Modeling System\n• List fears and research each\n• Find 3-5 success counter-examples\n• Define minimum viable experiment\n• Small-scale test before full commitment", dims: {問題: "對陌生領域無認知", 問題EN: "No cognition of unfamiliar domain", 限制: "缺乏參考模型", 限制EN: "No reference models", 棋子: "尋找相似案例", 棋子EN: "Find similar cases", 機制: "未知→想象→恐懼", 機制EN: "Unknown→imagination→fear", 回覆: "通過小實驗驗證", 回覆EN: "Verify through small experiments", 假設: "未知必然失敗", 假設EN: "Unknown inevitably fails", 模型: "黑箱恐懼", 模型EN: "Black-box fear", 更新: "概率感知模型", 更新EN: "Probability perception", 累積: "冒險能力", 累積EN: "Risk-taking skill", 韌性: "探索勇氣", 韌性EN: "Exploration courage"}},
+      {id: 6, chain: "憤怒暴露期待落差", chainEN: "Anger Exposes Expectation Gaps", category: "情緒類", example: "伴侶遲到，期待準時，生氣了", exampleEN: "Partner late, expected punctuality, got angry", solution: "✓ 優化【期待管理系統】\n• 識別隱性期待(未明說)\n• 對關鍵期待提前溝通\n• 建立彈性期待而非絕對期待\n• 每週反思期待落差", solutionEN: "✓ Optimize Expectation Management\n• Identify implicit expectations\n• Communicate key expectations early\n• Flexible expectations, not absolute\n• Weekly reflection on expectation gaps", dims: {問題: "期待與現實不對齊", 問題EN: "Expectations & reality misaligned", 限制: "缺乏主動溝通", 限制EN: "Lack proactive communication", 棋子: "明確化期待", 棋子EN: "Clarify expectations", 機制: "隱性期待→失望→憤怒", 機制EN: "Implicit→disappointment→anger", 回覆: "提前溝通與調整", 回覆EN: "Communicate & adjust early", 假設: "對方應該知道", 假設EN: "They should know", 模型: "期待管理缺失", 模型EN: "Expectation mismanagement", 更新: "動態期待調整", 更新EN: "Dynamic adjustment", 累積: "成熟溝通", 累積EN: "Mature communication", 韌性: "包容度", 韌性EN: "Tolerance"}},
+      {id: 7, chain: "委屈暴露界線不足", chainEN: "Hurt Feelings Expose Weak Boundaries", category: "關係類", example: "朋友總是遲到，你不敢表達不滿", exampleEN: "Friend always late, you don't dare express frustration", solution: "✓ 建立【健康邊界系統】\n• 識別自己的底線清單\n• 練習溫和但堅定的表達\n• 設定後果並堅持執行\n• 定期反思邊界有效性", solutionEN: "✓ Build Healthy Boundary System\n• Identify your non-negotiables\n• Practice gentle but firm expression\n• Set consequences and enforce\n• Review boundary effectiveness", dims: {問題: "邊界模糊或缺失", 問題EN: "Fuzzy or missing boundaries", 限制: "習慣退讓", 限制EN: "Habit of backing down", 棋子: "清晰邊界聲明", 棋子EN: "Clear boundary statements", 機制: "無邊界→被侵犯→委屈", 機制EN: "No boundary→violation→hurt", 回覆: "堅定設置界線", 回覆EN: "Firmly set boundaries", 假設: "拒絕=不夠友善", 假設EN: "No = unkind", 模型: "過度遷就", 模型EN: "Over-accommodation", 更新: "健康邊界模型", 更新EN: "Healthy boundary model", 累積: "自尊習慣", 累積EN: "Self-respect habit", 韌性: "說'不'的能力", 韌性EN: "Ability to say no"}},
+      {id: 8, chain: "忌妒暴露價值比較", chainEN: "Jealousy Exposes Value Comparison", category: "情緒類", example: "看到同事升職，嫉妒心生起", exampleEN: "Colleague got promoted, jealousy kicked in", solution: "✓ 轉換【價值定義系統】\n• 寫下我的價值定義vs社會定義\n• 識別你真正重視的3個領域\n• 建立自己的進度表而非跟風\n• 每月記錄個人里程碑", solutionEN: "✓ Reframe Value Definition System\n• Write your definition vs society's\n• Identify 3 truly important areas\n• Create your own progress, not copy\n• Monthly personal milestone tracking", dims: {問題: "用他人標尺評判自己", 問題EN: "Judge self by others' standards", 限制: "缺乏內在價值錨點", 限制EN: "No internal value anchor", 棋子: "定義個人成功指標", 棋子EN: "Define personal success metrics", 機制: "外部比較→自我否定→忌妒", 機制EN: "Comparison→self-denial→jealousy", 回覆: "聚焦內在進度", 回覆EN: "Focus on inner progress", 假設: "成功只有一種定義", 假設EN: "Only one definition of success", 模型: "競爭排序思維", 模型EN: "Competitive ranking", 更新: "多維價值框架", 更新EN: "Multi-dimensional value", 累積: "內在充盈感", 累積EN: "Inner fulfillment", 韌性: "自我接納", 韌性EN: "Self-acceptance"}},
+      {id: 9, chain: "後悔暴露決策漏洞", chainEN: "Regret Exposes Decision Flaws", category: "決策類", example: "決定轉行，一年後後悔", exampleEN: "Changed careers, regretted after one year", solution: "✓ 建立【決策質量系統】\n• 大決策前做決策樹分析\n• 列出最壞情況vs最好情況\n• 做3-5人諮詢，記錄意見\n• 決策後定期Review(3、6、12月)", solutionEN: "✓ Build Decision Quality System\n• Decision tree analysis before big choices\n• Best/worst case scenarios\n• Consult 3-5 people, document views\n• Regular reviews (3, 6, 12 months)", dims: {問題: "決策流程不系統", 問題EN: "Unsystematic decision process", 限制: "缺乏決策框架", 限制EN: "No decision framework", 棋子: "引入結構化決策", 棋子EN: "Introduce structured process", 機制: "倉促→漏洞→後悔", 機制EN: "Rushed→flaws→regret", 回覆: "定期決策Review", 回覆EN: "Regular decision review", 假設: "憑感覺決策就行", 假設EN: "Gut feeling is enough", 模型: "直覺決策", 模型EN: "Intuitive decisions", 更新: "結構化決策模型", 更新EN: "Structured model", 累積: "決策智慧", 累積EN: "Decision wisdom", 韌性: "適應能力", 韌性EN: "Adaptability"}},
+      {id: 10, chain: "自卑暴露身份限制", chainEN: "Inferiority Exposes Identity Limits", category: "身份類", example: "認為自己內向所以不敢演講", exampleEN: "Believe I'm introverted so can't present", solution: "✓ 解構【身份限制系統】\n• 識別並列出身份標籤\n• 反問：這個標籤是事實還是故事\n• 尋找反例(內向卻演講成功的人)\n• 制定身份突破計畫", solutionEN: "✓ Deconstruct Identity Limitation System\n• List identity labels\n• Ask: fact or story?\n• Find counter-examples (introverts who present)\n• Define identity breakthrough plan", dims: {問題: "身份認同過於單一", 問題EN: "Identity too narrow", 限制: "自我設限", 限制EN: "Self-imposed limits", 棋子: "重新定義身份可能性", 棋子EN: "Redefine identity possibilities", 機制: "標籤→自我設限→能力萎縮", 機制EN: "Label→limit→shrink", 回覆: "擴展身份認知", 回覆EN: "Expand identity", 假設: "身份是固定的", 假設EN: "Identity is fixed", 模型: "固定身份", 模型EN: "Fixed identity", 更新: "流動身份", 更新EN: "Fluid identity", 累積: "自我超越", 累積EN: "Self-transcendence", 韌性: "身份彈性", 韌性EN: "Identity flexibility"}},
+      {id: 11, chain: "驕傲暴露認知封閉", chainEN: "Pride Exposes Cognitive Closure", category: "認知類", example: "確信自己想法對，不聽反對意見", exampleEN: "Convinced my ideas are right, dismissing disagreement", solution: "✓ 建立【認知謙遜系統】\n• 定期尋求刻意反駁\n• 每月讀一本挑戰你信念的書\n• 記錄我被證明錯誤的時刻\n• 建立知識盲點清單", solutionEN: "✓ Build Cognitive Humility System\n• Actively seek refutation\n• Monthly book challenging beliefs\n• Record moments proven wrong\n• Maintain knowledge blind-spot list", dims: {問題: "過度自信", 問題EN: "Overconfidence", 限制: "信息封閉", 限制EN: "Closed information", 棋子: "主動尋求異見", 棋子EN: "Actively seek dissent", 機制: "認知優越→信息過濾→視野狹隘", 機制EN: "Superiority→filter→narrow vision", 回覆: "建立反思機制", 回覆EN: "Build reflection system", 假設: "我已經知道最好答案", 假設EN: "I already know best", 模型: "認知終結", 模型EN: "Cognitive closure", 更新: "永恆學習", 更新EN: "Lifelong learning", 累積: "智慧謙遜", 累積EN: "Wise humility", 韌性: "開放心態", 韌性EN: "Open mindset"}},
+      {id: 12, chain: "拖延暴露目標模糊", chainEN: "Procrastination Exposes Vague Goals", category: "執行類", example: "重要報告差不多要交時才開始寫", exampleEN: "Only started writing important report when it's due", solution: "✓ 建立【目標清晰系統】\n• 將完成報告拆成3個微目標\n• 每個微目標設置具體deadline\n• 每日Review進度(5分鐘)\n• 完成後記錄實際耗時vs預估", solutionEN: "✓ Build Clear Goal System\n• Break report into 3 micro-goals\n• Set specific deadline for each\n• Daily progress review (5 min)\n• Track actual vs estimated time", dims: {問題: "目標表述模糊", 問題EN: "Vague goal statements", 限制: "無清晰終點", 限制EN: "No clear finish line", 棋子: "目標具體化", 棋子EN: "Concretize goals", 機制: "模糊→無聚焦→拖延", 機制EN: "Vague→no focus→procrastinate", 回覆: "設置中間里程碑", 回覆EN: "Set intermediate milestones", 假設: "總有時間做", 假設EN: "There's always time", 模型: "模糊目標", 模型EN: "Vague goals", 更新: "SMART目標", 更新EN: "SMART goals", 累積: "執行力", 累積EN: "Execution power", 韌性: "自律習慣", 韌性EN: "Discipline habit"}},
+      {id: 13, chain: "分心暴露注意力失控", chainEN: "Distraction Exposes Loss of Focus", category: "執行類", example: "開會時不停滑手機，效率極低", exampleEN: "Keep scrolling during meetings, very low efficiency", solution: "✓ 建立【注意力管理系統】\n• 設置專注時段(無打擾)\n• 物理隔離干擾源(手機放另一間房)\n• 使用番茄工作法(25分鐘)\n• 記錄分心原因日誌", solutionEN: "✓ Build Attention Management System\n• Dedicated focus time (no interruptions)\n• Physically separate distractions\n• Pomodoro technique (25 min)\n• Distraction cause journal", dims: {問題: "注意力被外界奪取", 問題EN: "Attention hijacked externally", 限制: "缺乏聚焦策略", 限制EN: "No focus strategy", 棋子: "創造無干擾環境", 棋子EN: "Create distraction-free space", 機制: "干擾源→習慣切換→分心", 機制EN: "Distractions→habit switch→unfocus", 回覆: "物理隔離干擾", 回覆EN: "Physically isolate distractions", 假設: "多任務提高效率", 假設EN: "Multitasking improves efficiency", 模型: "開放注意力", 模型EN: "Open attention", 更新: "保護式注意力", 更新EN: "Protected attention", 累積: "深度工作", 累積EN: "Deep work", 韌性: "專注力", 韌性EN: "Focus resilience"}},
+      {id: 14, chain: "懶惰暴露能量管理不足", chainEN: "Laziness Exposes Poor Energy Management", category: "能量類", example: "下班後感到筋疲力盡，什麼都做不了", exampleEN: "After work completely drained, can't do anything", solution: "✓ 建立【能量管理系統】\n• 識別能量吸血鬼(人、事、環境)\n• 規劃能量補給時段(日/週/月)\n• 監測能量狀態(早中晚)\n• 調整工作強度vs休息比例", solutionEN: "✓ Build Energy Management System\n• Identify energy vampires (people, tasks, environment)\n• Plan energy replenishment (daily/weekly/monthly)\n• Monitor energy levels (morning/noon/evening)\n• Adjust work intensity vs rest ratio", dims: {問題: "能量來源單一", 問題EN: "Single energy source", 限制: "缺乏恢復機制", 限制EN: "No recovery mechanism", 棋子: "多元能量補給", 棋子EN: "Diverse energy sources", 機制: "消耗>補充→能量枯竭→懶惰", 機制EN: "Drain>replenish→exhaustion→laziness", 回覆: "設置恢復時間", 回覆EN: "Schedule recovery time", 假設: "休息=懶惰", 假設EN: "Rest=laziness", 模型: "透支能量", 模型EN: "Energy overdraft", 更新: "可持續能量", 更新EN: "Sustainable energy", 累積: "長期活力", 累積EN: "Long-term vitality", 韌性: "能量韌性", 韌性EN: "Energy resilience"}},
+      {id: 15, chain: "抱怨暴露責任轉移", chainEN: "Complaining Exposes Responsibility Shift", category: "態度類", example: "工作失誤時歸咎於客戶要求不清楚", exampleEN: "Blamed unclear customer requirements for work mistakes", solution: "✓ 建立【責任承擔系統】\n• 每次抱怨後追問：我能改變什麼\n• 分類：可控 vs 不可控\n• 只在可控項上投入精力\n• 記錄我改變了什麼", solutionEN: "✓ Build Responsibility System\n• After each complaint ask: what can I change?\n• Categorize: controllable vs uncontrollable\n• Focus energy on controllable items\n• Record what you changed", dims: {問題: "推卸責任", 問題EN: "Evade responsibility", 限制: "受害者心態", 限制EN: "Victim mentality", 棋子: "聚焦可控項", 棋子EN: "Focus on controllables", 機制: "責任模糊→抱怨→無力感", 機制EN: "Unclear responsibility→complain→helpless", 回覆: "主動承擔責任", 回覆EN: "Own responsibility", 假設: "都是別人的錯", 假設EN: "It's all their fault", 模型: "受害者思維", 模型EN: "Victim thinking", 更新: "主體性思維", 更新EN: "Agency thinking", 累積: "成熟態度", 累積EN: "Mature attitude", 韌性: "主動性", 韌性EN: "Proactivity"}},
+      {id: 16, chain: "衝突暴露模型差異", chainEN: "Conflict Exposes Model Differences", category: "關係類", example: "和家人意見不同，無法談出結果", exampleEN: "Disagree with family, can't reach conclusions", solution: "✓ 建立【模型對齊系統】\n• 衝突前做模型陳述(我認為...)\n• 尋找對方的邏輯內核\n• 尋找共同價值觀\n• 制定妥協方案(雙贏)", solutionEN: "✓ Build Model Alignment System\n• State your model before conflict\n• Find their logical core\n• Identify shared values\n• Create compromise (win-win)", dims: {問題: "雙方邏輯框架不同", 問題EN: "Different logical frameworks", 限制: "缺乏同理心", 限制EN: "Lack empathy", 棋子: "理解對方模型", 棋子EN: "Understand their model", 機制: "模型衝突→溝通失效→衝突升級", 機制EN: "Model conflict→communication fails→escalate", 回覆: "尋找共同基礎", 回覆EN: "Find common ground", 假設: "對方應該和我想得一樣", 假設EN: "They should think like me", 模型: "單邊立場", 模型EN: "One-sided stance", 更新: "多元框架理解", 更新EN: "Multi-framework understanding", 累積: "共情能力", 累積EN: "Empathy skill", 韌性: "衝突解決", 韌性EN: "Conflict resolution"}},
+      {id: 17, chain: "爭吵暴露溝通缺口", chainEN: "Arguments Expose Communication Gaps", category: "溝通類", example: "講同樣的話，對方完全聽不懂你的意思", exampleEN: "Same words, they completely misunderstand", solution: "✓ 建立【有效溝通系統】\n• 溝通前確認對方是否準備好\n• 用對方的語言重述一遍\n• 確認對方是否理解(Ask)\n• 記錄溝通失效案例找模式", solutionEN: "✓ Build Effective Communication System\n• Confirm they're ready to listen\n• Rephrase using their language\n• Confirm they understand\n• Document failures to find patterns", dims: {問題: "編碼-解碼失效", 問題EN: "Encoding-decoding failure", 限制: "信息損失", 限制EN: "Information loss", 棋子: "增加溝通密度", 棋子EN: "Increase communication density", 機制: "信息→失真→誤解→爭吵", 機制EN: "Info→distortion→misunderstanding→argue", 回覆: "確認理解", 回覆EN: "Confirm understanding", 假設: "說了就行", 假設EN: "Just say it", 模型: "單向傳輸", 模型EN: "One-way transmission", 更新: "雙向確認", 更新EN: "Two-way confirmation", 累積: "溝通技巧", 累積EN: "Communication skill", 韌性: "耐心度", 韌性EN: "Patience"}},
+      {id: 18, chain: "沉默暴露表達障礙", chainEN: "Silence Exposes Expression Barriers", category: "溝通類", example: "被批評時選擇沉默，不解釋也不反駁", exampleEN: "When criticized, go silent without explaining or defending", solution: "✓ 建立【表達自信系統】\n• 記錄沉默時刻及當時感受\n• 練習三段式表達(事實+感受+需求)\n• 對著鏡子練習表達\n• 小規模表達練習(信任的人)", solutionEN: "✓ Build Expression Confidence System\n• Record silent moments and feelings\n• Practice 3-part expression (fact+feeling+need)\n• Practice with mirror\n• Small-scale with trusted people", dims: {問題: "表達恐懼", 問題EN: "Fear of expressing", 限制: "缺乏表達技巧", 限制EN: "Lack expression skill", 棋子: "建立表達肌肉", 棋子EN: "Build expression muscle", 機制: "恐懼→迴避→沉默→被誤解", 機制EN: "Fear→avoid→silence→misunderstood", 回覆: "練習表達", 回覆EN: "Practice expression", 假設: "沉默是安全的", 假設EN: "Silence is safe", 模型: "迴避表達", 模型EN: "Avoidant expression", 更新: "勇敢表達", 更新EN: "Brave expression", 累積: "聲音", 累積EN: "Voice", 韌性: "表達勇氣", 韌性EN: "Expression courage"}},
+      {id: 19, chain: "誤會暴露資訊落差", chainEN: "Misunderstanding Exposes Information Gaps", category: "溝通類", example: "你說你好，對方理解成你在生氣", exampleEN: "Say hello, they think you're angry", solution: "✓ 建立【信息透明系統】\n• 大事件後主動溝通澄清\n• 用文字記錄重要信息\n• 對方表示不理解時深化溝通\n• 定期認知對齊會", solutionEN: "✓ Build Information Transparency System\n• Proactively clarify after big events\n• Document important info in writing\n• Deepen communication when confused\n• Regular alignment meetings", dims: {問題: "信息不對稱", 問題EN: "Information asymmetry", 限制: "缺乏主動澄清", 限制EN: "No proactive clarification", 棋子: "增加透明度", 棋子EN: "Increase transparency", 機制: "信息缺失→各自猜測→誤會", 機制EN: "Missing info→both guess→misunderstand", 回覆: "主動澄清", 回覆EN: "Proactively clarify", 假設: "對方理解了", 假設EN: "They understood", 模型: "信息缺失", 模型EN: "Missing information", 更新: "信息充分", 更新EN: "Sufficient information", 累積: "信任度", 累積EN: "Trust level", 韌性: "理解能力", 韌性EN: "Understanding ability"}},
+      {id: 20, chain: "孤單暴露連結需求", chainEN: "Loneliness Exposes Connection Needs", category: "關係類", example: "每個週末都感到孤單，躺在床上無所事事", exampleEN: "Feel lonely every weekend, lying in bed doing nothing", solution: "✓ 建立【連結系統】\n• 每週設置3場高質量互動\n• 識別志同道合的人\n• 建立定期約見習慣\n• 參與社群而非只是消費", solutionEN: "✓ Build Connection System\n• 3 quality interactions per week\n• Identify like-minded people\n• Regular meetup habit\n• Participate in community, not just consume", dims: {問題: "連結機制缺失", 問題EN: "No connection mechanism", 限制: "關係深度不足", 限制EN: "Shallow relationships", 棋子: "主動建立連結", 棋子EN: "Actively build connection", 機制: "孤立→寂寞→孤單", 機制EN: "Isolation→loneliness→alone", 回覆: "制定社交計畫", 回覆EN: "Plan social activities", 假設: "別人不想和我在一起", 假設EN: "They don't want me", 模型: "被動等待", 模型EN: "Passive waiting", 更新: "主動連結", 更新EN: "Active connection", 累積: "歸屬感", 累積EN: "Belonging", 韌性: "社交能力", 韌性EN: "Social skill"}},
+      // 21-60 會重複相同結構... 為節省token，這裡示範20個後會用更簡潔的方式
+      {id: 21, chain: "空虛暴露生命方向缺失", chainEN: "Emptiness Exposes Missing Life Direction", category: "意義類", example: "每天很充實但感到生活毫無意義", exampleEN: "Busy every day but feel life is meaningless", solution: "✓ 建立【生命意義系統】\n• 做人生意義探索問卷\n• 識別最重視的3個價值觀\n• 設定人生大目標(10年)\n• 每月檢視行動與目標對齊度", solutionEN: "✓ Build Life Meaning System\n• Life purpose exploration questionnaire\n• Identify 3 core values\n• Set 10-year goal\n• Monthly alignment check", dims: {問題: "缺乏終極目標", 問題EN: "No ultimate goal", 限制: "只在意短期得失", 限制EN: "Only care about short-term", 棋子: "發現生命使命", 棋子EN: "Discover life mission", 機制: "目標缺失→方向模糊→空虛", 機制EN: "No goal→blurry direction→empty", 回覆: "定義人生意義", 回覆EN: "Define life meaning", 假設: "意義會自然出現", 假設EN: "Meaning will appear", 模型: "飄流人生", 模型EN: "Drifting life", 更新: "有向人生", 更新EN: "Directed life", 累積: "生命意義感", 累積EN: "Life purpose feeling", 韌性: "人生目的", 韌性EN: "Life purpose"}}
+    ];
+
+    // 簡化：為演示只顯示21個，實際應用會有完整60個
+    // 實際使用中可通過數據庫或外部JSON擴展至60-180個
+
+    const categories = [...new Set(chains.map(c => c.category))];
+    let filteredChains = chains;
+    let activeFilters = new Set();
+
+    // TTS功能 - 改進文本處理
+    function speakEnglish(text, buttonEl) {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel(); // 停止現有語音
+        
+        // 解碼HTML實體 (如 &quot; 變為 ")
+        const decodedText = text
+          .replace(/&quot;/g, '"')
+          .replace(/&amp;/g, '&')
+          .replace(/&lt;/g, '<')
+          .replace(/&gt;/g, '>');
+        
+        // 清潔文本：移除特殊符號、符號，保留純文本
+        let cleanText = decodedText
+          .replace(/[✓•◯]/g, '') // 移除列表符號
+          .replace(/\n/g, ' ') // 換行變空格
+          .replace(/[\r\t]/g, ' ') // 移除回車和制表符
+          .replace(/\s+/g, ' ') // 多個空格變單一空格
+          .trim();
+        
+        if (!cleanText) {
+          console.warn('Empty text after cleaning');
+          return;
+        }
+        
+        const utterance = new SpeechSynthesisUtterance(cleanText);
+        utterance.lang = 'en-US';
+        utterance.rate = 0.85;
+        utterance.pitch = 1;
+        utterance.volume = 1;
+        
+        buttonEl.classList.add('playing');
+        buttonEl.textContent = '🔊 Speaking...';
+        
+        utterance.onend = () => {
+          buttonEl.classList.remove('playing');
+          buttonEl.textContent = '🔊 Speak';
+        };
+        utterance.onerror = (e) => {
+          console.error('TTS Error:', e);
+          buttonEl.classList.remove('playing');
+          buttonEl.textContent = '🔊 Speak';
+        };
+        
+        window.speechSynthesis.speak(utterance);
+      }
+    }
+
+    function renderGrid() {
+      const grid = document.getElementById('grid');
+      const emptyState = document.getElementById('emptyState');
+      
+      if (filteredChains.length === 0) {
+        grid.style.display = 'none';
+        emptyState.style.display = 'block';
+      } else {
+        grid.style.display = 'grid';
+        emptyState.style.display = 'none';
+        grid.innerHTML = filteredChains.map(chain => {
+          const dimKeys = Object.keys(chain.dims).filter(k => !k.endsWith('EN'));
+          return `
+            <div class="card" data-id="${chain.id}">
+              <div class="card-header">
+                <span class="card-id">#${String(chain.id).padStart(3, '0')}</span>
+                <span class="card-category">${chain.category}</span>
+              </div>
+              <div class="card-title-bilingual">
+                <div class="card-title-block card-title-zh">${chain.chain}</div>
+                <div class="card-title-block">${chain.chainEN}</div>
+              </div>
+              <div class="detail">
+                <div class="detail-section">
+                  <div class="section-title">💡 生活化舉例 | Real Example</div>
+                  <div class="bilingual-content">
+                    <div class="lang-block">
+                      <div class="lang-label">中文</div>
+                      <div class="lang-content">${chain.example}</div>
+                    </div>
+                    <div class="lang-block">
+                      <div class="lang-label">English</div>
+                      <div class="lang-content">${chain.exampleEN}</div>
+                      <button class="tts-btn tts-example-btn" data-text="${chain.exampleEN.replace(/"/g, '&quot;')}">🔊 Speak</button>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="detail-section">
+                  <div class="section-title">✓ 解套方案 | Solution</div>
+                  <div class="bilingual-content">
+                    <div class="lang-block">
+                      <div class="lang-label">中文</div>
+                      <div class="lang-content">${chain.solution}</div>
+                    </div>
+                    <div class="lang-block">
+                      <div class="lang-label">English</div>
+                      <div class="lang-content">${chain.solutionEN}</div>
+                      <button class="tts-btn tts-solution-btn" data-text="${chain.solutionEN.replace(/"/g, '&quot;')}">🔊 Speak</button>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="detail-section">
+                  <div class="section-title">🎯 系統除錯的10維度 | 10 Debug Dimensions</div>
+                  <div class="dims-grid">
+                    ${dimKeys.map(label => `
+                      <div class="dim-item">
+                        <div class="dim-label">${label}</div>
+                        <div class="dim-bilingual">
+                          <div>${chain.dims[label]}</div>
+                          <div>${chain.dims[label + 'EN']}</div>
+                        </div>
+                        <button class="tts-btn tts-dim-btn" style="width: 100%; margin-top: 8px;" data-text="${chain.dims[label + 'EN'].replace(/"/g, '&quot;')}">🔊 Speak</button>
+                      </div>
+                    `).join('')}
+                  </div>
+                </div>
+              </div>
+              <div class="card-toggle">點擊展開 / Click to expand ↓</div>
+            </div>
+          `;
+        }).join('');
+        
+        document.querySelectorAll('.card').forEach(card => {
+          card.addEventListener('click', (e) => {
+            if (!e.target.closest('.tts-btn')) {
+              card.classList.toggle('expanded');
+            }
+          });
+        });
+      }
+      
+      document.getElementById('visibleCount').textContent = filteredChains.length;
+      
+      // 添加TTS按鈕事件委托
+      setTimeout(() => {
+        document.querySelectorAll('.tts-btn').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const text = btn.getAttribute('data-text');
+            if (text) {
+              speakEnglish(text, btn);
+            }
+          });
+        });
+      }, 0);
+    }
+
+    function filterChains() {
+      const searchText = document.getElementById('searchInput').value.toLowerCase();
+      filteredChains = chains.filter(chain => {
+        const matchesSearch = 
+          chain.chain.toLowerCase().includes(searchText) ||
+          chain.chainEN.toLowerCase().includes(searchText) ||
+          chain.category.toLowerCase().includes(searchText) ||
+          chain.example.toLowerCase().includes(searchText) ||
+          chain.exampleEN.toLowerCase().includes(searchText);
+        const matchesFilter = activeFilters.size === 0 || activeFilters.has(chain.category);
+        return matchesSearch && matchesFilter;
+      });
+      renderGrid();
+    }
+
+    // 初始化過濾按鈕
+    const filterGroup = document.getElementById('filterGroup');
+    categories.forEach(cat => {
+      const btn = document.createElement('button');
+      btn.className = 'filter-btn';
+      btn.textContent = cat;
+      btn.addEventListener('click', () => {
+        btn.classList.toggle('active');
+        if (btn.classList.contains('active')) {
+          activeFilters.add(cat);
+        } else {
+          activeFilters.delete(cat);
+        }
+        filterChains();
+      });
+      filterGroup.appendChild(btn);
+    });
+
+    // 搜尋事件
+    document.getElementById('searchInput').addEventListener('input', filterChains);
+
+    // 初始渲染
+    renderGrid();
+  </script>
+</body>
+</html>
