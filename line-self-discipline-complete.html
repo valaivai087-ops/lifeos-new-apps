@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>自律模型 60 項完整版</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: "Microsoft JhengHei", Arial, sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      padding: 20px;
+    }
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    header {
+      background: linear-gradient(135deg, #0D1B3E 0%, #006B7D 100%);
+      color: white;
+      padding: 30px 20px;
+      border-radius: 12px;
+      margin-bottom: 30px;
+      text-align: center;
+    }
+    header h1 {
+      font-size: 2em;
+      margin-bottom: 10px;
+    }
+    .tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    .tab-btn {
+      padding: 10px 20px;
+      border: 2px solid #0D1B3E;
+      background: white;
+      color: #0D1B3E;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1em;
+      font-family: "Microsoft JhengHei", Arial;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+    .tab-btn.active {
+      background: linear-gradient(135deg, #0D1B3E 0%, #006B7D 100%);
+      color: white;
+    }
+    .tab-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+    }
+    .section {
+      background: white;
+      padding: 25px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+    .section h2 {
+      color: #0D1B3E;
+      font-size: 1.6em;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 3px solid #B8860B;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+    }
+    table th {
+      background: linear-gradient(135deg, #0D1B3E 0%, #006B7D 100%);
+      color: white;
+      padding: 15px;
+      text-align: left;
+      font-weight: 600;
+      font-size: 0.95em;
+    }
+    table td {
+      padding: 15px;
+      border-bottom: 1px solid #eee;
+      vertical-align: top;
+    }
+    table tr:nth-child(even) {
+      background: #f9f9f9;
+    }
+    table tr:hover {
+      background: #f0f8ff;
+    }
+    .no {
+      background: #E8F4F8;
+      color: #0D1B3E;
+      font-weight: 600;
+      width: 50px;
+      text-align: center;
+    }
+    .behavior {
+      font-weight: 600;
+      color: #0D1B3E;
+      width: 120px;
+    }
+    .temptation {
+      color: #C23B3B;
+      width: 120px;
+    }
+    .belief {
+      color: #006B7D;
+      width: 140px;
+      font-weight: 600;
+    }
+    .bilingual {
+      color: #333;
+      font-size: 0.9em;
+      line-height: 1.6;
+    }
+    .cn {
+      color: #0D1B3E;
+      font-weight: 600;
+    }
+    .en {
+      color: #006B7D;
+      font-style: italic;
+      font-size: 0.9em;
+      margin-top: 5px;
+    }
+    .highlight {
+      background: #FFF9E6;
+      padding: 20px;
+      border-radius: 8px;
+      border-left: 4px solid #B8860B;
+      margin: 30px 0;
+    }
+    .formula {
+      background: #FFF0E6;
+      padding: 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+      line-height: 2;
+      font-weight: 600;
+      color: #0D1B3E;
+    }
+    .footer {
+      text-align: center;
+      padding: 30px;
+      color: #666;
+      margin-top: 40px;
+      border-top: 2px solid rgba(0,0,0,0.1);
+    }
+    .info-box {
+      background: linear-gradient(135deg, #0D1B3E 0%, #006B7D 100%);
+      color: white;
+      padding: 15px;
+      border-radius: 8px;
+      margin: 20px 0;
+      text-align: center;
+      font-weight: 600;
+    }
+    @media (max-width: 768px) {
+      table {
+        font-size: 0.85em;
+      }
+      table th, table td {
+        padding: 10px;
+      }
+      .behavior, .temptation, .belief {
+        width: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🎯 自律模型 - 60 項完整內容表</h1>
+      <p>欣蓉 | 完整呈現每一項詳細內容 | 雙語金句激勵</p>
+    </header>
+    
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab('part1', event)">1-30 項</button>
+      <button class="tab-btn" onclick="switchTab('part2', event)">31-60 項</button>
+      <button class="tab-btn" onclick="switchTab('model', event)">模型金句</button>
+    </div>
+    
+    <!-- 第 1-30 項 -->
+    <div id="part1" class="tab-content active">
+      <div class="section">
+        <h2>高中生自律模型解套表 - 第 1-30 項</h2>
+        <div class="info-box">自律模型核心：長期目標 ＞ 短期誘惑 = 未來的我 ＞ 現在的爽</div>
+        
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 5%;">序號</th>
+              <th style="width: 18%;">自律行為</th>
+              <th style="width: 18%;">短期誘惑</th>
+              <th style="width: 18%;">解套信念</th>
+              <th style="width: 41%;">雙語金句</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="no">1</td>
+              <td class="behavior">早起</td>
+              <td class="temptation">多睡10分鐘</td>
+              <td class="belief">未來比床更重要</td>
+              <td class="bilingual"><span class="cn">我的未來比床更重要</span><br><span class="en">My future is bigger than my bed.</span></td>
+            </tr>
+            <tr>
+              <td class="no">2</td>
+              <td class="behavior">準時到校</td>
+              <td class="temptation">想拖延</td>
+              <td class="belief">準時是尊重未來</td>
+              <td class="bilingual"><span class="cn">準時是尊重未來</span><br><span class="en">Punctuality respects the future.</span></td>
+            </tr>
+            <tr>
+              <td class="no">3</td>
+              <td class="behavior">背單字</td>
+              <td class="temptation">滑手機</td>
+              <td class="belief">單字會複利</td>
+              <td class="bilingual"><span class="cn">單字會複利</span><br><span class="en">Vocabulary compounds.</span></td>
+            </tr>
+            <tr>
+              <td class="no">4</td>
+              <td class="behavior">晨讀</td>
+              <td class="temptation">想發呆</td>
+              <td class="belief">晨讀塑造大腦</td>
+              <td class="bilingual"><span class="cn">晨讀塑造大腦</span><br><span class="en">Morning reading shapes the brain.</span></td>
+            </tr>
+            <tr>
+              <td class="no">5</td>
+              <td class="behavior">寫作業</td>
+              <td class="temptation">打遊戲</td>
+              <td class="belief">先苦後甜</td>
+              <td class="bilingual"><span class="cn">先努力再享受</span><br><span class="en">Earn pleasure after effort.</span></td>
+            </tr>
+            <tr>
+              <td class="no">6</td>
+              <td class="behavior">訂正考卷</td>
+              <td class="temptation">逃避錯誤</td>
+              <td class="belief">錯題最值錢</td>
+              <td class="bilingual"><span class="cn">錯題最有價值</span><br><span class="en">Mistakes are valuable assets.</span></td>
+            </tr>
+            <tr>
+              <td class="no">7</td>
+              <td class="behavior">整理書桌</td>
+              <td class="temptation">懶得動</td>
+              <td class="belief">環境塑造行為</td>
+              <td class="bilingual"><span class="cn">環境塑造行為</span><br><span class="en">Environment shapes behavior.</span></td>
+            </tr>
+            <tr>
+              <td class="no">8</td>
+              <td class="behavior">整理書包</td>
+              <td class="temptation">覺得麻煩</td>
+              <td class="belief">整理節省時間</td>
+              <td class="bilingual"><span class="cn">整理節省時間</span><br><span class="en">Organization saves time.</span></td>
+            </tr>
+            <tr>
+              <td class="no">9</td>
+              <td class="behavior">上課專心</td>
+              <td class="temptation">偷偷聊天</td>
+              <td class="belief">注意力是資產</td>
+              <td class="bilingual"><span class="cn">注意力是資產</span><br><span class="en">Attention is an asset.</span></td>
+            </tr>
+            <tr>
+              <td class="no">10</td>
+              <td class="behavior">抄筆記</td>
+              <td class="temptation">想放空</td>
+              <td class="belief">筆記是第二大腦</td>
+              <td class="bilingual"><span class="cn">筆記是第二大腦</span><br><span class="en">Notes are a second brain.</span></td>
+            </tr>
+            <tr>
+              <td class="no">11</td>
+              <td class="behavior">問問題</td>
+              <td class="temptation">怕丟臉</td>
+              <td class="belief">提問縮短距離</td>
+              <td class="bilingual"><span class="cn">提問縮短路程</span><br><span class="en">Questions shorten the journey.</span></td>
+            </tr>
+            <tr>
+              <td class="no">12</td>
+              <td class="behavior">做Anki</td>
+              <td class="temptation">覺得煩</td>
+              <td class="belief">記憶靠重複</td>
+              <td class="bilingual"><span class="cn">記憶來自重複</span><br><span class="en">Memory grows through repetition.</span></td>
+            </tr>
+            <tr>
+              <td class="no">13</td>
+              <td class="behavior">練英文聽力</td>
+              <td class="temptation">聽不懂</td>
+              <td class="belief">每次都在進步</td>
+              <td class="bilingual"><span class="cn">每次都在進步</span><br><span class="en">Every listen improves me.</span></td>
+            </tr>
+            <tr>
+              <td class="no">14</td>
+              <td class="behavior">練口說</td>
+              <td class="temptation">怕講錯</td>
+              <td class="belief">錯誤加速成長</td>
+              <td class="bilingual"><span class="cn">錯誤加速成長</span><br><span class="en">Mistakes accelerate growth.</span></td>
+            </tr>
+            <tr>
+              <td class="no">15</td>
+              <td class="behavior">寫作文</td>
+              <td class="temptation">沒靈感</td>
+              <td class="belief">寫作靠累積</td>
+              <td class="bilingual"><span class="cn">寫作靠累積</span><br><span class="en">Writing grows by writing.</span></td>
+            </tr>
+            <tr>
+              <td class="no">16</td>
+              <td class="behavior">複習課本</td>
+              <td class="temptation">覺得無聊</td>
+              <td class="belief">基礎創造實力</td>
+              <td class="bilingual"><span class="cn">基礎創造實力</span><br><span class="en">Basics create strength.</span></td>
+            </tr>
+            <tr>
+              <td class="no">17</td>
+              <td class="behavior">做模考</td>
+              <td class="temptation">怕考差</td>
+              <td class="belief">模考是資料</td>
+              <td class="bilingual"><span class="cn">模考是資料</span><br><span class="en">Mock exams provide data.</span></td>
+            </tr>
+            <tr>
+              <td class="no">18</td>
+              <td class="behavior">面對成績</td>
+              <td class="temptation">不敢看</td>
+              <td class="belief">分數是回饋</td>
+              <td class="bilingual"><span class="cn">分數是回饋</span><br><span class="en">Scores are feedback.</span></td>
+            </tr>
+            <tr>
+              <td class="no">19</td>
+              <td class="behavior">參加讀書會</td>
+              <td class="temptation">想偷懶</td>
+              <td class="belief">同伴提高勝率</td>
+              <td class="bilingual"><span class="cn">同伴提高成功率</span><br><span class="en">Partners improve success.</span></td>
+            </tr>
+            <tr>
+              <td class="no">20</td>
+              <td class="behavior">運動</td>
+              <td class="temptation">想躺平</td>
+              <td class="belief">能量來自行動</td>
+              <td class="bilingual"><span class="cn">能量來自行動</span><br><span class="en">Energy comes from action.</span></td>
+            </tr>
+            <tr>
+              <td class="no">21</td>
+              <td class="behavior">喝水</td>
+              <td class="temptation">喝飲料</td>
+              <td class="belief">身體是本錢</td>
+              <td class="bilingual"><span class="cn">身體是本錢</span><br><span class="en">Health is capital.</span></td>
+            </tr>
+            <tr>
+              <td class="no">22</td>
+              <td class="behavior">吃早餐</td>
+              <td class="temptation">多睡一下</td>
+              <td class="belief">大腦需要燃料</td>
+              <td class="bilingual"><span class="cn">大腦需要燃料</span><br><span class="en">The brain needs fuel.</span></td>
+            </tr>
+            <tr>
+              <td class="no">23</td>
+              <td class="behavior">少喝含糖飲料</td>
+              <td class="temptation">口腹之慾</td>
+              <td class="belief">健康是複利</td>
+              <td class="bilingual"><span class="cn">健康會複利</span><br><span class="en">Health compounds.</span></td>
+            </tr>
+            <tr>
+              <td class="no">24</td>
+              <td class="behavior">早睡</td>
+              <td class="temptation">滑手機</td>
+              <td class="belief">睡眠創造實力</td>
+              <td class="bilingual"><span class="cn">睡眠創造實力</span><br><span class="en">Sleep creates performance.</span></td>
+            </tr>
+            <tr>
+              <td class="no">25</td>
+              <td class="behavior">關手機讀書</td>
+              <td class="temptation">想看通知</td>
+              <td class="belief">專注創造優勢</td>
+              <td class="bilingual"><span class="cn">專注創造優勢</span><br><span class="en">Focus creates advantage.</span></td>
+            </tr>
+            <tr>
+              <td class="no">26</td>
+              <td class="behavior">少看短影音</td>
+              <td class="temptation">追求刺激</td>
+              <td class="belief">深度創造價值</td>
+              <td class="bilingual"><span class="cn">深度創造價值</span><br><span class="en">Depth creates value.</span></td>
+            </tr>
+            <tr>
+              <td class="no">27</td>
+              <td class="behavior">每日閱讀</td>
+              <td class="temptation">想娛樂</td>
+              <td class="belief">閱讀擴大世界</td>
+              <td class="bilingual"><span class="cn">閱讀擴大世界</span><br><span class="en">Reading expands worlds.</span></td>
+            </tr>
+            <tr>
+              <td class="no">28</td>
+              <td class="behavior">寫反思日記</td>
+              <td class="temptation">懶得寫</td>
+              <td class="belief">反思創造智慧</td>
+              <td class="bilingual"><span class="cn">反思創造智慧</span><br><span class="en">Reflection creates wisdom.</span></td>
+            </tr>
+            <tr>
+              <td class="no">29</td>
+              <td class="behavior">設定目標</td>
+              <td class="temptation">覺得麻煩</td>
+              <td class="belief">方向大於速度</td>
+              <td class="bilingual"><span class="cn">方向勝過速度</span><br><span class="en">Direction beats speed.</span></td>
+            </tr>
+            <tr>
+              <td class="no">30</td>
+              <td class="behavior">每天進步1%</td>
+              <td class="temptation">看不到成果</td>
+              <td class="belief">複利終將爆發</td>
+              <td class="bilingual"><span class="cn">複利終將爆發</span><br><span class="en">Compounding will explode.</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    
+    <!-- 第 31-60 項 -->
+    <div id="part2" class="tab-content">
+      <div class="section">
+        <h2>高中生自律模型解套表 - 第 31-60 項</h2>
+        <div class="info-box">深層自律：從戒除誘惑升級到建立習慣系統</div>
+        
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 5%;">序號</th>
+              <th style="width: 18%;">自律行為</th>
+              <th style="width: 18%;">短期誘惑</th>
+              <th style="width: 18%;">解套信念</th>
+              <th style="width: 41%;">雙語金句</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="no">31</td>
+              <td class="behavior">戒熬夜</td>
+              <td class="temptation">多玩一下</td>
+              <td class="belief">明天的我會感謝今天</td>
+              <td class="bilingual"><span class="cn">明天感謝今天</span><br><span class="en">Tomorrow thanks today.</span></td>
+            </tr>
+            <tr>
+              <td class="no">32</td>
+              <td class="behavior">戒拖延</td>
+              <td class="temptation">晚點再做</td>
+              <td class="belief">現在開始最便宜</td>
+              <td class="bilingual"><span class="cn">現在開始成本最低</span><br><span class="en">Now is the cheapest time.</span></td>
+            </tr>
+            <tr>
+              <td class="no">33</td>
+              <td class="behavior">戒抱怨</td>
+              <td class="temptation">發洩情緒</td>
+              <td class="belief">抱怨消耗能量</td>
+              <td class="bilingual"><span class="cn">抱怨消耗能量</span><br><span class="en">Complaints drain energy.</span></td>
+            </tr>
+            <tr>
+              <td class="no">34</td>
+              <td class="behavior">戒藉口</td>
+              <td class="temptation">推卸責任</td>
+              <td class="belief">責任創造力量</td>
+              <td class="bilingual"><span class="cn">責任創造力量</span><br><span class="en">Responsibility creates power.</span></td>
+            </tr>
+            <tr>
+              <td class="no">35</td>
+              <td class="behavior">戒依賴</td>
+              <td class="temptation">求助別人</td>
+              <td class="belief">獨立才是能力</td>
+              <td class="bilingual"><span class="cn">獨立建立能力</span><br><span class="en">Independence builds capability.</span></td>
+            </tr>
+            <tr>
+              <td class="no">36</td>
+              <td class="behavior">戒遊戲</td>
+              <td class="temptation">再玩一場</td>
+              <td class="belief">自由大於刺激</td>
+              <td class="bilingual"><span class="cn">自由勝過快感</span><br><span class="en">Freedom beats pleasure.</span></td>
+            </tr>
+            <tr>
+              <td class="no">37</td>
+              <td class="behavior">戒購物</td>
+              <td class="temptation">衝動消費</td>
+              <td class="belief">克制創造財富</td>
+              <td class="bilingual"><span class="cn">紀律創造財富</span><br><span class="en">Discipline creates wealth.</span></td>
+            </tr>
+            <tr>
+              <td class="no">38</td>
+              <td class="behavior">戒消極</td>
+              <td class="temptation">自暴自棄</td>
+              <td class="belief">信念創造未來</td>
+              <td class="bilingual"><span class="cn">信念創造未來</span><br><span class="en">Belief creates future.</span></td>
+            </tr>
+            <tr>
+              <td class="no">39</td>
+              <td class="behavior">每天整理房間</td>
+              <td class="temptation">覺得沒差</td>
+              <td class="belief">秩序創造效率</td>
+              <td class="bilingual"><span class="cn">秩序創造效率</span><br><span class="en">Order creates efficiency.</span></td>
+            </tr>
+            <tr>
+              <td class="no">40</td>
+              <td class="behavior">每天規劃行程</td>
+              <td class="temptation">隨便過</td>
+              <td class="belief">計畫提高勝率</td>
+              <td class="bilingual"><span class="cn">計畫提高勝率</span><br><span class="en">Planning increases success.</span></td>
+            </tr>
+            <tr>
+              <td class="no">41</td>
+              <td class="behavior">練數學</td>
+              <td class="temptation">怕不會</td>
+              <td class="belief">困難在訓練大腦</td>
+              <td class="bilingual"><span class="cn">困難訓練大腦</span><br><span class="en">Difficulty trains the brain.</span></td>
+            </tr>
+            <tr>
+              <td class="no">42</td>
+              <td class="behavior">背醫學英文</td>
+              <td class="temptation">太難</td>
+              <td class="belief">難事創造優勢</td>
+              <td class="bilingual"><span class="cn">困難創造優勢</span><br><span class="en">Hard things create advantage.</span></td>
+            </tr>
+            <tr>
+              <td class="no">43</td>
+              <td class="behavior">學AI工具</td>
+              <td class="temptation">想放棄</td>
+              <td class="belief">AI是未來槓桿</td>
+              <td class="bilingual"><span class="cn">AI是未來槓桿</span><br><span class="en">AI is future leverage.</span></td>
+            </tr>
+            <tr>
+              <td class="no">44</td>
+              <td class="behavior">參加活動</td>
+              <td class="temptation">怕麻煩</td>
+              <td class="belief">經驗比舒適重要</td>
+              <td class="bilingual"><span class="cn">經驗勝過舒適</span><br><span class="en">Experience beats comfort.</span></td>
+            </tr>
+            <tr>
+              <td class="no">45</td>
+              <td class="behavior">練演講</td>
+              <td class="temptation">怕尷尬</td>
+              <td class="belief">勇氣來自行動</td>
+              <td class="bilingual"><span class="cn">勇氣來自行動</span><br><span class="en">Courage comes from action.</span></td>
+            </tr>
+            <tr>
+              <td class="no">46</td>
+              <td class="behavior">改善人際</td>
+              <td class="temptation">怕被拒絕</td>
+              <td class="belief">關係是資產</td>
+              <td class="bilingual"><span class="cn">關係是資產</span><br><span class="en">Relationships are assets.</span></td>
+            </tr>
+            <tr>
+              <td class="no">47</td>
+              <td class="behavior">學新技能</td>
+              <td class="temptation">怕失敗</td>
+              <td class="belief">新手期必經</td>
+              <td class="bilingual"><span class="cn">每個高手都曾是新手</span><br><span class="en">Every master was a beginner.</span></td>
+            </tr>
+            <tr>
+              <td class="no">48</td>
+              <td class="behavior">存零用錢</td>
+              <td class="temptation">想花掉</td>
+              <td class="belief">財富來自紀律</td>
+              <td class="bilingual"><span class="cn">財富來自紀律</span><br><span class="en">Wealth comes from discipline.</span></td>
+            </tr>
+            <tr>
+              <td class="no">49</td>
+              <td class="behavior">少買衝動商品</td>
+              <td class="temptation">當下爽</td>
+              <td class="belief">自由大於享受</td>
+              <td class="bilingual"><span class="cn">自由勝過享受</span><br><span class="en">Freedom beats pleasure.</span></td>
+            </tr>
+            <tr>
+              <td class="no">50</td>
+              <td class="behavior">控制遊戲時間</td>
+              <td class="temptation">再玩一場</td>
+              <td class="belief">時間是生命</td>
+              <td class="bilingual"><span class="cn">時間就是生命</span><br><span class="en">Time is life.</span></td>
+            </tr>
+            <tr>
+              <td class="no">51</td>
+              <td class="behavior">控制社群時間</td>
+              <td class="temptation">一直滑</td>
+              <td class="belief">注意力是命運</td>
+              <td class="bilingual"><span class="cn">注意力塑造命運</span><br><span class="en">Attention shapes destiny.</span></td>
+            </tr>
+            <tr>
+              <td class="no">52</td>
+              <td class="behavior">每天感恩</td>
+              <td class="temptation">忘記做</td>
+              <td class="belief">感恩創造幸福</td>
+              <td class="bilingual"><span class="cn">感恩創造幸福</span><br><span class="en">Gratitude creates happiness.</span></td>
+            </tr>
+            <tr>
+              <td class="no">53</td>
+              <td class="behavior">每天反思</td>
+              <td class="temptation">懶得想</td>
+              <td class="belief">反思加速進化</td>
+              <td class="bilingual"><span class="cn">反思加速進化</span><br><span class="en">Reflection accelerates growth.</span></td>
+            </tr>
+            <tr>
+              <td class="no">54</td>
+              <td class="behavior">持續練習</td>
+              <td class="temptation">看不到成果</td>
+              <td class="belief">看不見不等於不存在</td>
+              <td class="bilingual"><span class="cn">看不見的成長依然存在</span><br><span class="en">Invisible growth still exists.</span></td>
+            </tr>
+            <tr>
+              <td class="no">55</td>
+              <td class="behavior">堅持半年</td>
+              <td class="temptation">想放棄</td>
+              <td class="belief">半年後會感謝現在</td>
+              <td class="bilingual"><span class="cn">未來的你會感謝現在</span><br><span class="en">Future you will be grateful.</span></td>
+            </tr>
+            <tr>
+              <td class="no">56</td>
+              <td class="behavior">持續一年</td>
+              <td class="temptation">沒耐心</td>
+              <td class="belief">複利需要時間</td>
+              <td class="bilingual"><span class="cn">複利需要時間</span><br><span class="en">Compounding needs time.</span></td>
+            </tr>
+            <tr>
+              <td class="no">57</td>
+              <td class="behavior">守信用</td>
+              <td class="temptation">覺得沒差</td>
+              <td class="belief">信任是資產</td>
+              <td class="bilingual"><span class="cn">信任是資產</span><br><span class="en">Trust is an asset.</span></td>
+            </tr>
+            <tr>
+              <td class="no">58</td>
+              <td class="behavior">持續更新自己</td>
+              <td class="temptation">安於現狀</td>
+              <td class="belief">停止成長就是退步</td>
+              <td class="bilingual"><span class="cn">停止成長就是退步</span><br><span class="en">Stopping growth means decline.</span></td>
+            </tr>
+            <tr>
+              <td class="no">59</td>
+              <td class="behavior">每天做對一件事</td>
+              <td class="temptation">太小了</td>
+              <td class="belief">小事累積大事</td>
+              <td class="bilingual"><span class="cn">小事累積大事</span><br><span class="en">Small things become big things.</span></td>
+            </tr>
+            <tr>
+              <td class="no">60</td>
+              <td class="behavior">成為更好的自己</td>
+              <td class="temptation">很辛苦</td>
+              <td class="belief">未來值得現在努力</td>
+              <td class="bilingual"><span class="cn">未來值得今天努力</span><br><span class="en">The future is worth today's effort.</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    
+    <!-- 模型金句 -->
+    <div id="model" class="tab-content">
+      <div class="section">
+        <h2>🎯 自律模型終極金句</h2>
+        
+        <div class="highlight">
+          <h3 style="margin-top: 0; color: #0D1B3E; font-size: 1.5em;">自律的本質定義</h3>
+          <div style="font-size: 1.3em; margin: 25px 0; line-height: 2.2; color: #0D1B3E; font-weight: 600;">
+            自律不是壓迫自己<br>
+            而是讓未來的自己<br>
+            大於現在的誘惑
+          </div>
+          <div style="color: #006B7D; font-style: italic; font-size: 1.1em; margin: 25px 0;">
+            <strong>Discipline is not self-punishment.</strong><br>
+            <strong>It is letting your future self become more important than your present temptation.</strong>
+          </div>
+        </div>
+        
+        <div class="formula">
+          <h3 style="margin-top: 0; color: #0D1B3E;">自律升級的循環系統</h3>
+          <div style="text-align: center; color: #0D1B3E; font-size: 1.2em; line-height: 3;">
+            <div>未來感 ↓</div>
+            <div>身份感 ↓</div>
+            <div>自律 ↓</div>
+            <div>能力 ↓</div>
+            <div>成就感 ↓</div>
+            <div style="color: #B8860B; font-size: 1.4em; font-weight: 700;">人生升級 ↑</div>
+          </div>
+        </div>
+        
+        <div class="highlight">
+          <h3 style="margin-top: 0; color: #0D1B3E;">自律模型核心公式</h3>
+          <div style="font-size: 1.15em; margin: 20px 0; line-height: 2; color: #0D1B3E; font-weight: 600;">
+            長期目標 ＞ 短期誘惑<br>
+            ↓<br>
+            未來的我 ＞ 現在的爽<br>
+            ↓<br>
+            <span style="color: #B8860B; font-size: 1.3em;">自律產生</span>
+          </div>
+        </div>
+        
+        <div class="highlight">
+          <h3 style="margin-top: 0; color: #0D1B3E;">60 項自律行為的層級結構</h3>
+          <div style="margin: 20px 0; color: #333; line-height: 2;">
+            <div style="margin-bottom: 15px;">
+              <span style="background: #E8F4F8; padding: 8px 15px; border-radius: 20px; font-weight: 600; color: #0D1B3E;">🎯 第1層（1-10項）</span><br>
+              <span style="color: #666; margin-left: 20px;">基礎行為培養：早起、背單字、上課專心等日常自律</span>
+            </div>
+            <div style="margin-bottom: 15px;">
+              <span style="background: #E8F4F8; padding: 8px 15px; border-radius: 20px; font-weight: 600; color: #0D1B3E;">🎯 第2層（11-30項）</span><br>
+              <span style="color: #666; margin-left: 20px;">深化學習系統：練習各科目、做模考、健康管理</span>
+            </div>
+            <div style="margin-bottom: 15px;">
+              <span style="background: #E8F4F8; padding: 8px 15px; border-radius: 20px; font-weight: 600; color: #0D1B3E;">🎯 第3層（31-50項）</span><br>
+              <span style="color: #666; margin-left: 20px;">戒除誘惑升級：戒熬夜、戒拖延、戒消極，學習新技能</span>
+            </div>
+            <div style="margin-bottom: 15px;">
+              <span style="background: #E8F4F8; padding: 8px 15px; border-radius: 20px; font-weight: 600; color: #0D1B3E;">🎯 第4層（51-60項）</span><br>
+              <span style="color: #666; margin-left: 20px;">長期複利維持：堅持、感恩、反思，成為更好的自己</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="footer">
+      <p>✅ <strong>自律模型 60 項完整詳細內容已全部展開</strong></p>
+      <p>📊 每一項都包含：自律行為 | 短期誘惑 | 解套信念 | 雙語金句</p>
+      <p style="margin-top: 20px; font-size: 0.9em;">最後更新：2026年7月1日 | 版本 v3.0 - 完整詳細版</p>
+    </div>
+  </div>
+
+  <script>
+    function switchTab(tabName, event) {
+      event.preventDefault();
+      const tabs = document.querySelectorAll('.tab-content');
+      tabs.forEach(tab => tab.classList.remove('active'));
+      const buttons = document.querySelectorAll('.tab-btn');
+      buttons.forEach(btn => btn.classList.remove('active'));
+      document.getElementById(tabName).classList.add('active');
+      event.target.classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  </script>
+</body>
+</html>
