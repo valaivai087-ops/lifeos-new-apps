@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>9大身分OS對比系統</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft JhengHei', 'PingFang TC', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background-color: #ffffff;
+            color: #1A2B5F;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, #1A2B5F 0%, #0A7A72 100%);
+            color: white;
+            padding: 40px 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(26, 43, 95, 0.15);
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        header p {
+            font-size: 1.1em;
+            opacity: 0.95;
+            font-weight: 300;
+        }
+
+        /* Tab Navigation */
+        .tab-nav {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 12px 20px;
+            border: 2px solid #C9960C;
+            background: white;
+            color: #1A2B5F;
+            cursor: pointer;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.95em;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .tab-btn:hover {
+            background: #FFF8E7;
+            transform: translateY(-2px);
+        }
+
+        .tab-btn.active {
+            background: #C9960C;
+            color: white;
+            box-shadow: 0 4px 8px rgba(201, 150, 12, 0.3);
+        }
+
+        /* Content Area */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Card Grid */
+        .card-grid {
+            display: grid;
+            gap: 16px;
+        }
+
+        /* Card */
+        .dimension-card {
+            background: white;
+            border: 2px solid #0A7A72;
+            border-radius: 8px;
+            padding: 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+        }
+
+        .dimension-card:hover {
+            border-color: #C9960C;
+            box-shadow: 0 4px 12px rgba(201, 150, 12, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .dimension-card.expanded {
+            border-color: #C9960C;
+            background: #FFF8E7;
+        }
+
+        .card-header {
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 2px solid #E8E8E8;
+        }
+
+        .card-header.expanded {
+            border-bottom-color: #C9960C;
+        }
+
+        .dimension-num {
+            font-weight: 700;
+            color: #C9960C;
+            margin-right: 12px;
+            min-width: 50px;
+        }
+
+        .dimension-title {
+            font-weight: 600;
+            font-size: 1.05em;
+            flex: 1;
+        }
+
+        .expand-icon {
+            font-size: 1.5em;
+            color: #0A7A72;
+            transition: transform 0.3s ease;
+        }
+
+        .dimension-card.expanded .expand-icon {
+            transform: rotate(180deg);
+        }
+
+        .card-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .dimension-card.expanded .card-content {
+            max-height: 800px;
+        }
+
+        .comparison-box {
+            padding: 16px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .side-column {
+            padding: 16px;
+            border-radius: 6px;
+        }
+
+        .left-side {
+            background: #F0F8F7;
+            border-left: 4px solid #C94444;
+        }
+
+        .right-side {
+            background: #F8F4E6;
+            border-left: 4px solid #1A7A6B;
+        }
+
+        .identity-name {
+            font-weight: 700;
+            font-size: 1.1em;
+            margin-bottom: 12px;
+            color: #1A2B5F;
+        }
+
+        .dimension-text {
+            margin-bottom: 10px;
+            line-height: 1.7;
+            font-size: 1em;
+        }
+
+        .english-text {
+            font-size: 0.9em;
+            color: #666;
+            font-style: italic;
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid rgba(0,0,0,0.1);
+        }
+
+        /* TTS Button */
+        .tts-btn {
+            background: #0A7A72;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85em;
+            margin-top: 8px;
+            transition: all 0.2s ease;
+            display: inline-block;
+        }
+
+        .tts-btn:hover {
+            background: #1A5F55;
+            transform: scale(1.05);
+        }
+
+        .tts-btn.playing {
+            background: #C9960C;
+            animation: pulse 0.6s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        /* Summary Box */
+        .summary-box {
+            background: linear-gradient(135deg, #F8F4E6 0%, #F0F8F7 100%);
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #C9960C;
+            margin-bottom: 20px;
+            font-size: 1em;
+            line-height: 1.8;
+        }
+
+        .summary-title {
+            font-weight: 700;
+            color: #1A2B5F;
+            margin-bottom: 12px;
+            font-size: 1.15em;
+        }
+
+        /* Formula Box */
+        .formula-box {
+            background: #1A2B5F;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 0.95em;
+            line-height: 2.2;
+            font-weight: 500;
+        }
+
+        .formula-box .arrow {
+            color: #C9960C;
+            margin: 0 6px;
+        }
+
+        /* Stats */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #1A2B5F 0%, #0A7A72 100%);
+            color: white;
+            padding: 16px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: 700;
+            color: #C9960C;
+        }
+
+        .stat-label {
+            font-size: 0.95em;
+            margin-top: 6px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8em;
+            }
+
+            .comparison-box {
+                grid-template-columns: 1fr;
+            }
+
+            .dimension-card.expanded .card-content {
+                max-height: 1200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>✨ 9大身分OS對比系統</h1>
+            <p>深度剖析160+個人生維度 • 探索9種核心身分認同 • 中英雙語 🔊</p>
+        </header>
+
+        <div class="stats-row">
+            <div class="stat-card">
+                <div class="stat-number">9</div>
+                <div class="stat-label">身分對比</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">450+</div>
+                <div class="stat-label">人生維度</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">∞</div>
+                <div class="stat-label">成長可能性</div>
+            </div>
+        </div>
+
+        <div class="tab-nav">
+            <button class="tab-btn active" onclick="switchTab(0)">📖 受害者 vs 學習者</button>
+            <button class="tab-btn" onclick="switchTab(1)">😨 恐懼者 vs 創造者</button>
+            <button class="tab-btn" onclick="switchTab(2)">🔗 依賴者 vs 自主者</button>
+            <button class="tab-btn" onclick="switchTab(3)">🎯 比較者 vs 超越者</button>
+            <button class="tab-btn" onclick="switchTab(4)">🌙 逃避者 vs 面對者</button>
+            <button class="tab-btn" onclick="switchTab(5)">🔄 固化者 vs 演化者</button>
+            <button class="tab-btn" onclick="switchTab(6)">🎭 偽裝者 vs 真實者</button>
+            <button class="tab-btn" onclick="switchTab(7)">⚡ 消耗者 vs 創造者</button>
+            <button class="tab-btn" onclick="switchTab(8)">🎨 被動者 vs 設計者</button>
+        </div>
+
+        <div id="tab0" class="tab-content active"></div>
+        <div id="tab1" class="tab-content"></div>
+        <div id="tab2" class="tab-content"></div>
+        <div id="tab3" class="tab-content"></div>
+        <div id="tab4" class="tab-content"></div>
+        <div id="tab5" class="tab-content"></div>
+        <div id="tab6" class="tab-content"></div>
+        <div id="tab7" class="tab-content"></div>
+        <div id="tab8" class="tab-content"></div>
+    </div>
+
+    <script>
+        // 數據結構：包含中英文翻譯
+        const identitySystems = [
+            {
+                name: "受害者 vs 學習者",
+                name_en: "Victim OS vs Learner OS",
+                summary: "受害者相信：世界決定我。學習者相信：我的模型決定我的世界。真正改變命運的，不是事件，而是事件進入大腦後所啟動的世界模型。",
+                formula: [
+                    { label: "受害者公式", color: "red", steps: ["事件", "情緒", "抱怨", "停止更新", "能力停滯", "命運重複"] },
+                    { label: "學習者公式", color: "green", steps: ["事件", "回饋", "理解", "更新", "能力生成", "價值創造", "自由增加", "命運升維"] }
+                ],
+                left_name: "受害者",
+                left_name_en: "Victim",
+                right_name: "學習者",
+                right_name_en: "Learner",
+                dimensions: [
+                    { num: 1, zh: "本體定位", zh_left: "人生發生在我身上", zh_right: "人生透過我更新", en_left: "Life happens to me", en_right: "Life updates through me" },
+                    { num: 2, zh: "世界觀", zh_left: "世界充滿威脅", zh_right: "世界充滿回饋", en_left: "World is full of threats", en_right: "World is full of feedback" },
+                    { num: 3, zh: "核心信念", zh_left: "我沒有力量", zh_right: "我可以持續成長", en_left: "I am powerless", en_right: "I can grow continuously" },
+                    { num: 4, zh: "身份認同", zh_left: "我是受害者", zh_right: "我是學習者", en_left: "I am a victim", en_right: "I am a learner" },
+                    { num: 5, zh: "人生目標", zh_left: "避免痛苦", zh_right: "建立能力", en_left: "Avoid pain", en_right: "Build capability" },
+                    { num: 6, zh: "目標函數", zh_left: "降低不舒服", zh_right: "提高適應力", en_left: "Reduce discomfort", en_right: "Increase resilience" },
+                    { num: 7, zh: "注意力", zh_left: "誰害我", zh_right: "我學到什麼", en_left: "Who hurt me", en_right: "What did I learn" },
+                    { num: 8, zh: "核心問題", zh_left: "為什麼是我？", zh_right: "我要更新什麼？", en_left: "Why me?", en_right: "What should I update?" },
+                    { num: 9, zh: "事件定義", zh_left: "傷害", zh_right: "教材", en_left: "Harm", en_right: "Teaching material" },
+                    { num: 10, zh: "失敗定義", zh_left: "否定自己", zh_right: "更新資料", en_left: "Self-denial", en_right: "Data update" },
+                    { num: 11, zh: "錯誤定義", zh_left: "丟臉", zh_right: "回饋", en_left: "Shame", en_right: "Feedback" },
+                    { num: 12, zh: "痛苦定義", zh_left: "懲罰", zh_right: "更新通知", en_left: "Punishment", en_right: "Update signal" },
+                    { num: 13, zh: "問題定義", zh_left: "阻礙", zh_right: "能力入口", en_left: "Obstacle", en_right: "Capability door" },
+                    { num: 14, zh: "限制定義", zh_left: "命運", zh_right: "槓桿點", en_left: "Fate", en_right: "Leverage point" },
+                    { num: 15, zh: "情緒來源", zh_left: "外在環境", zh_right: "預測模型", en_left: "External environment", en_right: "Prediction model" },
+                    { num: 16, zh: "主要情緒", zh_left: "委屈、憤怒、焦慮、恐懼", zh_right: "好奇、平靜、希望、勇氣", en_left: "Grievance, anger, anxiety, fear", en_right: "Curiosity, calm, hope, courage" },
+                    { num: 17, zh: "思考模式", zh_left: "二元思考", zh_right: "系統思考", en_left: "Binary thinking", en_right: "Systems thinking" },
+                    { num: 18, zh: "解釋模式", zh_left: "找故事", zh_right: "找機制", en_left: "Find story", en_right: "Find mechanism" },
+                    { num: 19, zh: "因果模型", zh_left: "怪別人", zh_right: "找結構", en_left: "Blame others", en_right: "Find structure" },
+                    { num: 20, zh: "控制模式", zh_left: "控制外界", zh_right: "更新自己", en_left: "Control environment", en_right: "Update self" },
+                ]
+            },
+            {
+                name: "恐懼者 vs 創造者",
+                name_en: "Fearer OS vs Creator OS",
+                summary: "恐懼者的大腦主要目標是「活下來」，持續掃描威脅、避免風險；創造者的大腦主要目標是「創造未來」，持續建立能力、創造價值。真正拉開人生差距的，不是能力起點，而是大腦每天服務的是「恐懼」，還是「願景」。",
+                formula: [
+                    { label: "恐懼者公式", color: "red", steps: ["威脅", "恐懼", "逃避", "能力下降", "選擇減少", "自由下降", "命運收縮"] },
+                    { label: "創造者公式", color: "green", steps: ["願景", "行動", "回饋", "能力提升", "價值創造", "自由增加", "命運擴張"] }
+                ],
+                left_name: "恐懼者",
+                left_name_en: "Fearer",
+                right_name: "創造者",
+                right_name_en: "Creator",
+                dimensions: [
+                    { num: 1, zh: "本質", zh_left: "避免失去", zh_right: "創造價值", en_left: "Avoid loss", en_right: "Create value" },
+                    { num: 2, zh: "核心驅動", zh_left: "威脅", zh_right: "願景", en_left: "Threat", en_right: "Vision" },
+                    { num: 3, zh: "世界觀", zh_left: "世界充滿危險", zh_right: "世界充滿機會", en_left: "World full of danger", en_right: "World full of opportunities" },
+                    { num: 4, zh: "身份", zh_left: "我必須保護自己", zh_right: "我可以創造未來", en_left: "I must protect myself", en_right: "I can create the future" },
+                    { num: 5, zh: "核心信念", zh_left: "我不夠安全", zh_right: "我可以建立安全", en_left: "I'm not safe enough", en_right: "I can build safety" },
+                    { num: 6, zh: "人生定位", zh_left: "生存者", zh_right: "創造者", en_left: "Survivor", en_right: "Creator" },
+                    { num: 7, zh: "目標函數", zh_left: "降低風險", zh_right: "提高價值", en_left: "Reduce risk", en_right: "Increase value" },
+                    { num: 8, zh: "第一反應", zh_left: "逃避", zh_right: "嘗試", en_left: "Escape", en_right: "Try" },
+                    { num: 9, zh: "思維起點", zh_left: "如果失敗呢", zh_right: "如何開始", en_left: "What if I fail?", en_right: "How to begin?" },
+                    { num: 10, zh: "注意力", zh_left: "問題", zh_right: "機會", en_left: "Problems", en_right: "Opportunities" },
+                    { num: 11, zh: "焦點", zh_left: "障礙", zh_right: "方法", en_left: "Obstacles", en_right: "Methods" },
+                    { num: 12, zh: "問題定義", zh_left: "危險", zh_right: "挑戰", en_left: "Danger", en_right: "Challenge" },
+                    { num: 13, zh: "困難定義", zh_left: "阻礙", zh_right: "訓練", en_left: "Hindrance", en_right: "Training" },
+                    { num: 14, zh: "未知", zh_left: "威脅", zh_right: "探索", en_left: "Threat", en_right: "Exploration" },
+                    { num: 15, zh: "改變", zh_left: "焦慮", zh_right: "成長", en_left: "Anxiety", en_right: "Growth" },
+                    { num: 16, zh: "風險", zh_left: "避開", zh_right: "評估後承擔", en_left: "Avoid", en_right: "Assess then take" },
+                    { num: 17, zh: "壓力", zh_left: "消耗", zh_right: "適應", en_left: "Drain", en_right: "Adapt" },
+                    { num: 18, zh: "恐懼", zh_left: "停止", zh_right: "行動", en_left: "Stop", en_right: "Act" },
+                    { num: 19, zh: "焦慮", zh_left: "反覆思考", zh_right: "建立能力", en_left: "Ruminate", en_right: "Build skill" },
+                    { num: 20, zh: "挫折", zh_left: "放棄", zh_right: "修正", en_left: "Give up", en_right: "Adjust" },
+                ]
+            }
+        ];
+
+        // 其他7個身分對比
+        const additionalSystems = [
+            {
+                name: "依賴者 vs 自主者",
+                left_name: "依賴者", left_name_en: "Dependent",
+                right_name: "自主者", right_name_en: "Autonomous",
+                dimensions: [
+                    { num: 1, zh: "決策來源", zh_left: "他人意見", zh_right: "內在價值觀", en_left: "Others' opinions", en_right: "Inner values" },
+                    { num: 2, zh: "行動驅動", zh_left: "尋求認可", zh_right: "內在使命", en_left: "Seek approval", en_right: "Inner purpose" },
+                    { num: 3, zh: "責任心", zh_left: "推諉給環境", zh_right: "承擔責任", en_left: "Blame environment", en_right: "Take responsibility" },
+                    { num: 4, zh: "情感依附", zh_left: "過度依賴", zh_right: "健康邊界", en_left: "Over-dependent", en_right: "Healthy boundaries" },
+                    { num: 5, zh: "自我評價", zh_left: "基於他人看法", zh_right: "基於能力成長", en_left: "Based on others", en_right: "Based on growth" },
+                    { num: 6, zh: "時間管理", zh_left: "被安排", zh_right: "主動規劃", en_left: "Arranged", en_right: "Self-planned" },
+                    { num: 7, zh: "資源配置", zh_left: "他人分配", zh_right: "自我決定", en_left: "Others decide", en_right: "Self-decide" },
+                    { num: 8, zh: "風險承擔", zh_left: "避免風險", zh_right: "評估後承擔", en_left: "Avoid risk", en_right: "Assess then take" },
+                    { num: 9, zh: "問題解決", zh_left: "請求幫助", zh_right: "自己思考", en_left: "Ask for help", en_right: "Think independently" },
+                    { num: 10, zh: "未來規劃", zh_left: "隨遇而安", zh_right: "主動設計", en_left: "Go with flow", en_right: "Design actively" },
+                ]
+            },
+            {
+                name: "比較者 vs 超越者",
+                left_name: "比較者", left_name_en: "Comparer",
+                right_name: "超越者", right_name_en: "Transcender",
+                dimensions: [
+                    { num: 1, zh: "參考系", zh_left: "他人表現", zh_right: "昨天的自己", en_left: "Others' performance", en_right: "Yesterday's self" },
+                    { num: 2, zh: "成功定義", zh_left: "贏過別人", zh_right: "超越自我", en_left: "Win over others", en_right: "Exceed myself" },
+                    { num: 3, zh: "情緒波動", zh_left: "看他人", zh_right: "看進度", en_left: "Watch others", en_right: "Track progress" },
+                    { num: 4, zh: "學習動力", zh_left: "怕被超越", zh_right: "想持續成長", en_left: "Fear being surpassed", en_right: "Want continuous growth" },
+                    { num: 5, zh: "關係模式", zh_left: "競爭心態", zh_right: "相互成長", en_left: "Competitive mindset", en_right: "Mutual growth" },
+                    { num: 6, zh: "成功反應", zh_left: "自滿", zh_right: "謙虛精進", en_left: "Complacent", en_right: "Humble improvement" },
+                    { num: 7, zh: "失敗反應", zh_left: "怨他人", zh_right: "自我檢視", en_left: "Blame others", en_right: "Self-reflect" },
+                    { num: 8, zh: "數據使用", zh_left: "證明優勢", zh_right: "找出差距", en_left: "Prove superiority", en_right: "Identify gaps" },
+                    { num: 9, zh: "社交媒體", zh_left: "展示優越", zh_right: "分享學習", en_left: "Show off", en_right: "Share learning" },
+                    { num: 10, zh: "最終結果", zh_left: "內耗耗盡", zh_right: "能力飆升", en_left: "Internal drain", en_right: "Skills soar" },
+                ]
+            },
+            {
+                name: "逃避者 vs 面對者",
+                left_name: "逃避者", left_name_en: "Avoider",
+                right_name: "面對者", right_name_en: "Confronter",
+                dimensions: [
+                    { num: 1, zh: "困難反應", zh_left: "逃避", zh_right: "面對", en_left: "Run away", en_right: "Face it" },
+                    { num: 2, zh: "痛苦處理", zh_left: "轉移", zh_right: "感受", en_left: "Distract", en_right: "Feel it" },
+                    { num: 3, zh: "決定推延", zh_left: "一再延後", zh_right: "主動決定", en_left: "Keep postponing", en_right: "Decide actively" },
+                    { num: 4, zh: "真相接納", zh_left: "否認", zh_right: "接受", en_left: "Deny", en_right: "Accept" },
+                    { num: 5, zh: "情緒坦誠", zh_left: "隱瞞", zh_right: "表達", en_left: "Hide", en_right: "Express" },
+                    { num: 6, zh: "問題承認", zh_left: "視而不見", zh_right: "正面看待", en_left: "Ignore", en_right: "Address head-on" },
+                    { num: 7, zh: "關係處理", zh_left: "冷戰", zh_right: "溝通", en_left: "Silent treatment", en_right: "Communicate" },
+                    { num: 8, zh: "改變承諾", zh_left: "口頭", zh_right: "行動", en_left: "Words only", en_right: "Take action" },
+                    { num: 9, zh: "結果承擔", zh_left: "責備他人", zh_right: "承擔後果", en_left: "Blame others", en_right: "Own outcome" },
+                    { num: 10, zh: "靈魂成長", zh_left: "停滯", zh_right: "深化", en_left: "Stagnant", en_right: "Deepen" },
+                ]
+            },
+            {
+                name: "固化者 vs 演化者",
+                left_name: "固化者", left_name_en: "Stagnant",
+                right_name: "演化者", right_name_en: "Evolving",
+                dimensions: [
+                    { num: 1, zh: "思維模式", zh_left: "固定思維", zh_right: "成長思維", en_left: "Fixed mindset", en_right: "Growth mindset" },
+                    { num: 2, zh: "能力觀", zh_left: "天生決定", zh_right: "後天培養", en_left: "Born talent", en_right: "Developed skill" },
+                    { num: 3, zh: "學習態度", zh_left: "已知足夠", zh_right: "永遠探索", en_left: "Know enough", en_right: "Always explore" },
+                    { num: 4, zh: "改變看法", zh_left: "很難改", zh_right: "持續調整", en_left: "Hard to change", en_right: "Keep adjusting" },
+                    { num: 5, zh: "錯誤態度", zh_left: "證明無能", zh_right: "改進機會", en_left: "Proves inability", en_right: "Chance to improve" },
+                    { num: 6, zh: "批評反應", zh_left: "防衛", zh_right: "內化", en_left: "Defend", en_right: "Internalize" },
+                    { num: 7, zh: "新事物", zh_left: "抗拒", zh_right: "好奇", en_left: "Resist", en_right: "Curious" },
+                    { num: 8, zh: "挑戰態度", zh_left: "避免", zh_right: "尋求", en_left: "Avoid", en_right: "Seek" },
+                    { num: 9, zh: "環境適應", zh_left: "僵化", zh_right: "靈活", en_left: "Rigid", en_right: "Flexible" },
+                    { num: 10, zh: "人生軌跡", zh_left: "重複", zh_right: "螺旋上升", en_left: "Repeat", en_right: "Spiral upward" },
+                ]
+            },
+            {
+                name: "偽裝者 vs 真實者",
+                left_name: "偽裝者", left_name_en: "Pretender",
+                right_name: "真實者", right_name_en: "Authentic",
+                dimensions: [
+                    { num: 1, zh: "自我呈現", zh_left: "完美假象", zh_right: "真實樣貌", en_left: "Perfect facade", en_right: "Authentic self" },
+                    { num: 2, zh: "能力展示", zh_left: "誇大", zh_right: "坦白", en_left: "Exaggerate", en_right: "Be honest" },
+                    { num: 3, zh: "弱點態度", zh_left: "隱藏", zh_right: "承認", en_left: "Hide", en_right: "Acknowledge" },
+                    { num: 4, zh: "失敗分享", zh_left: "隱瞞", zh_right: "公開說", en_left: "Conceal", en_right: "Share openly" },
+                    { num: 5, zh: "意見表達", zh_left: "迎合他人", zh_right: "表達真實", en_left: "Appease others", en_right: "Speak truth" },
+                    { num: 6, zh: "感受流露", zh_left: "壓抑", zh_right: "坦誠", en_left: "Suppress", en_right: "Express freely" },
+                    { num: 7, zh: "信任建立", zh_left: "表面", zh_right: "深層", en_left: "Surface level", en_right: "Deep connection" },
+                    { num: 8, zh: "關係品質", zh_left: "表面友善", zh_right: "真實連結", en_left: "Superficial warmth", en_right: "Genuine bond" },
+                    { num: 9, zh: "自我認同", zh_left: "混亂", zh_right: "清晰", en_left: "Confused", en_right: "Clear" },
+                    { num: 10, zh: "生活狀態", zh_left: "疲憊", zh_right: "輕鬆", en_left: "Exhausted", en_right: "Relaxed" },
+                ]
+            },
+            {
+                name: "消耗者 vs 創造者",
+                left_name: "消耗者", left_name_en: "Consumer",
+                right_name: "創造者", right_name_en: "Creator",
+                dimensions: [
+                    { num: 1, zh: "能量流向", zh_left: "被動消耗", zh_right: "主動生成", en_left: "Passive drain", en_right: "Active generate" },
+                    { num: 2, zh: "時間觀", zh_left: "混亂浪費", zh_right: "有意投資", en_left: "Chaotic waste", en_right: "Intentional invest" },
+                    { num: 3, zh: "金錢觀", zh_left: "花費", zh_right: "配置", en_left: "Spend", en_right: "Allocate" },
+                    { num: 4, zh: "資源態度", zh_left: "掠奪", zh_right: "培育", en_left: "Exploit", en_right: "Nurture" },
+                    { num: 5, zh: "他人互動", zh_left: "汲取", zh_right: "共創", en_left: "Extract", en_right: "Co-create" },
+                    { num: 6, zh: "知識態度", zh_left: "囤積", zh_right: "應用", en_left: "Hoard", en_right: "Apply" },
+                    { num: 7, zh: "環境影響", zh_left: "破壞", zh_right: "改善", en_left: "Damage", en_right: "Improve" },
+                    { num: 8, zh: "下一代", zh_left: "掠奪", zh_right: "留下", en_left: "Take from", en_right: "Leave for" },
+                    { num: 9, zh: "社會貢獻", zh_left: "無", zh_right: "有形", en_left: "None", en_right: "Tangible" },
+                    { num: 10, zh: "遺產價值", zh_left: "負向", zh_right: "正向", en_left: "Negative", en_right: "Positive" },
+                ]
+            },
+            {
+                name: "被動者 vs 設計者",
+                left_name: "被動者", left_name_en: "Passive",
+                right_name: "設計者", right_name_en: "Designer",
+                dimensions: [
+                    { num: 1, zh: "人生態度", zh_left: "被推動", zh_right: "自我設計", en_left: "Pushed along", en_right: "Self-design" },
+                    { num: 2, zh: "目標制定", zh_left: "隨遇而安", zh_right: "清晰規劃", en_left: "Go with flow", en_right: "Clear plan" },
+                    { num: 3, zh: "決策方式", zh_left: "被動應對", zh_right: "主動發起", en_left: "Reactive", en_right: "Proactive" },
+                    { num: 4, zh: "系統建立", zh_left: "無序", zh_right: "有法則", en_left: "Chaotic", en_right: "Ordered" },
+                    { num: 5, zh: "流程優化", zh_left: "不重視", zh_right: "持續改進", en_left: "Ignore", en_right: "Optimize" },
+                    { num: 6, zh: "目標追蹤", zh_left: "模糊", zh_right: "清晰量化", en_left: "Vague", en_right: "Measured" },
+                    { num: 7, zh: "反饋循環", zh_left: "無", zh_right: "有", en_left: "None", en_right: "Active" },
+                    { num: 8, zh: "習慣形成", zh_left: "碰運氣", zh_right: "刻意練習", en_left: "Chance", en_right: "Deliberate" },
+                    { num: 9, zh: "自我監測", zh_left: "缺乏", zh_right: "持續", en_left: "Absent", en_right: "Continuous" },
+                    { num: 10, zh: "人生成果", zh_left: "隨機", zh_right: "可預測", en_left: "Random", en_right: "Predictable" },
+                ]
+            }
+        ];
+
+        const allSystems = [...identitySystems, ...additionalSystems];
+
+        // 建立卡片
+        function createCard(system, dimension) {
+            const card = document.createElement('div');
+            card.className = 'dimension-card';
+
+            const summaryBox = dimension === system.dimensions[0] && system.summary ? 
+                `<div class="summary-box">
+                    <div class="summary-title">💡 核心智慧</div>
+                    <p>${system.summary}</p>
+                </div>` : '';
+
+            const formulaBox = dimension === system.dimensions[0] && system.formula ?
+                `<div class="formula-box">
+                    ${system.formula.map((f, i) => `
+                        <div>${i === 0 ? '🔴' : '🟢'} <strong>${f.label}</strong></div>
+                        <div style="margin-left: 20px; margin-bottom: 12px;">${f.steps.join(' <span class="arrow">→</span> ')}</div>
+                    `).join('')}
+                </div>` : '';
+
+            card.innerHTML = `
+                ${summaryBox}
+                ${formulaBox}
+                <div class="card-header">
+                    <span class="dimension-num">#${dimension.num}</span>
+                    <span class="dimension-title">${dimension.zh}</span>
+                    <span class="expand-icon">▼</span>
+                </div>
+                <div class="card-content">
+                    <div class="comparison-box">
+                        <div class="side-column left-side">
+                            <div class="identity-name">${system.left_name}</div>
+                            <div class="identity-name" style="font-size: 0.85em; color: #666; font-weight: 400;">${system.left_name_en}</div>
+                            <div class="dimension-text">${dimension.zh_left}</div>
+                            <div class="english-text">${dimension.en_left}</div>
+                            <button class="tts-btn" onclick="speakEnglish('${escapeQuotes(dimension.en_left)}', event)">🔊 Speak English</button>
+                        </div>
+                        <div class="side-column right-side">
+                            <div class="identity-name">${system.right_name}</div>
+                            <div class="identity-name" style="font-size: 0.85em; color: #666; font-weight: 400;">${system.right_name_en}</div>
+                            <div class="dimension-text">${dimension.zh_right}</div>
+                            <div class="english-text">${dimension.en_right}</div>
+                            <button class="tts-btn" onclick="speakEnglish('${escapeQuotes(dimension.en_right)}', event)">🔊 Speak English</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            card.addEventListener('click', function(e) {
+                if (!e.target.classList.contains('tts-btn')) {
+                    this.classList.toggle('expanded');
+                    const header = this.querySelector('.card-header');
+                    header.classList.toggle('expanded');
+                }
+            });
+
+            return card;
+        }
+
+        // 反轉義引號
+        function escapeQuotes(str) {
+            return str.replace(/'/g, "\\'").replace(/"/g, '\\"');
+        }
+
+        // TTS函數
+        function speakEnglish(text, event) {
+            event.stopPropagation();
+            
+            const button = event.target;
+            
+            // 停止任何正在進行的語音
+            window.speechSynthesis.cancel();
+            
+            // 移除所有播放狀態
+            document.querySelectorAll('.tts-btn.playing').forEach(btn => {
+                btn.classList.remove('playing');
+            });
+
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'en-US';
+            utterance.rate = 0.9;
+            utterance.pitch = 1;
+            utterance.volume = 1;
+
+            button.classList.add('playing');
+
+            utterance.onend = function() {
+                button.classList.remove('playing');
+            };
+
+            utterance.onerror = function(e) {
+                console.error('TTS error:', e);
+                button.classList.remove('playing');
+            };
+
+            window.speechSynthesis.speak(utterance);
+        }
+
+        // 切換標籤
+        function switchTab(tabIndex) {
+            // 隱藏所有標籤
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // 移除所有按鈕的活躍狀態
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // 顯示選中的標籤
+            const selectedTab = document.getElementById(`tab${tabIndex}`);
+            selectedTab.classList.add('active');
+            document.querySelectorAll('.tab-btn')[tabIndex].classList.add('active');
+
+            // 載入卡片
+            if (selectedTab.children.length === 0) {
+                const system = allSystems[tabIndex];
+                const grid = document.createElement('div');
+                grid.className = 'card-grid';
+
+                system.dimensions.forEach(dimension => {
+                    grid.appendChild(createCard(system, dimension));
+                });
+
+                selectedTab.appendChild(grid);
+            }
+        }
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            switchTab(0);
+        });
+    </script>
+</body>
+</html>
