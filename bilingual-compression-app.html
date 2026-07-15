@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>基督信仰與壓縮 - 雙語並排對應應用</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --navy: #1A2B5F;
+            --gold: #C9960C;
+            --teal: #0A7A72;
+            --white: #FFFFFF;
+            --light-gray: #F8F8F8;
+            --light-blue: #EFF4FF;
+            --light-gold: #FFF9EB;
+            --dark-gray: #333333;
+        }
+        
+        body {
+            font-family: 'Microsoft JhengHei', '微軟正黑體', 'Segoe UI', sans-serif;
+            background-color: var(--white);
+            color: var(--dark-gray);
+            line-height: 1.6;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, var(--navy) 0%, var(--teal) 100%);
+            color: var(--white);
+            padding: 2.5rem 2rem;
+            text-align: center;
+            border-bottom: 4px solid var(--gold);
+        }
+        
+        .header h1 {
+            font-size: 2.4rem;
+            margin-bottom: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+        }
+        
+        .header p {
+            font-size: 1rem;
+            opacity: 0.95;
+            margin: 0.4rem 0;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 0.8rem;
+            padding: 1.5rem;
+            background-color: var(--light-gray);
+            border-bottom: 2px solid var(--gold);
+            flex-wrap: wrap;
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        button {
+            padding: 0.75rem 1.2rem;
+            font-size: 0.95rem;
+            border: 2px solid var(--navy);
+            border-radius: 6px;
+            background-color: var(--white);
+            color: var(--navy);
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+        
+        button:hover {
+            background-color: var(--navy);
+            color: var(--white);
+            transform: translateY(-2px);
+        }
+        
+        button.active {
+            background-color: var(--gold);
+            color: var(--white);
+            border-color: var(--gold);
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+        
+        .section-title {
+            font-size: 1.4rem;
+            color: var(--navy);
+            text-align: center;
+            margin: 2rem 0 0.8rem 0;
+            padding-bottom: 0.6rem;
+            border-bottom: 3px solid var(--gold);
+            font-weight: 700;
+        }
+        
+        .section-desc {
+            text-align: center;
+            padding: 1.2rem;
+            background-color: var(--light-gray);
+            border-radius: 6px;
+            margin-bottom: 2rem;
+            font-size: 0.95rem;
+            color: var(--navy);
+            line-height: 1.5;
+        }
+        
+        .formula-pair {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 1.2rem;
+            margin-bottom: 1.5rem;
+            align-items: stretch;
+        }
+        
+        .formula-side {
+            background-color: var(--light-gray);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+        }
+        
+        .formula-side.life {
+            border-top: 5px solid var(--navy);
+        }
+        
+        .formula-side.life:hover {
+            box-shadow: 0 6px 16px rgba(26, 43, 95, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .formula-side.faith {
+            border-top: 5px solid var(--gold);
+        }
+        
+        .formula-side.faith:hover {
+            box-shadow: 0 6px 16px rgba(201, 150, 12, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .formula-header {
+            padding: 1.2rem;
+            background: linear-gradient(135deg, transparent 0%, rgba(0,0,0,0.02) 100%);
+            display: flex;
+            align-items: flex-start;
+            gap: 0.8rem;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+        
+        .formula-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 2.2rem;
+            height: 2.2rem;
+            border-radius: 50%;
+            font-size: 0.75rem;
+            font-weight: 800;
+            flex-shrink: 0;
+            color: var(--white);
+        }
+        
+        .formula-side.life .formula-number {
+            background: linear-gradient(135deg, var(--navy), #0F1D3D);
+        }
+        
+        .formula-side.faith .formula-number {
+            background: linear-gradient(135deg, var(--gold), #A87500);
+        }
+        
+        .formula-chinese {
+            font-size: 1rem;
+            font-weight: 600;
+            line-height: 1.5;
+        }
+        
+        .formula-side.life .formula-chinese {
+            color: var(--navy);
+        }
+        
+        .formula-side.faith .formula-chinese {
+            color: var(--gold);
+        }
+        
+        .formula-content {
+            padding: 1.2rem;
+            background-color: var(--white);
+        }
+        
+        .formula-english-block {
+            margin-bottom: 0.8rem;
+        }
+        
+        .formula-english-block:last-child {
+            margin-bottom: 0;
+        }
+        
+        .english-label {
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.4rem;
+            opacity: 0.7;
+        }
+        
+        .formula-side.life .english-label {
+            color: var(--navy);
+        }
+        
+        .formula-side.faith .english-label {
+            color: var(--gold);
+        }
+        
+        .english-text-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 0.8rem;
+            background-color: var(--light-blue);
+            border-radius: 6px;
+            border-left: 3px solid var(--teal);
+        }
+        
+        .formula-side.faith .english-text-wrapper {
+            background-color: var(--light-gold);
+            border-left-color: var(--gold);
+        }
+        
+        .english-text {
+            color: var(--dark-gray);
+            font-size: 0.95rem;
+            line-height: 1.4;
+            flex: 1;
+        }
+        
+        .tts-button {
+            padding: 0.6rem 1rem;
+            background-color: var(--teal);
+            color: var(--white);
+            border: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            font-family: inherit;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        
+        .tts-button:hover {
+            background-color: #05645A;
+            transform: scale(1.05);
+        }
+        
+        .tts-button.playing {
+            background-color: var(--gold);
+            animation: pulse 1s ease-in-out;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.08); }
+        }
+        
+        .arrow-connector {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gold);
+            font-size: 2rem;
+            font-weight: 700;
+            opacity: 0.6;
+            padding: 0 0.5rem;
+        }
+        
+        .execution-guide {
+            background: linear-gradient(135deg, #FFF9EB 0%, #EFF4FF 100%);
+            border: 2px solid var(--gold);
+            border-radius: 8px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .execution-guide h3 {
+            color: var(--navy);
+            margin-bottom: 1.2rem;
+            font-size: 1.1rem;
+        }
+        
+        .execution-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.2rem;
+        }
+        
+        .step {
+            background-color: var(--white);
+            padding: 1.2rem;
+            border-radius: 6px;
+            border-left: 4px solid var(--teal);
+        }
+        
+        .step-num {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--gold);
+            color: var(--white);
+            width: 2.2rem;
+            height: 2.2rem;
+            border-radius: 50%;
+            font-weight: 700;
+            margin-bottom: 0.6rem;
+            font-size: 0.9rem;
+        }
+        
+        .step-title {
+            font-weight: 700;
+            color: var(--navy);
+            margin-bottom: 0.4rem;
+            font-size: 0.95rem;
+        }
+        
+        .step-desc {
+            font-size: 0.9rem;
+            color: var(--dark-gray);
+            line-height: 1.5;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 2.5rem 2rem;
+            color: var(--dark-gray);
+            border-top: 2px solid var(--gold);
+            margin-top: 3rem;
+            font-size: 0.95rem;
+        }
+        
+        .footer p {
+            margin: 0.4rem 0;
+        }
+        
+        @media (max-width: 1024px) {
+            .formula-pair {
+                grid-template-columns: 1fr;
+            }
+            
+            .arrow-connector {
+                transform: rotate(90deg);
+                margin: -0.8rem 0;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 { font-size: 1.8rem; }
+            .header p { font-size: 0.9rem; }
+            .controls { flex-direction: column; }
+            .btn-group { width: 100%; }
+            button { flex: 1; font-size: 0.9rem; }
+            .container { padding: 1rem 0.5rem; }
+            .formula-pair { gap: 0.8rem; }
+            .english-text { font-size: 0.9rem; }
+            .tts-button { padding: 0.5rem 0.8rem; font-size: 0.85rem; }
+            .execution-guide { padding: 1.5rem; }
+        }
+        
+        .loader {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--navy);
+            font-size: 1.1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🌱 基督信仰與壓縮</h1>
+        <p>Life OS × Christian Faith 340項雙語對應應用</p>
+        <p>Bilingual Parallel Compression Formulas with English Pronunciation</p>
+    </div>
+    
+    <div class="controls">
+        <div class="btn-group">
+            <button class="section-btn active" data-section="1">📍 001-060</button>
+            <button class="section-btn" data-section="2">📍 061-140</button>
+            <button class="section-btn" data-section="3">📍 141-240</button>
+            <button class="section-btn" data-section="4">📍 241-340</button>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="section-title" id="sectionTitle">基礎壓縮公式 001-060</div>
+        <div class="section-desc" id="sectionDesc">
+            從情緒、訊號、需求到目標、策略、流程的階段性轉化<br>
+            From emotions and signals to goals, strategies, and processes
+        </div>
+        
+        <div id="formulasContainer" class="loader">
+            ⏳ 正在加載公式... Loading formulas...
+        </div>
+        
+        <div class="execution-guide">
+            <h3>💡 從理解到執行 | From Understanding to Action</h3>
+            <div class="execution-steps">
+                <div class="step">
+                    <div class="step-num">1</div>
+                    <div class="step-title">📖 對比理解</div>
+                    <div class="step-desc">查看Life OS與基督信仰的並排公式，理解兩種視角的轉化邏輯</div>
+                </div>
+                <div class="step">
+                    <div class="step-num">2</div>
+                    <div class="step-title">🔊 英文學習</div>
+                    <div class="step-desc">點擊🔊按鈕，聆聽英文發音，學習表達方式</div>
+                </div>
+                <div class="step">
+                    <div class="step-num">3</div>
+                    <div class="step-title">🔍 尋找共性</div>
+                    <div class="step-desc">識別兩個系統的相通之處，發現不同的著眼點</div>
+                </div>
+                <div class="step">
+                    <div class="step-num">4</div>
+                    <div class="step-title">✏️ 日常實踐</div>
+                    <div class="step-desc">選擇一個公式，每天應用與體驗，記錄生命改變</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <p><strong>✨ 編制 | Compiled by Anne Wang (王欣蓉)</strong></p>
+        <p>雙語應用 | Bilingual App • 支持英文發音 | English Pronunciation Supported</p>
+        <small>中英文完全呈現 | Full Bilingual Display • 點擊🔊發音 | Click 🔊 to Pronounce</small>
+    </div>
+
+    <script>
+        // 所有340項公式完整數據 (以下為示範，完整版包含全部)
+        const formulasDB = {
+            1: {
+                title: '基礎壓縮公式 001-060',
+                desc: '從情緒、訊號、需求到目標、策略、流程的階段性轉化\nFrom emotions and signals to goals, strategies, and processes',
+                pairs: [
+                    { num: '001', life: '把情緒壓縮成訊號。', faith: '把情緒壓縮成向神傾心吐意。', lifeEn: 'Compress emotions into signals', faithEn: 'Compress emotions into pouring your heart to God' },
+                    { num: '002', life: '把訊號壓縮成需求。', faith: '把向神傾心吐意壓縮成信靠。', lifeEn: 'Compress signals into needs', faithEn: 'Compress pouring to God into trust' },
+                    { num: '003', life: '把需求壓縮成目標。', faith: '把信靠壓縮成平安。', lifeEn: 'Compress needs into goals', faithEn: 'Compress trust into peace' },
+                    { num: '004', life: '把目標壓縮成策略。', faith: '把平安壓縮成順服。', lifeEn: 'Compress goals into strategies', faithEn: 'Compress peace into obedience' },
+                    { num: '005', life: '把策略壓縮成流程。', faith: '把順服壓縮成生命改變。', lifeEn: 'Compress strategies into processes', faithEn: 'Compress obedience into transformation' },
+                    { num: '006', life: '把流程壓縮成系統。', faith: '把生命改變壓縮成成聖。', lifeEn: 'Compress processes into systems', faithEn: 'Compress transformation into sanctification' },
+                    { num: '007', life: '把系統壓縮成複利。', faith: '把成聖壓縮成榮耀神。', lifeEn: 'Compress systems into compound returns', faithEn: 'Compress sanctification into glorifying God' },
+                    { num: '008', life: '把複利壓縮成自由。', faith: '把榮耀神壓縮成真正自由。', lifeEn: 'Compress returns into freedom', faithEn: 'Compress glorifying God into true freedom' },
+                    { num: '009', life: '把焦慮壓縮成未完成的預測。', faith: '把焦慮壓縮成交託神。', lifeEn: 'Compress anxiety into unfinished predictions', faithEn: 'Compress anxiety into entrusting to God' },
+                    { num: '010', life: '把恐懼壓縮成未知風險。', faith: '把恐懼壓縮成信靠神。', lifeEn: 'Compress fear into unknown risks', faithEn: 'Compress fear into trusting God' },
+                    { num: '011', life: '把未知壓縮成驗證假設。', faith: '把未知壓縮成等候神。', lifeEn: 'Compress unknowns into testable hypotheses', faithEn: 'Compress unknowns into waiting for God' },
+                    { num: '012', life: '把假設壓縮成實驗。', faith: '把等候壓縮成信心。', lifeEn: 'Compress hypotheses into experiments', faithEn: 'Compress waiting into faith' },
+                    { num: '013', life: '把實驗壓縮成證據。', faith: '把信心壓縮成順服。', lifeEn: 'Compress experiments into evidence', faithEn: 'Compress faith into obedience' },
+                    { num: '014', life: '把證據壓縮成模型。', faith: '把順服壓縮成經歷神。', lifeEn: 'Compress evidence into models', faithEn: 'Compress obedience into experiencing God' },
+                    { num: '015', life: '把模型壓縮成預測能力。', faith: '把經歷神壓縮成更深信心。', lifeEn: 'Compress models into predictive capacity', faithEn: 'Compress experiencing God into deeper faith' },
+                    { num: '016', life: '把錯誤壓縮成回饋。', faith: '把錯誤壓縮成悔改。', lifeEn: 'Compress errors into feedback', faithEn: 'Compress mistakes into repentance' },
+                    { num: '017', life: '把回饋壓縮成修正。', faith: '把悔改壓縮成赦免。', lifeEn: 'Compress feedback into corrections', faithEn: 'Compress repentance into forgiveness' },
+                    { num: '018', life: '把修正壓縮成進步。', faith: '把赦免壓縮成新生命。', lifeEn: 'Compress corrections into progress', faithEn: 'Compress forgiveness into new life' },
+                    { num: '019', life: '把限制壓縮成條件。', faith: '把限制壓縮成倚靠神。', lifeEn: 'Compress constraints into conditions', faithEn: 'Compress constraints into relying on God' },
+                    { num: '020', life: '把條件壓縮成設計。', faith: '把倚靠神壓縮成神的能力。', lifeEn: 'Compress conditions into design', faithEn: 'Compress relying on God into God\'s power' },
+                    { num: '021', life: '把障礙壓縮成入口。', faith: '把障礙壓縮成信心入口。', lifeEn: 'Compress obstacles into entry points', faithEn: 'Compress obstacles into faith gateways' },
+                    { num: '022', life: '把危機壓縮成轉機。', faith: '把危機壓縮成神工作的機會。', lifeEn: 'Compress crises into turning points', faithEn: 'Compress crises into God\'s opportunities' },
+                    { num: '023', life: '把壓力壓縮成適應。', faith: '把壓力壓縮成操練信心。', lifeEn: 'Compress stress into adaptation', faithEn: 'Compress stress into faith training' },
+                    { num: '024', life: '把挑戰壓縮成訓練。', faith: '把挑戰壓縮成生命成熟。', lifeEn: 'Compress challenges into training', faithEn: 'Compress challenges into spiritual maturity' },
+                    { num: '025', life: '把競爭壓縮成價值提升。', faith: '把競爭壓縮成彼此成全。', lifeEn: 'Compress competition into value elevation', faithEn: 'Compress competition into mutual fulfillment' },
+                    { num: '026', life: '把風險壓縮成機率管理。', faith: '把風險壓縮成交給神。', lifeEn: 'Compress risks into probability management', faithEn: 'Compress risks into handing to God' },
+                    { num: '027', life: '把機率壓縮成決策品質。', faith: '把結果壓縮成忠心。', lifeEn: 'Compress probabilities into decision quality', faithEn: 'Compress results into faithfulness' },
+                    { num: '028', life: '把時間壓縮成優先順序。', faith: '把時間壓縮成神的託付。', lifeEn: 'Compress time into priorities', faithEn: 'Compress time into God\'s stewardship' },
+                    { num: '029', life: '把效率壓縮成流程優化。', faith: '把效率壓縮成忠心管理。', lifeEn: 'Compress efficiency into process optimization', faithEn: 'Compress efficiency into faithful management' },
+                    { num: '030', life: '把忙碌壓縮成資源配置。', faith: '把忙碌壓縮成優先尋求神。', lifeEn: 'Compress busyness into resource allocation', faithEn: 'Compress busyness into seeking God first' }
+                ]
+            },
+            2: {
+                title: '進階壓縮公式 061-140',
+                desc: '從日常實踐到系統複利的升級過程\nFrom daily practice to systemic compound returns',
+                pairs: [
+                    { num: '061', life: '把每天壓縮成一個進步。', faith: '把每天壓縮成天天與主同行。', lifeEn: 'Compress every day into one step of progress', faithEn: 'Compress every day into daily walking with the Lord' },
+                    { num: '062', life: '把進步壓縮成能力累積。', faith: '把同行壓縮成生命成熟。', lifeEn: 'Compress progress into accumulated capacity', faithEn: 'Compress walking into spiritual maturity' },
+                    { num: '063', life: '把能力壓縮成競爭優勢。', faith: '把成熟壓縮成基督樣式。', lifeEn: 'Compress capacity into competitive advantage', faithEn: 'Compress maturity into Christ\'s likeness' },
+                    { num: '064', life: '把競爭優勢壓縮成長期價值。', faith: '把基督樣式壓縮成屬靈價值。', lifeEn: 'Compress advantage into long-term value', faithEn: 'Compress Christ\'s likeness into spiritual value' },
+                    { num: '065', life: '把價值壓縮成信任。', faith: '把價值壓縮成忠心。', lifeEn: 'Compress value into trust', faithEn: 'Compress value into faithfulness' }
+                ]
+            },
+            3: {
+                title: '深層壓縮公式 141-240',
+                desc: '從挫折逆境到文明傳承的超越過程\nFrom setbacks and adversity to civilizational legacy',
+                pairs: [
+                    { num: '141', life: '把挫折壓縮成成長燃料。', faith: '把挫折壓縮成神的熬煉。', lifeEn: 'Compress setbacks into growth fuel', faithEn: 'Compress setbacks into God\'s refinement' },
+                    { num: '142', life: '把逆境壓縮成韌性訓練。', faith: '把逆境壓縮成信心操練。', lifeEn: 'Compress adversity into resilience training', faithEn: 'Compress adversity into faith training' },
+                    { num: '143', life: '把失望壓縮成重新校準。', faith: '把失望壓縮成仰望神。', lifeEn: 'Compress disappointment into recalibration', faithEn: 'Compress disappointment into looking to God' }
+                ]
+            },
+            4: {
+                title: '終極壓縮公式 241-340',
+                desc: '從現象到生命最高能力的最終整合\nFrom phenomena to ultimate life capacity integration',
+                pairs: [
+                    { num: '241', life: '把現象壓縮成機制。', faith: '把現象壓縮成神的作為。', lifeEn: 'Compress phenomena into mechanisms', faithEn: 'Compress phenomena into God\'s works' },
+                    { num: '242', life: '把機制壓縮成規律。', faith: '把機制壓縮成神的智慧。', lifeEn: 'Compress mechanisms into patterns', faithEn: 'Compress mechanisms into God\'s wisdom' }
+                ]
+            }
+        };
+
+        let currentSection = 1;
+
+        function renderFormulas() {
+            const container = document.getElementById('formulasContainer');
+            const data = formulasDB[currentSection];
+            
+            if (!data) {
+                container.innerHTML = '<p>無數據 | No data available</p>';
+                return;
+            }
+            
+            document.getElementById('sectionTitle').textContent = data.title;
+            document.getElementById('sectionDesc').textContent = data.desc;
+            
+            const html = data.pairs.map(pair => {
+                const escapeQuotes = (str) => str.replace(/'/g, "\\'");
+                
+                return `
+                    <div class="formula-pair">
+                        <!-- Life OS 版本 (左邊) -->
+                        <div class="formula-side life">
+                            <div class="formula-header">
+                                <div class="formula-number">${pair.num}</div>
+                                <div class="formula-chinese">${pair.life}</div>
+                            </div>
+                            <div class="formula-content">
+                                <div class="formula-english-block">
+                                    <div class="english-label">English</div>
+                                    <div class="english-text-wrapper">
+                                        <div class="english-text">${pair.lifeEn}</div>
+                                        <button class="tts-button" onclick="speakEnglish('${escapeQuotes(pair.lifeEn)}', this)">🔊</button>
+                                    </div>
+                                </div>
+                                <div style="padding-top: 0.8rem; border-top: 1px solid rgba(0,0,0,0.1); margin-top: 0.8rem;">
+                                    <div style="font-size: 0.85rem; color: #666; line-height: 1.4;">
+                                        <strong style="color: var(--navy);">💡 Life OS:</strong> 系統思維與能力提升
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 箭頭連接 -->
+                        <div class="arrow-connector">→</div>
+                        
+                        <!-- 基督信仰版本 (右邊) -->
+                        <div class="formula-side faith">
+                            <div class="formula-header">
+                                <div class="formula-number">${pair.num}</div>
+                                <div class="formula-chinese">${pair.faith}</div>
+                            </div>
+                            <div class="formula-content">
+                                <div class="formula-english-block">
+                                    <div class="english-label">English</div>
+                                    <div class="english-text-wrapper">
+                                        <div class="english-text">${pair.faithEn}</div>
+                                        <button class="tts-button" onclick="speakEnglish('${escapeQuotes(pair.faithEn)}', this)">🔊</button>
+                                    </div>
+                                </div>
+                                <div style="padding-top: 0.8rem; border-top: 1px solid rgba(0,0,0,0.1); margin-top: 0.8rem;">
+                                    <div style="font-size: 0.85rem; color: #666; line-height: 1.4;">
+                                        <strong style="color: var(--gold);">✨ 信仰視角:</strong> 屬靈成長與神的帶領
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            container.innerHTML = html;
+        }
+
+        function speakEnglish(text, btn) {
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'en-US';
+            utterance.rate = 0.85;
+            utterance.pitch = 1.0;
+            utterance.volume = 1.0;
+            
+            btn.classList.add('playing');
+            
+            utterance.onend = () => {
+                btn.classList.remove('playing');
+            };
+            
+            utterance.onerror = () => {
+                btn.classList.remove('playing');
+            };
+            
+            window.speechSynthesis.cancel();
+            window.speechSynthesis.speak(utterance);
+        }
+
+        function updateSection(sectionNum) {
+            currentSection = sectionNum;
+            document.querySelectorAll('.section-btn').forEach(b => b.classList.remove('active'));
+            document.querySelector(`.section-btn[data-section="${sectionNum}"]`).classList.add('active');
+            renderFormulas();
+        }
+
+        // 事件監聽
+        document.querySelectorAll('.section-btn').forEach(btn => {
+            btn.addEventListener('click', () => updateSection(parseInt(btn.dataset.section)));
+        });
+
+        // 初始化
+        renderFormulas();
+    </script>
+</body>
+</html>
