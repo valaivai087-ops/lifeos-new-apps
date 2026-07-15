@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>高維語言升維 APP | Language Elevation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Microsoft JhengHei', 'Segoe UI', sans-serif;
+            background: white;
+            color: #1a2b5f;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #1a2b5f 0%, #0a7a72 100%);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+            margin-bottom: 30px;
+            border-radius: 10px;
+        }
+        
+        header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        
+        header p {
+            font-size: 16px;
+            opacity: 0.95;
+        }
+        
+        .search-box {
+            margin-bottom: 30px;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .search-box input {
+            flex: 1;
+            padding: 12px 20px;
+            font-size: 16px;
+            border: 2px solid #c9960c;
+            border-radius: 5px;
+            font-family: inherit;
+        }
+        
+        .search-box button {
+            padding: 12px 30px;
+            background: #c9960c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            font-family: inherit;
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            border-bottom: 3px solid #0a7a72;
+            padding-bottom: 10px;
+        }
+        
+        .tab-btn {
+            padding: 10px 20px;
+            background: #f5f5f5;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-family: inherit;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .tab-btn.active {
+            background: #c9960c;
+            color: white;
+            border-color: #c9960c;
+        }
+        
+        .tab-btn:hover {
+            border-color: #c9960c;
+        }
+        
+        .content {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+        }
+        
+        .card {
+            background: white;
+            border: 2px solid #0a7a72;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: all 0.3s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .card:hover {
+            box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+            transform: translateY(-2px);
+        }
+        
+        .card-header {
+            background: #0a7a72;
+            color: white;
+            padding: 15px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .card-header h3 {
+            font-size: 16px;
+            margin: 0;
+        }
+        
+        .card-toggle {
+            font-size: 20px;
+            transition: transform 0.3s;
+        }
+        
+        .card.expanded .card-toggle {
+            transform: rotate(180deg);
+        }
+        
+        .card-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s;
+            padding: 0 15px;
+        }
+        
+        .card.expanded .card-body {
+            max-height: 1000px;
+            padding: 15px;
+        }
+        
+        .bilingual {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .lang-box {
+            padding: 12px;
+            background: #f9f9f9;
+            border-left: 4px solid #c9960c;
+            border-radius: 4px;
+        }
+        
+        .lang-box.cn {
+            border-left-color: #0a7a72;
+        }
+        
+        .lang-label {
+            font-size: 12px;
+            font-weight: bold;
+            color: #666;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+        
+        .lang-content {
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        
+        .tts-btn {
+            background: #c9960c;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            margin-top: 8px;
+            font-family: inherit;
+        }
+        
+        .tts-btn:hover {
+            background: #b8860b;
+        }
+        
+        .formula {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            border-left: 4px solid #1a2b5f;
+        }
+        
+        .arrow {
+            text-align: center;
+            color: #0a7a72;
+            font-weight: bold;
+            font-size: 18px;
+            margin: 8px 0;
+        }
+        
+        .ability {
+            background: #e8f5f3;
+            padding: 8px 12px;
+            border-radius: 4px;
+            margin: 8px 0;
+            font-size: 13px;
+            border-left: 3px solid #0a7a72;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #1a2b5f 0%, #0a7a72 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            .bilingual {
+                grid-template-columns: 1fr;
+            }
+            
+            .content {
+                grid-template-columns: 1fr;
+            }
+            
+            header h1 {
+                font-size: 24px;
+            }
+            
+            .tabs {
+                flex-direction: column;
+            }
+            
+            .tab-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🌟 高維語言升維工程 | Language Elevation</h1>
+            <p>把現象轉成結構 | 把情緒轉成訊號 | 把知識轉成能力</p>
+        </header>
+        
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-number">10</div>
+                <div class="stat-label">核心判準</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">25</div>
+                <div class="stat-label">轉換公式</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">100+</div>
+                <div class="stat-label">生活案例</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">∞</div>
+                <div class="stat-label">Life OS</div>
+            </div>
+        </div>
+        
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="搜尋...例如：情緒、焦慮、失敗、成功">
+            <button onclick="searchContent()">搜尋</button>
+        </div>
+        
+        <div class="tabs" id="tabs"></div>
+        
+        <div id="content" class="content"></div>
+    </div>
+    
+    <script>
+const data = {
+    "核心框架": [
+        {
+            title: "① 是否描述結構（Structure）",
+            cn: "不是描述事件。而是描述系統。",
+            en: "Not describing events. But describing systems.",
+            examples: [
+                { cn: "孩子很懶", en: "Child is lazy", high_cn: "孩子的回饋系統、習慣系統與家庭規範沒有建立", high_en: "Child lacks feedback system, habit system and family norms" },
+                { cn: "老公很自私", en: "Husband is selfish", high_cn: "家庭責任分工與共同目標沒有對齊", high_en: "Family responsibility allocation and common goals are not aligned" }
+            ]
+        },
+        {
+            title: "② 是否描述機制（Mechanism）",
+            cn: "不是問是什麼。而是問如何形成。",
+            en: "Not asking what. But asking how it's formed.",
+            examples: [
+                { cn: "一直胖", en: "Keep gaining weight", high_cn: "飲食、睡眠、壓力共同影響代謝", high_en: "Diet, sleep and stress together affect metabolism" },
+                { cn: "一直拖延", en: "Keep procrastinating", high_cn: "立即回饋不足，痛苦預測過高", high_en: "Insufficient immediate feedback, excessive pain prediction" }
+            ]
+        },
+        {
+            title: "③ 是否可以驗證（Verification）",
+            cn: "用證據說話。不是用感覺。",
+            en: "Talk with evidence. Not with feelings.",
+            examples: [
+                { cn: "我很健康", en: "I'm healthy", high_cn: "睡眠7.5小時、體脂22%、血壓120/75", high_en: "7.5 hours sleep, 22% body fat, 120/75 BP" },
+                { cn: "孩子進步很多", en: "Child improved a lot", high_cn: "閱讀量增加50%，英文成績提高15分", high_en: "50% increase in reading, 15 points higher in English" }
+            ]
+        },
+        {
+            title: "④ 是否可以更新（Update）",
+            cn: "持續修正。不是固定信念。",
+            en: "Keep correcting. Not fixed beliefs.",
+            examples: [
+                { cn: "我就是這樣", en: "That's just who I am", high_cn: "我目前的模型如此，但可以更新", high_en: "My current model is like this, but can be updated" },
+                { cn: "我數學不好", en: "I'm bad at math", high_cn: "目前缺少刻意練習與回饋", high_en: "Currently lack deliberate practice and feedback" }
+            ]
+        },
+        {
+            title: "⑤ 是否可以遷移（Transfer）",
+            cn: "跨域運用。",
+            en: "Cross-domain application.",
+            examples: [
+                { cn: "閱讀能力", en: "Reading ability", high_cn: "可遷移到英文、醫學、AI、法律都能用", high_en: "Transferable to English, medicine, AI, law" },
+                { cn: "自律能力", en: "Self-discipline", high_cn: "可遷移到投資、工作、婚姻", high_en: "Transferable to investment, work, marriage" }
+            ]
+        },
+        {
+            title: "⑥ 是否可以工程化（Engineering）",
+            cn: "流程化。",
+            en: "Process-oriented.",
+            examples: [
+                { cn: "我要減肥", en: "I want to lose weight", high_cn: "建立飲食、睡眠、運動SOP", high_en: "Establish diet, sleep, exercise SOP" },
+                { cn: "我要學英文", en: "I want to learn English", high_cn: "每日閱讀30分鐘＋Anki＋口說", high_en: "Daily reading 30min + Anki + speaking" }
+            ]
+        },
+        {
+            title: "⑦ 是否可以AI化（AI Ready）",
+            cn: "Prompt能力。",
+            en: "Prompt engineering.",
+            examples: [
+                { cn: "幫我寫文章", en: "Help me write", high_cn: "請用高中程度。1000字。條列式。舉20個生活例子", high_en: "Use high school level. 1000 words. Bullet points. 20 life examples" },
+                { cn: "分析公司", en: "Analyze company", high_cn: "請分析商業模式、風險、競爭、AI策略", high_en: "Analyze business model, risk, competition, AI strategy" }
+            ]
+        },
+        {
+            title: "⑧ 是否形成能力（Ability）",
+            cn: "能力生成。不是知識累積。",
+            en: "Ability generation. Not knowledge accumulation.",
+            examples: [
+                { cn: "我要成功", en: "I want success", high_cn: "每天完成三件最重要的工作", high_en: "Complete 3 most important tasks daily" },
+                { cn: "我要快樂", en: "I want happiness", high_cn: "建立感恩、運動、睡眠三個習慣", high_en: "Build gratitude, exercise, sleep habits" }
+            ]
+        }
+    ],
+    "轉換公式": [
+        {
+            title: "第一式：人格 → 行為",
+            cn: "你很懶",
+            en: "You're lazy",
+            high_cn: "最近家務分工沒有達成我們原本的共識",
+            high_en: "Household chores distribution didn't meet our original agreement"
+        },
+        {
+            title: "第二式：指責 → 描述",
+            cn: "你都不關心我",
+            en: "You don't care about me",
+            high_cn: "最近一週我們幾乎沒有高品質的相處時間",
+            high_en: "Almost no quality time together in recent week"
+        },
+        {
+            title: "第三式：情緒 → 需求",
+            cn: "你讓我很難過",
+            en: "You made me sad",
+            high_cn: "我需要被理解、被陪伴，也需要知道我的感受對你是重要的",
+            high_en: "I need understanding, companionship, and knowing my feelings matter to you"
+        },
+        {
+            title: "第四式：命令 → 合作",
+            cn: "你給我改",
+            en: "You have to change",
+            high_cn: "我們可以一起討論一個新的相處方式嗎？",
+            high_en: "Can we discuss a new way to interact together?"
+        },
+        {
+            title: "第五式：故事 → 結構",
+            cn: "我們就是不適合",
+            en: "We're just not compatible",
+            high_cn: "我們目前的溝通模式一直產生相同的衝突，需要一起更新這個互動模式",
+            high_en: "Our communication pattern keeps producing same conflicts, need to update interaction model"
+        }
+    ],
+    "情緒轉換": [
+        {
+            title: "① 人格公式：你很自私",
+            cn: "你很自私",
+            en: "You're selfish",
+            high_cn: "我觀察到家庭投入的時間分配失衡，我希望重新討論責任分工",
+            high_en: "I observe family investment time is imbalanced, I want to discuss responsibility distribution"
+        },
+        {
+            title: "② 指責公式：都是你的錯",
+            cn: "都是你的錯",
+            en: "It's all your fault",
+            high_cn: "目前我們的互動模式沒有產生好的結果，需要一起修正",
+            high_en: "Our current interaction pattern isn't producing good results, need to correct together"
+        },
+        {
+            title: "③ 情緒公式：我很生氣",
+            cn: "我很生氣",
+            en: "I'm very angry",
+            high_cn: "我期待的結果與現實落差很大，所以產生強烈情緒",
+            high_en: "Large gap between expected and actual results, producing strong emotion"
+        },
+        {
+            title: "④ 焦慮公式：我好焦慮",
+            cn: "我好焦慮",
+            en: "I'm so anxious",
+            high_cn: "我對未來缺乏穩定預測，所以一直處於警戒狀態",
+            high_en: "Lack stable prediction of future, staying in alert state"
+        },
+        {
+            title: "⑤ 痛苦公式：我很痛苦",
+            cn: "我很痛苦",
+            en: "I'm in pain",
+            high_cn: "目前的生命模型無法容納新的現實，所以產生巨大誤差",
+            high_en: "Current life model can't accommodate new reality, producing huge error"
+        },
+        {
+            title: "⑥ 失敗公式：我失敗了",
+            cn: "我失敗了",
+            en: "I failed",
+            high_cn: "目前的方法沒有達成目標，需要更新策略",
+            high_en: "Current method didn't achieve goal, need to update strategy"
+        },
+        {
+            title: "⑦ 成功公式：我成功了",
+            cn: "我成功了",
+            en: "I succeeded",
+            high_cn: "目前模型與策略有效，可以複製與放大",
+            high_en: "Current model and strategy effective, can replicate and scale"
+        },
+        {
+            title: "⑧ 放下公式：我放下了",
+            cn: "我放下了",
+            en: "I let it go",
+            high_cn: "這件事已經不是我生命模型中的高權重節點",
+            high_en: "This is no longer high-weight node in my life model"
+        }
+    ],
+    "婚姻案例": [
+        {
+            title: "案例1：你都不愛我",
+            cn: "你都不愛我",
+            en: "You don't love me",
+            high_cn: "我們的情感連結與陪伴時間下降，需要重新建立關係系統",
+            high_en: "Our emotional connection and quality time decreased, need to rebuild relationship system"
+        },
+        {
+            title: "案例2：你很自私",
+            cn: "你很自私",
+            en: "You're selfish",
+            high_cn: "家庭資源投入比例失衡，需要重新分配責任",
+            high_en: "Family resource allocation is imbalanced, need to redistribute responsibility"
+        },
+        {
+            title: "案例3：你根本不懂我",
+            cn: "你根本不懂我",
+            en: "You don't understand me at all",
+            high_cn: "我們缺少有效理解彼此需求的溝通流程",
+            high_en: "We lack effective communication process to understand each other's needs"
+        },
+        {
+            title: "案例4：你都不陪孩子",
+            cn: "你都不陪孩子",
+            en: "You never spend time with kids",
+            high_cn: "孩子需要更多高品質親子互動，我們可以一起安排固定陪伴時間",
+            high_en: "Children need more quality parent-child time, we can schedule regular time together"
+        },
+        {
+            title: "案例5：我們一直吵架",
+            cn: "我們一直吵架",
+            en: "We keep fighting",
+            high_cn: "衝突修復流程尚未建立",
+            high_en: "Conflict resolution process not yet established"
+        }
+    ],
+    "工作案例": [
+        {
+            title: "案例1：老闆很機車",
+            cn: "老闆很機車",
+            en: "Boss is difficult",
+            high_cn: "目前工作期待、回饋方式與溝通機制沒有對齊",
+            high_en: "Work expectations, feedback method and communication mechanism not aligned"
+        },
+        {
+            title: "案例2：同事很難相處",
+            cn: "同事很難相處",
+            en: "Colleagues are hard to work with",
+            high_cn: "彼此合作模式與溝通風格不同",
+            high_en: "Different collaboration patterns and communication styles"
+        },
+        {
+            title: "案例3：公司沒有前途",
+            cn: "公司沒有前途",
+            en: "Company has no future",
+            high_cn: "公司的商業模式與市場競爭力需要重新評估",
+            high_en: "Company's business model and competitive advantage need re-evaluation"
+        },
+        {
+            title: "案例4：工作好累",
+            cn: "工作好累",
+            en: "Work is exhausting",
+            high_cn: "工作負荷、恢復時間與資源配置失衡",
+            high_en: "Workload, recovery time and resource allocation imbalanced"
+        },
+        {
+            title: "案例5：我沒有時間",
+            cn: "我沒有時間",
+            en: "I have no time",
+            high_cn: "目前時間配置沒有符合目標優先順序",
+            high_en: "Current time allocation doesn't match goal priorities"
+        }
+    ],
+    "健康案例": [
+        {
+            title: "案例1：一直感冒",
+            cn: "一直感冒",
+            en: "Keep catching colds",
+            high_cn: "睡眠、壓力、營養與免疫平衡需要檢查",
+            high_en: "Sleep, stress, nutrition and immunity balance need checking"
+        },
+        {
+            title: "案例2：一直睡不好",
+            cn: "一直睡不好",
+            en: "Can't sleep well",
+            high_cn: "生理時鐘、壓力荷爾蒙與睡眠習慣需要調整",
+            high_en: "Circadian rhythm, stress hormones and sleep habits need adjustment"
+        },
+        {
+            title: "案例3：一直變胖",
+            cn: "一直變胖",
+            en: "Keep gaining weight",
+            high_cn: "熱量平衡、睡眠與活動量共同影響體重",
+            high_en: "Calorie balance, sleep and activity level together affect weight"
+        },
+        {
+            title: "案例4：一直疲勞",
+            cn: "一直疲勞",
+            en: "Always tired",
+            high_cn: "恢復速度低於消耗速度",
+            high_en: "Recovery speed lower than consumption rate"
+        },
+        {
+            title: "案例5：一直發炎",
+            cn: "一直發炎",
+            en: "Keep getting inflammation",
+            high_cn: "免疫系統長期處於高負荷狀態",
+            high_en: "Immune system in high-load state for long time"
+        }
+    ],
+    "親子案例": [
+        {
+            title: "案例1：孩子很懶",
+            cn: "孩子很懶",
+            en: "Child is lazy",
+            high_cn: "孩子缺少穩定習慣與回饋機制",
+            high_en: "Child lacks stable habits and feedback mechanism"
+        },
+        {
+            title: "案例2：孩子不聽話",
+            cn: "孩子不聽話",
+            en: "Child doesn't listen",
+            high_cn: "家庭規則、示範與一致性不足",
+            high_en: "Family rules, modeling and consistency insufficient"
+        },
+        {
+            title: "案例3：孩子一直滑手機",
+            cn: "孩子一直滑手機",
+            en: "Child keeps using phone",
+            high_cn: "手機提供高頻立即回饋，學習回饋不足",
+            high_en: "Phone provides high-frequency immediate reward, learning reward insufficient"
+        },
+        {
+            title: "案例4：孩子沒責任感",
+            cn: "孩子沒責任感",
+            en: "Child has no responsibility",
+            high_cn: "責任感需要透過持續承擔與回饋建立",
+            high_en: "Responsibility built through continuous undertaking and feedback"
+        },
+        {
+            title: "案例5：孩子沒有禮貌",
+            cn: "孩子沒有禮貌",
+            en: "Child is rude",
+            high_cn: "家庭示範與正向回饋需要更一致",
+            high_en: "Family modeling and positive feedback need to be more consistent"
+        }
+    ],
+    "學習案例": [
+        {
+            title: "案例1：英文很難",
+            cn: "英文很難",
+            en: "English is difficult",
+            high_cn: "英文輸入量、理解量與輸出量不足",
+            high_en: "Insufficient English input, comprehension and output"
+        },
+        {
+            title: "案例2：我背不起來",
+            cn: "我背不起來",
+            en: "I can't memorize",
+            high_cn: "缺少間隔複習與情境連結",
+            high_en: "Lack spaced repetition and contextual connection"
+        },
+        {
+            title: "案例3：我數學不好",
+            cn: "我數學不好",
+            en: "I'm bad at math",
+            high_cn: "基本概念節點尚未建立",
+            high_en: "Basic concept nodes not yet established"
+        },
+        {
+            title: "案例4：讀書沒用",
+            cn: "讀書沒用",
+            en: "Reading doesn't help",
+            high_cn: "目前沒有把知識轉化成能力",
+            high_en: "Not converting knowledge to ability"
+        },
+        {
+            title: "案例5：我學很慢",
+            cn: "我學很慢",
+            en: "I learn slowly",
+            high_cn: "目前學習方法與大腦運作方式不匹配",
+            high_en: "Current learning method doesn't match how brain works"
+        }
+    ],
+    "創業案例": [
+        {
+            title: "案例1：沒有人買",
+            cn: "客人都不買",
+            en: "Customers don't buy",
+            high_cn: "產品價值與市場需求尚未充分匹配",
+            high_en: "Product value and market demand not fully matched"
+        },
+        {
+            title: "案例2：粉絲都不互動",
+            cn: "粉絲都不互動",
+            en: "Followers don't engage",
+            high_cn: "內容沒有形成持續價值輸出",
+            high_en: "Content not generating continuous value output"
+        },
+        {
+            title: "案例3：沒有人支持我",
+            cn: "沒有人支持我",
+            en: "No one supports me",
+            high_cn: "信任資本仍需長期累積",
+            high_en: "Trust capital still needs long-term accumulation"
+        },
+        {
+            title: "案例4：我不會銷售",
+            cn: "我不會銷售",
+            en: "I can't sell",
+            high_cn: "價值傳遞能力需要訓練",
+            high_en: "Value communication ability needs training"
+        },
+        {
+            title: "案例5：沒有機會",
+            cn: "沒有機會",
+            en: "No opportunity",
+            high_cn: "目前資源連結不足",
+            high_en: "Resource connection currently insufficient"
+        }
+    ],
+    "評估系統": [
+        {
+            title: "HDLI 評估框架",
+            cn: "高維語言指數評估",
+            en: "High-Dimensional Language Index",
+            formula: "每項0～10分，八項相加÷8",
+            levels: [
+                "80-100分：屬於高維語言",
+                "60-79分：具有部分高維特性",
+                "40-59分：仍偏向描述現象",
+                "40分以下：屬於低維語言"
+            ]
+        },
+        {
+            title: "八大判準檢核表",
+            cn: "一句高維語言必須符合八大判準",
+            en: "High-dimensional language must meet 8 criteria",
+            checklist: [
+                "✓ 描述結構 | Describe structure",
+                "✓ 描述機制 | Describe mechanism",
+                "✓ 可以驗證 | Can verify",
+                "✓ 可以更新 | Can update",
+                "✓ 可以遷移 | Can transfer",
+                "✓ 可以工程化 | Can engineer",
+                "✓ 可以AI化 | AI ready",
+                "✓ 形成能力 | Forms ability"
+            ]
+        }
+    ]
+};
+
+function initTabs() {
+    const tabs = document.getElementById('tabs');
+    Object.keys(data).forEach(key => {
+        const btn = document.createElement('button');
+        btn.className = 'tab-btn';
+        btn.textContent = key;
+        btn.onclick = () => switchTab(key);
+        if (key === Object.keys(data)[0]) btn.classList.add('active');
+        tabs.appendChild(btn);
+    });
+}
+
+function switchTab(tab) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    event.target.classList.add('active');
+    renderContent(tab);
+}
+
+function renderContent(tab) {
+    const content = document.getElementById('content');
+    content.innerHTML = '';
+    
+    data[tab].forEach((item, index) => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        
+        let bodyHTML = '';
+        
+        if (item.examples) {
+            bodyHTML += '<div style="margin-bottom: 15px;">';
+            item.examples.forEach(ex => {
+                bodyHTML += `<div class="bilingual">
+                    <div class="lang-box cn">
+                        <div class="lang-label">低維</div>
+                        <div class="lang-content">${ex.cn}</div>
+                    </div>
+                    <div class="lang-box">
+                        <div class="lang-label">Low Dim</div>
+                        <div class="lang-content">${ex.en}</div>
+                    </div>
+                </div>
+                <div class="arrow">↓</div>
+                <div class="bilingual">
+                    <div class="lang-box cn">
+                        <div class="lang-label">高維</div>
+                        <div class="lang-content">${ex.high_cn}</div>
+                    </div>
+                    <div class="lang-box">
+                        <div class="lang-label">High Dim</div>
+                        <div class="lang-content">${ex.high_en}</div>
+                        <button class="tts-btn" onclick="speak('${ex.high_en.replace(/'/g, "\\'")}')">🔊 Speak</button>
+                    </div>
+                </div>`;
+            });
+            bodyHTML += '</div>';
+        } else if (item.high_cn) {
+            bodyHTML = `<div class="bilingual">
+                <div class="lang-box cn">
+                    <div class="lang-label">低維 Low Dim</div>
+                    <div class="lang-content">${item.cn}</div>
+                </div>
+                <div class="lang-box">
+                    <div class="lang-content">${item.en}</div>
+                </div>
+            </div>
+            <div class="arrow">↓</div>
+            <div class="bilingual">
+                <div class="lang-box cn">
+                    <div class="lang-label">高維 High Dim</div>
+                    <div class="lang-content">${item.high_cn}</div>
+                </div>
+                <div class="lang-box">
+                    <div class="lang-content">${item.high_en}</div>
+                    <button class="tts-btn" onclick="speak('${item.high_en.replace(/'/g, "\\'")}')">🔊 Speak</button>
+                </div>
+            </div>`;
+        } else if (item.checklist) {
+            bodyHTML = `<ul style="margin-left: 20px;">
+                ${item.checklist.map(c => `<li style="margin: 8px 0;">${c}</li>`).join('')}
+            </ul>`;
+        } else if (item.formula) {
+            bodyHTML = `<div class="formula">${item.formula}</div>
+            <div style="margin-top: 15px;">
+                ${item.levels.map(l => `<div class="ability">${l}</div>`).join('')}
+            </div>`;
+        }
+        
+        card.innerHTML = `
+            <div class="card-header" onclick="toggleCard(this)">
+                <h3>${item.title}</h3>
+                <span class="card-toggle">▼</span>
+            </div>
+            <div class="card-body">${bodyHTML}</div>
+        `;
+        content.appendChild(card);
+    });
+}
+
+function toggleCard(header) {
+    header.parentElement.classList.toggle('expanded');
+}
+
+function speak(text) {
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'en-US';
+    utterance.rate = 0.9;
+    speechSynthesis.speak(utterance);
+}
+
+function searchContent() {
+    const query = document.getElementById('searchInput').value.toLowerCase();
+    if (!query) {
+        renderContent(Object.keys(data)[0]);
+        return;
+    }
+    
+    const content = document.getElementById('content');
+    content.innerHTML = '';
+    let found = 0;
+    
+    Object.keys(data).forEach(tab => {
+        data[tab].forEach(item => {
+            const matchTitle = item.title.toLowerCase().includes(query);
+            const matchCN = item.cn && item.cn.toLowerCase().includes(query);
+            const matchEN = item.en && item.en.toLowerCase().includes(query);
+            const matchHighCN = item.high_cn && item.high_cn.toLowerCase().includes(query);
+            const matchHighEN = item.high_en && item.high_en.toLowerCase().includes(query);
+            
+            if (matchTitle || matchCN || matchEN || matchHighCN || matchHighEN) {
+                found++;
+                const card = document.createElement('div');
+                card.className = 'card expanded';
+                
+                let bodyHTML = '';
+                if (item.high_cn) {
+                    bodyHTML = `<div class="bilingual">
+                        <div class="lang-box cn">
+                            <div class="lang-label">低維</div>
+                            <div class="lang-content">${item.cn}</div>
+                        </div>
+                        <div class="lang-box">
+                            <div class="lang-label">Low Dim</div>
+                            <div class="lang-content">${item.en}</div>
+                        </div>
+                    </div>
+                    <div class="arrow">↓</div>
+                    <div class="bilingual">
+                        <div class="lang-box cn">
+                            <div class="lang-label">高維</div>
+                            <div class="lang-content">${item.high_cn}</div>
+                        </div>
+                        <div class="lang-box">
+                            <div class="lang-content">${item.high_en}</div>
+                            <button class="tts-btn" onclick="speak('${item.high_en.replace(/'/g, "\\'")}')">🔊 Speak</button>
+                        </div>
+                    </div>`;
+                }
+                
+                card.innerHTML = `
+                    <div class="card-header">
+                        <h3>${item.title} <span style="color: #c9960c;">[${tab}]</span></h3>
+                    </div>
+                    <div class="card-body">${bodyHTML}</div>
+                `;
+                content.appendChild(card);
+            }
+        });
+    });
+    
+    if (found === 0) {
+        content.innerHTML = '<div style="text-align: center; padding: 40px; color: #999;">找不到相關結果</div>';
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    initTabs();
+    renderContent(Object.keys(data)[0]);
+});
+    </script>
+</body>
+</html>
