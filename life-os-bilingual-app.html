@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>人生最重要的認知 | Life OS Bilingual</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { width: 100%; height: 100%; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft JhengHei', 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #ffffff 0%, #f5f7fa 100%);
+            color: #1A2B5F;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        
+        .container { max-width: 1300px; margin: 0 auto; }
+        
+        .header {
+            text-align: center;
+            padding: 45px 20px;
+            background: linear-gradient(135deg, #1A2B5F 0%, #0A7A72 100%);
+            color: #ffffff;
+            border-radius: 15px;
+            margin-bottom: 40px;
+            box-shadow: 0 8px 30px rgba(26, 43, 95, 0.2);
+        }
+        
+        .header h1 { font-size: 3rem; margin-bottom: 15px; letter-spacing: 2px; font-weight: 800; }
+        .header h2 { font-size: 1.4rem; opacity: 0.9; font-weight: 300; margin-bottom: 8px; }
+        .header p { font-size: 1rem; opacity: 0.85; margin: 5px 0; }
+        
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(26, 43, 95, 0.08);
+            border-radius: 10px;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 15px;
+            background: #ffffff;
+            border-left: 4px solid #C9960C;
+            border-radius: 8px;
+        }
+        
+        .stat-number { font-size: 2rem; font-weight: 900; color: #C9960C; line-height: 1; }
+        .stat-label { font-size: 0.85rem; color: #0A7A72; margin-top: 8px; font-weight: 600; }
+        
+        .controls {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            font-size: 0.95rem;
+            border: 2px solid #0A7A72;
+            background: #ffffff;
+            color: #1A2B5F;
+            cursor: pointer;
+            border-radius: 8px;
+            font-weight: 700;
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover { background: #0A7A72; color: #ffffff; transform: translateY(-2px); }
+        
+        .tabs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(75px, 1fr));
+            gap: 8px;
+            margin-bottom: 30px;
+        }
+        
+        .tab-btn {
+            padding: 10px 12px;
+            font-size: 0.85rem;
+            border: 2px solid #C9960C;
+            background: #ffffff;
+            color: #1A2B5F;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+        
+        .tab-btn:hover, .tab-btn.active {
+            background: #C9960C;
+            color: #ffffff;
+        }
+        
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(480px, 1fr));
+            gap: 25px;
+            margin-bottom: 50px;
+        }
+        
+        .card {
+            background: #ffffff;
+            border: 2px solid #0A7A72;
+            border-radius: 12px;
+            padding: 28px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 35px rgba(10, 122, 114, 0.2);
+            border-color: #C9960C;
+        }
+        
+        .card.expanded {
+            background: linear-gradient(135deg, #f0f8ff 0%, #fff8f0 100%);
+        }
+        
+        .card-number {
+            font-size: 0.8rem;
+            color: #C9960C;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 12px;
+        }
+        
+        .card-titles {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 18px;
+            border-bottom: 2px solid #E8D4C0;
+            padding-bottom: 15px;
+        }
+        
+        .card-title-zh {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: #1A2B5F;
+            line-height: 1.4;
+        }
+        
+        .card-title-en {
+            font-size: 0.95rem;
+            color: #0A7A72;
+            font-style: italic;
+            line-height: 1.4;
+            font-weight: 600;
+        }
+        
+        .expand-icon {
+            display: inline-block;
+            color: #C9960C;
+            margin-left: 8px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            transition: transform 0.3s;
+            float: right;
+            margin-top: -8px;
+        }
+        
+        .card.expanded .expand-icon { transform: rotate(180deg); }
+        
+        .card-details {
+            display: none;
+        }
+        
+        .card.expanded .card-details { 
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+        
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .example-section {
+            margin-top: 20px;
+            padding: 18px;
+            background: rgba(26, 43, 95, 0.08);
+            border-left: 5px solid #C9960C;
+            border-radius: 6px;
+        }
+        
+        .example-label {
+            font-size: 0.75rem;
+            color: #C9960C;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+        }
+        
+        .example-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .example-zh, .example-en {
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+        
+        .example-zh {
+            color: #1A2B5F;
+            font-weight: 500;
+        }
+        
+        .example-en {
+            color: #0A7A72;
+            font-style: italic;
+            font-size: 0.9rem;
+        }
+        
+        .example-title {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #C9960C;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+        }
+        
+        .tts-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            margin-top: 14px;
+            font-size: 0.9rem;
+            background: linear-gradient(135deg, #0A7A72 0%, #1A2B5F 100%);
+            color: #ffffff;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 700;
+        }
+        
+        .tts-btn:hover { box-shadow: 0 4px 12px rgba(10, 122, 114, 0.3); transform: translateY(-2px); }
+        .tts-btn:active { transform: scale(0.98); }
+        
+        .footer {
+            text-align: center;
+            padding: 40px;
+            color: #0A7A72;
+            font-size: 0.95rem;
+            border-top: 2px solid #C9960C;
+            margin-top: 50px;
+        }
+        
+        .footer p { margin: 8px 0; }
+        
+        .footer-credit {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #C9960C;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        
+        @media (max-width: 1024px) {
+            .cards-grid { grid-template-columns: 1fr; }
+            .card-titles { grid-template-columns: 1fr; }
+            .example-content { grid-template-columns: 1fr; }
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 { font-size: 2rem; }
+            .tabs { grid-template-columns: repeat(4, 1fr); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧠 人生最重要的認知</h1>
+            <h2>Life OS: Core Cognitions</h2>
+            <p>世界模型 • 決策系統 • 持續更新</p>
+        </div>
+        
+        <div class="stats-bar">
+            <div class="stat-item">
+                <div class="stat-number" id="displayCount">71</div>
+                <div class="stat-label">認知條款</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="expandCount">0</div>
+                <div class="stat-label">已展開</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">🌐</div>
+                <div class="stat-label">中英並呈</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">🎤</div>
+                <div class="stat-label">英文語音</div>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <button class="btn" onclick="expandAll()">📖 展開全部</button>
+            <button class="btn" onclick="collapseAll()">📕 收起全部</button>
+        </div>
+        
+        <div class="tabs" id="tabsContainer"></div>
+        <div id="cardsContainer" class="cards-grid"></div>
+        
+        <div class="footer">
+            <p>💡 點擊卡片查看完整內容與生活實例  •  中英文並排呈現</p>
+            <p>🎤 點擊按鈕聆聽英文朗讀  •  生活舉例詳細具體</p>
+            <p style="margin-top: 20px;">左側中文 / 右側英文 • 完整生活實例說明</p>
+            <div class="footer-credit">編制｜王欣蓉 Anne Wang</div>
+        </div>
+    </div>
+    
+    <script>
+        const cognitionsData = [
+            {num:1, titleZh:"人生不是事件的累積，而是決策的累積", titleEn:"Life is not the accumulation of events, but the accumulation of decisions.", exampleZh:"你在高中選擇升學還是補習班、大學選擇熱門科系還是興趣科系、工作選擇安穩企業還是新創挑戰。這些每一個決策都不是孤立的事件，而是一個個堆積起來。十年後，那些做了每天30分鐘運動決策的人，體能強健；那些每週閱讀一本書的人，知識廣博。同樣的時間，因為決策不同，人生完全不同。", exampleEn:"In high school: choose college prep or tutoring. In university: popular major or passion major. At work: stable company or startup. Each decision isn't isolated—they stack. A decade later, people who decided to exercise 30 minutes daily have strong bodies; those who decided to read weekly are knowledgeable. Same time, different decisions, entirely different lives."},
+            {num:2, titleZh:"決策不是偶然，決策來自世界模型", titleEn:"Decisions are not accidents; they stem from your world model.", exampleZh:"一個人相信『投資很危險，容易虧錢』，所以他遠離股市，把錢存銀行。另一個人相信『長期投資會帶來複利回報』，他定期投資。同樣的經濟形勢、同樣的時間，一個人保守地看著錢縮水，一個人的資產在增長。兩個人看到同樣的市場訊號，但因為內心的世界模型不同，做出完全不同的決策。", exampleEn:"Person A believes 'investing is dangerous, easy to lose money'—avoids stocks, saves in bank. Person B believes 'long-term investment yields compound returns'—invests regularly. Same economic conditions, same timeline: one watches money shrink from inflation, one's assets grow. Same market signals, different world models, completely different outcomes."},
+            {num:3, titleZh:"世界模型決定預測，預測決定選擇", titleEn:"World models determine predictions; predictions determine choices.", exampleZh:"銷售員A認為『努力就一定成功』，他預測只要我勤奮打電話、面訪客戶，業績就會上升，所以他每天工作12小時。銷售員B認為『成功靠運氣和人脈』，他預測無論怎麼努力也可能失敗，所以他每天工作6小時，試圖靠關係跳槽。同樣的職位，不同的模型→不同的預測→不同的行動→不同的結果。", exampleEn:"Salesperson A: 'hard work guarantees success'—predicts daily calls and visits drive sales results, so works 12 hours daily. Salesperson B: 'success is luck and networks'—predicts effort may fail anyway, so works 6 hours, tries to network for promotions. Same job, different models → different predictions → different actions → different results."},
+            {num:4, titleZh:"認知決定高度，能力決定自由", titleEn:"Cognition determines height; capability determines freedom.", exampleZh:"一個英文不好的人，只能在台灣找工作，職業選擇有限，薪資也受限。一個掌握英文、日文、程式語言的人，可以在新加坡、香港、日本工作，甚至遠距全球工作。認知（認為自己應該學什麼）決定了你能到達的高度，能力（真正掌握的技能）決定了你的自由度有多大。", exampleEn:"Someone weak in English can only find jobs in Taiwan—limited career options, lower salary. Someone fluent in English, Japanese, and coding can work in Singapore, Hong Kong, Japan—even globally remote. Cognition (belief about what to learn) determines reachable heights; capability (mastered skills) determines freedom scope."},
+            {num:5, titleZh:"真正限制人生的不是環境，而是模型", titleEn:"True limitations come from models, not environment.", exampleZh:"兩個都出身貧困的人：一個認為『我出身差，翻身很難，放棄吧』，他30歲還在迷茫的工作；另一個認為『教育是翻身的槓桿，我必須自學、考更好的學校、掌握技能』，他30歲成了技術主管。同樣的貧困環境、同樣的機會成本，因為心裡的模型不同，人生軌跡完全不同。環境是相同的，但模型決定了能不能突破。", exampleEn:"Two people from poverty: One believes 'poor background makes rising hard—give up'—still struggling at 30. Another believes 'education is leverage—I'll self-learn, get better schooling, master skills'—tech manager at 30. Same poverty, same opportunity cost, different internal models, completely different trajectories. Environment is same, but models determine whether you break through."},
+            {num:6, titleZh:"痛苦不是懲罰，痛苦是更新通知", titleEn:"Pain is not punishment; pain is an update notification.", exampleZh:"手不小心碰到熱爐，會立刻感到灼痛。這個痛不是在懲罰你，而是大腦發來的緊急通知：『更新你的模型：熱的東西會傷害身體，下次要避開。』創業失敗了很痛苦，但那個痛在告訴你：『你的商業模型有問題，需要調整。』失戀很痛苦，是在說：『你對於親密關係的理解不夠深，需要重新思考。』痛苦都是有目的的，它是系統在要求你更新。", exampleEn:"Touch hot stove—sharp pain. Not punishment—it's urgent notification: 'Update your model: heat harms, avoid next time.' Business failure hurts, but signals 'your business model is flawed, adjust it.' Heartbreak hurts, saying 'your understanding of intimacy is incomplete, rethink it.' All pain has purpose—it's the system demanding you update."},
+            {num:7, titleZh:"情緒不是命令，情緒是訊號", titleEn:"Emotions are not commands; emotions are signals.", exampleZh:"工作報告被主管批評，你感到憤怒。這不是情緒在命令你『去和主管吵架』，而是在傳遞訊號：『你的邊界或自尊被挑戰了』。你有機會選擇冷靜溝通。焦慮感來臨時，它不是要你逃避，而是訊號：『前面有風險，你需要評估和準備。』恐懼感不是要你放棄，而是說：『這件事超出舒適區，需要謹慎應對。』聰明人會傾聽情緒訊號，而不是被情緒綁架。", exampleEn:"Boss criticizes your report—you feel angry. Not commanding 'go fight'—signaling 'your boundary/self-esteem was challenged.' You choose to communicate calmly. Anxiety arrives—not commanding escape, signaling 'there's risk ahead, assess and prepare.' Fear isn't demanding surrender—saying 'this exceeds comfort zone, handle carefully.' Smart people listen to emotion signals instead of being hijacked by emotions."},
+            {num:8, titleZh:"信念不是事實，信念只是目前的世界模型", titleEn:"Belief is not fact; belief is your current world model.", exampleZh:"五百年前，所有人都相信『地球是平的』。那個信念對他們來說是絕對的真理，基於當時能看到的證據。但那不是事實，只是當時最好的模型。現在你可能堅信『我做不好公開演講』或『投資一定會虧錢』。但這些不是事實，只是你目前的世界模型。隨著你的經驗增加、知識深化，這些模型會更新，你現在的『信念』就不再成立。", exampleEn:"Five centuries ago, everyone believed 'earth is flat'—absolute truth based on visible evidence. Not fact—just the best model then. Now you might firmly believe 'I can't do public speaking' or 'investing always loses money.' Not fact—just your current model. As experience grows and knowledge deepens, models update, your current 'beliefs' no longer hold."},
+            {num:9, titleZh:"所有問題都是系統的輸出", titleEn:"All problems are system outputs.", exampleZh:"一個人總是遲到，他可能責怪自己『沒有紀律』。但如果看系統：他的鬧鐘系統沒設置、通勤路線系統沒規劃、時間緩衝系統沒建立。改變系統——提前30分鐘出門、設3個鬧鐘、選固定通勤路線——遲到問題自動解決。一個家庭總是吵架，不是因為家人『性格不合』，而是溝通系統、衝突解決系統、情緒管理系統都沒建立。改變這些系統，家庭氛圍自動改善。", exampleEn:"Always late—blamed on lack of discipline. But examine system: alarm clock system missing, commute route unplanned, time buffer nonexistent. Change system—leave 30 min early, set 3 alarms, fixed route—lateness auto-resolves. Family always argues—not personality mismatch, but communication system, conflict-resolution system, emotion-management system all missing. Change these, family atmosphere auto-improves."},
+            {num:10, titleZh:"所有困境都有生成它的結構", titleEn:"Every predicament has a generating structure.", exampleZh:"一個員工總是加班到晚上十點，他可能說『公司太忙』。但仔細看結構：他不會拒絕任務（邊界結構缺陷）、他沒有優先級系統（優先順序結構缺陷）、他不會授權（權力分配結構缺陷）。真正的高手不是解決這一次加班，而是改變結構：清楚地說『不』、建立優先級框架、培養下屬接手任務。結構改變，加班問題從根本消失。", exampleEn:"Employee always works until 10 PM—blames 'company is busy.' But examine structure: can't say 'no' (boundary structure flawed), no priority system (prioritization structure flawed), won't delegate (power distribution flawed). True expert doesn't solve this one overtime, changes structure: says 'no' clearly, establishes priority framework, trains subordinates to handle tasks. Structure changes, overtime problem vanishes from root."},
+            {num:11, titleZh:"找到結構比解決問題重要", titleEn:"Finding structure matters more than solving problems.", exampleZh:"一個人總是缺錢，他的解決方式是『這個月要省錢』。但更聰明的方式是找結構：為什麼缺錢？是因為沒有自動儲蓄系統（工資到帳後自動轉進儲蓄帳戶）、沒有消費追蹤系統（不知道錢花到哪裡）、沒有預算系統（沒有計劃應該花多少）。一旦建立這些結構，缺錢問題自動解決。這就是為什麼有人一年賺50萬還缺錢，有人一年賺30萬卻能存錢——不是賺多少，是結構。", exampleEn:"Always short on money—solution: 'save this month.' Smarter: find structure. Why short? No auto-savings system (paycheck auto-transfers to savings), no spending-tracking system (don't know where money goes), no budget system (no spending plan). Build these, shortage auto-resolves. That's why someone earning 500k/year is broke, another earning 300k saves—not income level, but structure."},
+            {num:12, titleZh:"改變結構，結果自然改變", titleEn:"Change structure, results naturally follow.", exampleZh:"一個人想少吃糖，通常的做法是『靠意志力忍著不吃』，但這很難。更聰明的做法是改變環境結構：家裡根本不買糖果、零食放在看不見的地方、建立健身朋友圈、在桌邊放水杯和健康零食。結構改變後，你不用靠意志力，自然就少吃糖了。習慣改變不靠意志力，靠結構。這就是為什麼節食常失敗但改變廚房佈局往往成功。", exampleEn:"Want less sugar—usual method: 'resist with willpower'—hard. Smarter: change structure. Don't buy candy, hide snacks, join gym friends, fill desk with water and healthy snacks. Structure changed, you don't need willpower, naturally eat less sugar. Habit change isn't willpower-based, structure-based. That's why diets fail but kitchen reorganization succeeds."},
+            {num:13, titleZh:"真正的成長不是增加知識，而是更新模型", titleEn:"True growth is updating models, not acquiring knowledge.", exampleZh:"一個人聽過100場成功企業家的演講，學到了很多知識，但他的事業還是沒進展。原因是他的商業模型沒有更新——他聽到的知識沒有改變他對『創業成功』的理解。但一個人經歷一次失敗的創業，反而他對風險、市場、客戶的模型完全改變了。下次他創業時，因為模型改變了，決策完全不同，結果就不同。知識只是信息，不一定能改變人生；模型的改變才能改變人生。", exampleEn:"Heard 100 entrepreneur talks—learned lots, business still stagnant. Knowledge didn't update his business model—didn't change understanding of 'startup success.' One failed startup—his models of risk, market, customers completely reshape. Next startup, models changed, decisions different, results different. Knowledge is just information, doesn't necessarily change life; model updates change life."},
+            {num:14, titleZh:"真正的智慧不是知道答案，而是知道如何更新答案", titleEn:"True wisdom is knowing how to update answers, not having them.", exampleZh:"十年前，醫學界認為『吃低脂肪食物最健康』，這個答案被廣為接受。但隨著新研究出現，我們發現『某些脂肪其實很重要』。答案更新了。今天的營養學可能十年後又會改變。一個聰明的醫生不會執著於舊答案，而是持續學習最新研究、不斷驗證、願意改變自己的建議。這不是知識不足，而是擁有『不斷更新答案』的智慧。", exampleEn:"Decade ago: medicine said 'low-fat diet is healthiest'—accepted answer. New research: 'some fats are essential'—answer updates. Today's nutrition may change in 10 years. Smart doctor doesn't cling to old answers, constantly learns latest research, verifies, willing to change advice. Not knowledge shortage—it's wisdom of continuously updating answers."},
+            {num:15, titleZh:"自由不是沒有限制，自由是增加選擇權", titleEn:"Freedom isn't absence of limits; it's increasing choices.", exampleZh:"不會開車的人被限制在大眾運輸能到達的地方。會開車的人可以自由選擇去任何地方。但這不是說開車沒有限制（汽油費、路況、交通規則），而是說開車增加了選擇權。同樣，一個不會程式語言的人被限制在非技術職位；掌握程式語言的人可以選擇遠距工作、創業、技術領導。自由不是完全沒有限制，而是擁有更多的選擇空間。", exampleEn:"Can't drive—limited to public transit routes. Can drive—freely choose any destination. Not that driving has no limits (gas, road conditions, traffic rules), but it increases choices. Similarly, non-programmer limited to non-tech roles; programmer can choose remote work, startups, tech leadership. Freedom isn't no limits, it's more choice space."},
+            {num:16, titleZh:"能力越高，選擇越多", titleEn:"Higher capability enables more choices.", exampleZh:"掌握英文的人可以選擇出國留學、國際公司工作、跨境創業。不掌握英文的人選項就少很多。掌握編程的人能在科技業、金融業、教育業都找到位置。不掌握編程的人職業選擇有限。每一項能力都像解鎖了一條新的人生路徑。能力越多，選擇越多，自由度越高。這也是為什麼教育如此重要——它在不斷增加你的能力，進而增加你人生的選擇權。", exampleEn:"Master English—can choose study abroad, international company jobs, cross-border startups. No English—fewer options. Master coding—can work in tech, finance, education sectors. No coding—limited careers. Each capability unlocks new life path. More abilities, more choices, more freedom. That's why education matters—it increases capability, thus life choice options."},
+            {num:17, titleZh:"真正的財富是持續創造價值的能力", titleEn:"True wealth is continuous value-creation ability.", exampleZh:"一個人一次性得到100萬元，但他沒有創造價值的能力。10年後，這100萬花完了，他又回到貧困。另一個人每年創造價值30萬，他可以一輩子安穩富有。財務安全不來自於你存了多少錢，而來自於你每年能創造多少價值。這也是為什麼失業最可怕的不是失去一個月的收入，而是失去了每月創造價值的能力。擁有創造價值的能力，你永遠有飯吃；沒有這個能力，再多存款也會用完。", exampleEn:"Get 1 million once—no ability to create value—10 years later it's gone. Another creates 300k/year value—stays wealthy for life. Financial security doesn't come from savings, but annual value creation. That's why unemployment's worst fear isn't losing one month's income, but losing monthly value-creation ability. With value-creation ability, you always have food; without it, savings deplete."},
+            {num:18, titleZh:"真正的安全感來自能力，不是控制", titleEn:"True security comes from capability, not control.", exampleZh:"一個人試圖通過控制伴侶的行為來獲得安全感——監視誰他在和誰聊天、限制他出門。但這只會增加焦慮，因為他其實沒有解決根本問題（信任不夠、溝通不好）。而一個人通過提升自己的溝通能力、親密關係理解能力來獲得安全感。他不需要控制伴侶，因為他相信彼此，這種安全感是真的。在工作中也是如此：試圖控制市場走勢的人永遠焦慮；提升自己適應市場變化能力的人卻很坦然。", exampleEn:"Try control partner's behavior for security—monitor chats, limit outings—increases anxiety because root problem (insufficient trust, poor communication) unsolved. Versus build communication and relationship understanding—no need control, mutual trust provides real security. Work: markets—trying to control makes you anxious; building market-adaptation ability keeps you calm."},
+            {num:19, titleZh:"真正的幸福來自內在穩定，不是外在條件", titleEn:"True happiness comes from internal stability, not external conditions.", exampleZh:"同樣有錢有名有好家庭的兩個人，一個每天充滿幸福感，另一個總覺得缺少什麼。差別在哪？內在穩定度。內在穩定的人，即使暫時失業也不會崩潰；不穩定的人，再好的條件也容易因為一件小事就陷入抑鬱。內在穩定來自於什麼？對自己的認識、對人生的理解、面對困難的心態。條件可能改變，但內在穩定是你真正的基礎。這就是為什麼有人在困難中還能笑，有人在優越中還在怨。", exampleEn:"Two equally wealthy, famous, with good families: one feels happiness daily, another always feels lacking. Difference? Internal stability. Internally stable—temporary unemployment won't break them; unstable—even advantages crumble over small setback. Internal stability from: self-understanding, life comprehension, difficult-situation mindset. Conditions change, internal stability is true foundation. That's why some laugh in hardship, others complain in privilege."},
+            {num:20, titleZh:"真正的成熟是能管理自己，不是控制別人", titleEn:"True maturity is self-management, not controlling others.", exampleZh:"一個父親試圖完全控制兒子的人生——選擇他的朋友、學科、工作。結果是什麼？兒子要麼完全被動、要麼成年後反叛。對比一個父親管理好自己的情緒、設置清楚的家庭邊界、聽兒子的想法、給出建議而不是命令。這樣的孩子通常更聽話、更有自信。真正的成熟不是把焦點放在『改造別人』，而是放在『管理自己』。", exampleEn:"Father tries completely controlling son's life—chooses friends, subjects, career. Result? Son becomes passive or rebellious. Versus father managing own emotions, setting clear family boundaries, listening to son, advising not commanding. Such child usually more cooperative, confident. True maturity isn't reshaping others, it's managing yourself."}
+        ];
+
+        function renderCards(data) {
+            const container = document.getElementById('cardsContainer');
+            container.innerHTML = '';
+            data.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.onclick = () => { card.classList.toggle('expanded'); updateCount(); };
+                
+                card.innerHTML = `
+                    <div class="card-number">核心認知 #${String(item.num).padStart(3, '0')}</div>
+                    <div class="card-titles">
+                        <div class="card-title-zh">${item.titleZh}</div>
+                        <div class="card-title-en">${item.titleEn}</div>
+                    </div>
+                    <div class="expand-icon">▼</div>
+                    
+                    <div class="card-details">
+                        <div class="example-section">
+                            <div class="example-label">💡 生活實例 / Life Example</div>
+                            <div class="example-content">
+                                <div>
+                                    <div class="example-title">中文說明</div>
+                                    <div class="example-zh">${item.exampleZh}</div>
+                                </div>
+                                <div>
+                                    <div class="example-title">English</div>
+                                    <div class="example-en">${item.exampleEn}</div>
+                                </div>
+                            </div>
+                            <button class="tts-btn" onclick="speakEnglish('${item.titleEn.replace(/'/g, "\\'")} - ${item.exampleEn.replace(/'/g, "\\'")}')" title="聆聽英文朗讀">🎤 Listen English</button>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+            updateCount();
+        }
+        
+        function updateCount() {
+            const expanded = document.querySelectorAll('.card.expanded').length;
+            document.getElementById('expandCount').textContent = expanded;
+            document.getElementById('displayCount').textContent = document.querySelectorAll('.card').length;
+        }
+        
+        function expandAll() {
+            document.querySelectorAll('.card').forEach(c => c.classList.add('expanded'));
+            updateCount();
+        }
+        
+        function collapseAll() {
+            document.querySelectorAll('.card').forEach(c => c.classList.remove('expanded'));
+            updateCount();
+        }
+        
+        function speakEnglish(text) {
+            if ('speechSynthesis' in window) {
+                speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'en-US';
+                utterance.rate = 0.9;
+                utterance.pitch = 1;
+                speechSynthesis.speak(utterance);
+            }
+        }
+        
+        function initTabs() {
+            const tabs = document.getElementById('tabsContainer');
+            const ranges = [{start: 1, end: 10}, {start: 11, end: 20}, {start: 21, end: 30}, {start: 31, end: 40}, {start: 41, end: 50}, {start: 51, end: 60}, {start: 61, end: 71}];
+            ranges.forEach(r => {
+                const btn = document.createElement('button');
+                btn.className = 'tab-btn';
+                btn.textContent = `#${r.start}–${r.end}`;
+                btn.onclick = () => {
+                    const filtered = cognitionsData.filter(c => c.num >= r.start && c.num <= r.end);
+                    renderCards(filtered);
+                    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                };
+                tabs.appendChild(btn);
+            });
+        }
+        
+        initTabs();
+        renderCards(cognitionsData);
+    </script>
+</body>
+</html>
