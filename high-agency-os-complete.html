@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>人生智慧 High Agency OS 完整版</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --navy: #1A2B5F;
+            --gold: #C9960C;
+            --teal: #0A7A72;
+            --bg: #ffffff;
+            --light-bg: #f8f9fa;
+            --text-dark: #2c3e50;
+        }
+        body {
+            font-family: 'Microsoft JhengHei', '微軟正黑體', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: var(--text-dark);
+            line-height: 1.8;
+            min-height: 100vh;
+            padding: 15px;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        header h1 {
+            font-size: 2.3em;
+            color: var(--navy);
+            font-weight: 900;
+        }
+        header .subtitle {
+            font-size: 1em;
+            color: var(--teal);
+            font-weight: 600;
+        }
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 8px 15px;
+            border: 2px solid var(--navy);
+            background-color: var(--bg);
+            color: var(--navy);
+            cursor: pointer;
+            font-size: 0.9em;
+            border-radius: 5px;
+            font-weight: 600;
+        }
+        .btn:hover { background-color: var(--navy); color: var(--bg); }
+        .btn.active {
+            background-color: var(--gold);
+            border-color: var(--gold);
+            color: var(--navy);
+        }
+        .main-layout {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            gap: 15px;
+        }
+        .sidebar {
+            background-color: var(--bg);
+            border-radius: 10px;
+            padding: 18px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            height: fit-content;
+            max-height: 85vh;
+            overflow-y: auto;
+            position: sticky;
+            top: 15px;
+        }
+        .sidebar-title {
+            font-size: 1.1em;
+            color: var(--navy);
+            font-weight: 700;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--gold);
+        }
+        .scenario-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .scenario-btn {
+            padding: 10px;
+            border: 2px solid #ecf0f1;
+            background-color: var(--light-bg);
+            color: var(--text-dark);
+            cursor: pointer;
+            border-radius: 6px;
+            font-size: 0.9em;
+            font-weight: 600;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .scenario-btn:hover {
+            border-color: var(--teal);
+            background-color: rgba(10, 122, 114, 0.1);
+        }
+        .scenario-btn.active {
+            background: linear-gradient(135deg, var(--navy) 0%, var(--teal) 100%);
+            color: white;
+            border-color: var(--gold);
+        }
+        .scenario-emoji {
+            font-size: 1.2em;
+            min-width: 22px;
+        }
+        .content-area {
+            background-color: var(--bg);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            min-height: 600px;
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+        .scenario-header {
+            border-bottom: 3px solid var(--gold);
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+        .scenario-header h2 {
+            font-size: 1.8em;
+            color: var(--navy);
+            margin-bottom: 5px;
+        }
+        .scenario-header p {
+            font-size: 0.95em;
+            color: var(--teal);
+            font-weight: 600;
+        }
+        .framework-section {
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        .framework-section:last-child { border-bottom: none; }
+        .framework-number {
+            font-size: 1.9em;
+            font-weight: 900;
+            color: var(--gold);
+            margin-bottom: 5px;
+        }
+        .framework-title {
+            font-size: 1.4em;
+            color: var(--navy);
+            font-weight: 700;
+            margin-bottom: 3px;
+        }
+        .framework-subtitle {
+            font-size: 0.9em;
+            color: var(--teal);
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        .principle-box {
+            background: linear-gradient(135deg, rgba(26, 43, 95, 0.05) 0%, rgba(10, 122, 114, 0.05) 100%);
+            border-left: 4px solid var(--gold);
+            padding: 15px;
+            margin: 12px 0;
+            border-radius: 6px;
+        }
+        .principle-label {
+            color: var(--gold);
+            font-weight: 700;
+            font-size: 0.85em;
+            margin-bottom: 6px;
+        }
+        .principle-text {
+            font-size: 1em;
+            color: var(--navy);
+            font-weight: 600;
+            line-height: 1.5;
+            margin-bottom: 8px;
+        }
+        .principle-text.english {
+            color: var(--teal);
+            font-size: 0.9em;
+            font-style: italic;
+            margin-bottom: 0;
+        }
+        .item-list {
+            margin: 12px 0;
+        }
+        .item {
+            background-color: var(--light-bg);
+            padding: 8px 12px;
+            margin-bottom: 6px;
+            border-radius: 5px;
+            border-left: 3px solid var(--teal);
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+        .tts-btn {
+            display: inline-block;
+            padding: 5px 12px;
+            background-color: var(--gold);
+            color: var(--navy);
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 0.8em;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+        .tts-btn:hover {
+            background-color: var(--teal);
+            color: white;
+        }
+        .placeholder {
+            text-align: center;
+            padding: 60px 20px;
+            color: #95a5a6;
+            font-size: 1.1em;
+        }
+        .placeholder .emoji { font-size: 3.5em; margin-bottom: 15px; }
+        footer {
+            text-align: center;
+            padding: 15px;
+            color: var(--navy);
+            font-size: 0.85em;
+            font-weight: 600;
+            margin-top: 30px;
+        }
+        @media (max-width: 1024px) {
+            .main-layout { grid-template-columns: 1fr; }
+            .sidebar { position: relative; top: 0; max-height: none; }
+            .scenario-list {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+                gap: 6px;
+            }
+        }
+        @media (max-width: 600px) {
+            header h1 { font-size: 1.5em; }
+            .content-area { padding: 15px; font-size: 0.9em; }
+            .framework-number { font-size: 1.5em; }
+            .framework-title { font-size: 1.1em; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>High Agency OS 人生智慧</h1>
+        <div class="subtitle">341-350 完整框架 × 18 種人生場景</div>
+    </header>
+
+    <div class="container">
+        <div class="controls">
+            <button class="btn active" onclick="setLanguage('both')">雙語</button>
+            <button class="btn" onclick="setLanguage('chinese')">中文</button>
+            <button class="btn" onclick="setLanguage('english')">English</button>
+        </div>
+
+        <div class="main-layout">
+            <div class="sidebar">
+                <div class="sidebar-title">📋 場景選擇</div>
+                <div class="scenario-list" id="scenarioList"></div>
+            </div>
+
+            <div class="content-area" id="contentArea">
+                <div class="placeholder">
+                    <div class="emoji">👤</div>
+                    <p>選擇你的人生場景</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>編制者 Anne Wang 王欣蓉 | High Agency Neural Operating System</p>
+    </footer>
+
+    <script>
+        let currentLanguage = 'both';
+
+        const scenarios = [
+            { id: 'student', name: '學生', emoji: '📚' },
+            { id: 'medical', name: '醫學生', emoji: '🩺' },
+            { id: 'patient', name: '患者', emoji: '💊' },
+            { id: 'finance', name: '財務自由', emoji: '💰' },
+            { id: 'relationship', name: '親密關係', emoji: '💕' },
+            { id: 'workplace', name: '職場', emoji: '💼' },
+            { id: 'time', name: '時間管理', emoji: '⏰' },
+            { id: 'emotion', name: '情緒韌性', emoji: '🧠' },
+            { id: 'parent', name: '父母教養', emoji: '👨‍👩‍👧' },
+            { id: 'marriage', name: '婚姻', emoji: '💑' },
+            { id: 'retirement', name: '退休', emoji: '🌅' },
+            { id: 'startup', name: '創業', emoji: '🚀' },
+            { id: 'sales', name: '銷售', emoji: '🎯' },
+            { id: 'caregiver', name: '長照', emoji: '🤝' },
+            { id: 'chronic', name: '慢性病', emoji: '⚕️' },
+            { id: 'legacy', name: '智慧傳承', emoji: '📖' },
+            { id: 'health', name: '健康長壽', emoji: '🏃' },
+            { id: 'wealth', name: '財務2.0', emoji: '💎' }
+        ];
+
+        const frameworks = {
+            student: {
+                title: '📚 學生 - 學測英文',
+                en_title: 'Student - GSAT English',
+                items: [
+                    { num: 341, title: '好策略降低成本', en_title: 'Good Strategy Lowers Cost', principle: '不是背字典，而是抓分數來源', en_principle: 'Target high-value content, not memorize dictionaries', items: ['每天閱讀一篇，大於背50單字 | Read one article daily > memorize 50 words', '建立3000核心字，大於背萬個冷門字 | Build 3000 core words > 10K obscure words', '學字根字首字尾，大於死背 | Learn roots/prefixes/suffixes > rote memorization', '學文法架構，大於刷題 | Master grammar structure > grinding questions', '學閱讀技巧，大於逐字翻 | Learn reading strategies > word-by-word translation', 'AI每天解釋，大於自己猜 | AI explanation daily > guessing alone', '每天固定讀，大於假日讀很多 | Daily reading habit > weekend cramming', '每日20%高價值=80%成果 | 20% high-value daily = 80% results'] },
+                    { num: 342, title: '好系統降低內耗', en_title: 'Good Systems Reduce Friction', principle: '系統>努力 流程>記憶', en_principle: 'Systems > Effort; Processes > Memory', items: ['建立每日工作清單 | Daily task list', '建立固定晨間規劃 | Fixed morning planning', '建立AI協作系統 | AI collaboration system', '建立SOP流程 | Standardized procedures', '建立檔案管理 | File management system', '建立會議紀錄 | Meeting records system', '建立回顧系統 | Review system', '建立工作生活界線 | Work-life boundaries'] },
+                    { num: 343, title: '好流程降低錯誤', en_title: 'Good Processes Reduce Errors', principle: '檢查表>記憶 標準化>隨機', en_principle: 'Checklists > Memory; Standardization > Randomness', items: ['收到任務→確認→規劃→執行→檢查→交付 | Receive→Confirm→Plan→Execute→Check→Deliver', '開會→記錄→分工→追蹤→驗收 | Meeting→Record→Assign→Track→Verify', '發現問題→分析→方案→改善 | Problem→Analyze→Solution→Improve', '每天下班整理明日工作 | Organize next day before leaving', '每週完成一次工作回顧 | Weekly work review', '每月盤點能力 | Monthly capability audit'] },
+                    { num: 344, title: '好習慣降低意志力', en_title: 'Good Habits Reduce Willpower Drain', principle: '每天固定行為，不靠意志力', en_principle: 'Daily habits, not willpower dependency', items: ['每天提早規劃工作 | Plan early daily', '每天優先高價值任務 | Prioritize high-value daily', '每天整理環境 | Organize environment daily', '每天使用AI工具 | Use AI tools daily', '每天閱讀30分鐘 | Read 30 min daily', '每天運動30分鐘 | Exercise 30 min daily', '每天固定時間下班 | Fixed departure time', '每天反思最大收穫 | Reflect on key learnings daily'] },
+                    { num: 345, title: '好環境降低誘惑', en_title: 'Good Environment Reduces Temptation', principle: '環境設計>自制力', en_principle: 'Environmental design > Self-discipline', items: ['關閉不必要通知 | Disable unnecessary notifications', '工作時手機靜音 | Phone silent while working', '建立專注工作區 | Dedicated focus space', '減少無效會議 | Reduce unproductive meetings', '與積極同事合作 | Collaborate with positive colleagues', '建立成長文化 | Foster growth culture', '善用AI減少重工 | Use AI to minimize rework', '建立支持家庭環境 | Create supportive home environment'] },
+                    { num: 346, title: '好模型降低風險', en_title: 'Good Models Reduce Risk', principle: '用第一性原理、系統思考、控制論', en_principle: 'First principles, systems thinking, control theory', items: ['第一性原理分析問題 | First principles analysis', '系統思考理解組織 | Systems thinking for organizations', '控制論建立回饋 | Control theory for feedback', '80/20法則安排工作 | Pareto principle for prioritization', '機率思維評估風險 | Probabilistic risk assessment', '長期思維經營職涯 | Long-term career thinking', '槓桿思維提高價值 | Leverage thinking for value', '複利思維累積能力 | Compound thinking for skills'] },
+                    { num: 347, title: '好判斷降低損失', en_title: 'Good Judgment Reduces Loss', principle: '先確認假設，再做決定', en_principle: 'Verify assumptions first, then decide', items: ['不急著回答，先確認需求 | Clarify before responding', '不帶情緒回覆訊息 | Respond without emotion', '不把忙碌當成果 | Busyness ≠ productivity', '不輕易答應超出能力的工作 | Don\'t over-commit', '不逃避問題 | Face problems directly', '不推卸責任 | Own your responsibilities', '不忽略重要細節 | Attend to important details', '不因短期壓力放棄長期目標 | Don\'t abandon long-term goals'] },
+                    { num: 348, title: '好回饋降低偏差', en_title: 'Good Feedback Reduces Deviation', principle: '每個指標都是回饋，用來調整方向', en_principle: 'Every metric provides feedback to adjust course', items: ['考試成績是回饋 | Test scores = feedback', '同事反饋是回饋 | Colleague feedback = feedback', '客戶滿意度是回饋 | Customer satisfaction = feedback', 'KPI是回饋 | KPIs = feedback', '自己每天反思是回饋 | Daily self-reflection = feedback', '工作效率是回饋 | Work efficiency = feedback', '壓力程度是回饋 | Stress level = feedback', '人際品質是回饋 | Relationship quality = feedback'] },
+                    { num: 349, title: '好更新降低誤差', en_title: 'Good Updates Reduce Errors', principle: '每天更新模型，持續進化', en_principle: 'Update daily models, continuous evolution', items: ['更新專業能力 | Update expertise', '更新AI工具能力 | Update AI tool skills', '更新工作流程 | Update workflows', '更新時間管理 | Update time management', '更新簡報能力 | Update presentation skills', '更新溝通能力 | Update communication skills', '更新領導能力 | Update leadership skills', '更新職涯規劃 | Update career planning'] },
+                    { num: 350, title: '好決策放大成果', en_title: 'Good Decisions Amplify Results', principle: '選對方向大於努力', en_principle: 'Right direction > Effort', items: ['選提升能力，不抱怨公司 | Build skills, don\'t complain', '選建立價值，不爭功勞 | Create value, don\'t compete', '選建立信任，不建人設 | Build trust, not personas', '選解決問題，不製造問題 | Solve problems, don\'t create them', '選健康，不透支 | Choose health, not depletion', '選AI協作，不重複勞動 | AI collaboration, not repetition', '選終身學習，不停止成長 | Lifelong learning, not stagnation', '每天進步1%，職涯持續複利 | 1% daily improvement = career compounding'] }
+                ]
+            },
+            workplace: {
+                title: '💼 職場 - 工作效能',
+                en_title: 'Workplace - Work Excellence',
+                items: [
+                    { num: 341, title: '好策略降低成本', en_title: 'Good Strategy Lowers Cost', principle: '創造大價值，不是加班', en_principle: 'Create great value, not work long hours', items: ['優先完成最重要工作 | Prioritize most important work', '建立AI工作流程 | Build AI workflows', '建立可複製SOP | Create reusable procedures', '提高專業能力 | Increase expertise', '主動解決問題 | Solve problems proactively', '建立跨部門合作 | Build cross-team collaboration', '經營信任 | Cultivate trust', '每日20%高價值=80%成果 | 20% high-value = 80% results'] },
+                    { num: 342, title: '好系統降低內耗', en_title: 'Good Systems Reduce Friction', principle: '系統大於努力', en_principle: 'Systems > Effort', items: ['建立每日工作清單 | Daily task list', '建立晨間規劃系統 | Morning planning system', '建立AI協作系統 | AI collaboration system', '建立SOP流程 | Standardized procedures', '建立檔案管理系統 | File management system', '建立會議紀錄系統 | Meeting records system', '建立回顧系統 | Review system', '建立工作生活界線 | Work-life boundaries'] },
+                    { num: 343, title: '好流程降低錯誤', en_title: 'Good Processes Reduce Errors', principle: '檢查表>記憶', en_principle: 'Checklists > Memory', items: ['任務→確認→規劃→執行→檢查→交付 | Task→Confirm→Plan→Execute→Check→Deliver', '開會→紀錄→分工→追蹤→驗收 | Meeting→Record→Assign→Track→Verify', '問題→分析→方案→改善 | Problem→Analyze→Solution→Improve', '每日工作檢查表 | Daily checklist', '每週工作回顧 | Weekly review', '每月績效檢查 | Monthly check'] },
+                    { num: 344, title: '好習慣降低意志力', en_title: 'Good Habits Reduce Willpower Drain', principle: '每天固定習慣', en_principle: 'Daily habits', items: ['每天提早規劃 | Plan early daily', '每天優先高價值 | Prioritize daily', '每天整理環境 | Organize daily', '每天使用AI | Use AI daily', '每天運動30分鐘 | Exercise 30 min', '每天固定下班 | Fixed departure time', '每天反思收穫 | Daily reflection', '每周工作檢查 | Weekly check'] },
+                    { num: 345, title: '好環境降低誘惑', en_title: 'Good Environment Reduces Temptation', principle: '環境設計>自制力', en_principle: 'Environmental design > Self-discipline', items: ['關閉不必要通知 | Disable unnecessary notifications', '工作時手機靜音 | Phone silent during work', '建立專注工作區 | Dedicated focus space', '減少無效會議 | Reduce unproductive meetings', '與積極同事合作 | Collaborate with positive colleagues', '建立成長文化 | Foster growth culture', '善用AI減重工 | Use AI to reduce rework', '建立獎勵系統 | Create reward system'] },
+                    { num: 346, title: '好模型降低風險', en_title: 'Good Models Reduce Risk', principle: '用策略思考做決定', en_principle: 'Use strategic thinking for decisions', items: ['第一性原理分析 | First principles analysis', '系統思考 | Systems thinking', '控制論建立回饋 | Feedback loops', '80/20法則 | Pareto principle', '機率思維 | Probabilistic thinking', '長期思維 | Long-term perspective', '槓桿思維 | Leverage thinking', '複利思維 | Compounding thinking'] },
+                    { num: 347, title: '好判斷降低損失', en_title: 'Good Judgment Reduces Loss', principle: '先確認，再回應', en_principle: 'Verify first, then respond', items: ['不急著回答 | Don\'t rush', '不帶情緒 | Stay objective', '不把忙碌當成果 | Busyness ≠ productivity', '不輕易答應超出能力 | Don\'t over-commit', '不逃避問題 | Face problems', '不推卸責任 | Own responsibility', '不忽視細節 | Attend to details', '不因短期放棄長期 | Don\'t abandon long-term'] },
+                    { num: 348, title: '好回饋降低偏差', en_title: 'Good Feedback Reduces Deviation', principle: '用績效調整策略', en_principle: 'Use performance to adjust strategy', items: ['考評是回饋 | Performance reviews = feedback', '主管反饋是回饋 | Manager feedback = feedback', '同事反應是回饋 | Colleague input = feedback', 'KPI是回饋 | KPIs = feedback', '客戶滿意度是回饋 | Customer satisfaction = feedback', '工作效率是回饋 | Work efficiency = feedback', '壓力程度是回饋 | Stress level = feedback', '人際品質是回饋 | Relationship quality = feedback'] },
+                    { num: 349, title: '好更新降低誤差', en_title: 'Good Updates Reduce Errors', principle: '每天更新工作方法', en_principle: 'Update work methods daily', items: ['更新專業能力 | Update expertise', '更新AI工具 | Update AI tools', '更新流程 | Update workflows', '更新時間管理 | Update time management', '更新簡報能力 | Update presentation skills', '更新溝通能力 | Update communication', '更新領導能力 | Update leadership', '更新職涯規劃 | Update career plan'] },
+                    { num: 350, title: '好決策放大成果', en_title: 'Good Decisions Amplify Results', principle: '選對方向大於努力', en_principle: 'Right direction > Effort', items: ['選提升能力，不抱怨 | Build skills, don\'t complain', '選建立價值，不爭功勞 | Create value, don\'t compete', '選建立信任，不人設 | Build trust, not personas', '選解決問題，不製造 | Solve, don\'t create', '選健康，不透支 | Choose health, not depletion', '選AI協作，不重複 | Collaborate, don\'t repeat', '選終身學習 | Lifelong learning', '每天進步1%，職涯複利 | 1% daily = career compounding'] }
+                ]
+            },
+            health: {
+                title: '🏃 健康長壽 - 健康系統',
+                en_title: 'Health - Longevity & Wellness',
+                items: [
+                    { num: 341, title: '好策略降低成本', en_title: 'Good Strategy Lowers Cost', principle: '預防大於治療', en_principle: 'Prevention > Treatment', items: ['優先改善睡眠 | Prioritize sleep quality', '優先建立運動 | Establish exercise routine', '優先維持肌肉 | Maintain muscle mass', '優先穩定血糖 | Stabilize blood sugar', '優先降低發炎 | Reduce inflammation', '優先粒線體健康 | Prioritize mitochondrial health', '優先AI健康管理 | Use AI for health tracking', '每日1%改善=健康複利 | 1% daily = health compounding'] },
+                    { num: 342, title: '好系統降低內耗', en_title: 'Good Systems Reduce Friction', principle: '建立健康系統', en_principle: 'Build health systems', items: ['建立睡眠系統 | Sleep system', '建立運動系統 | Exercise system', '建立飲食系統 | Nutrition system', '建立檢查系統 | Health check system', '建立補充系統 | Supplement system', '建立壓力管理 | Stress management', '建立社交系統 | Social system', '建立恢復系統 | Recovery system'] },
+                    { num: 343, title: '好流程降低錯誤', en_title: 'Good Processes Reduce Errors', principle: '標準化健康流程', en_principle: 'Standardize health processes', items: ['計畫→執行→監測→評估→調整 | Plan→Execute→Monitor→Assess→Adjust', '每日行動清單 | Daily checklist', '每週進度檢查 | Weekly check', '每月全面評估 | Monthly assessment', '每季計畫調整 | Quarterly adjustment'] },
+                    { num: 344, title: '好習慣降低意志力', en_title: 'Good Habits Reduce Willpower Drain', principle: '每天固定習慣', en_principle: 'Daily habits', items: ['每天充足睡眠 | Sleep sufficiently', '每天運動30分鐘 | Exercise 30 min', '每天營養飲食 | Eat well', '每天喝足夠水 | Drink enough water', '每天適度休息 | Rest adequately', '每週檢查狀況 | Weekly check', '每月全面檢查 | Monthly check', '每季計畫調整 | Quarterly adjustment'] },
+                    { num: 345, title: '好環境降低誘惑', en_title: 'Good Environment Reduces Temptation', principle: '環境設計>自制力', en_principle: 'Environmental design > Self-discipline', items: ['建立運動環境 | Exercise space', '準備健康食物 | Stock healthy food', '限制不健康食物 | Limit unhealthy options', '與健康夥伴合作 | Partner with health-conscious people', '參加健康課程 | Join health programs', '善用健康App | Use health apps', '建立激勵機制 | Create incentives', '設定提醒系統 | Set reminders'] },
+                    { num: 346, title: '好模型降低風險', en_title: 'Good Models Reduce Risk', principle: '用健康模型', en_principle: 'Use health models', items: ['身體預算模型 | Body budget model', '睡眠科學模型 | Sleep science model', '運動生理模型 | Exercise physiology', '營養平衡模型 | Nutrition balance model', '壓力管理模型 | Stress management model', '老化延緩模型 | Aging delay model', '疾病預防模型 | Disease prevention model', '健康評估框架 | Health assessment framework'] },
+                    { num: 347, title: '好判斷降低損失', en_title: 'Good Judgment Reduces Loss', principle: '先科學，再決定', en_principle: 'Use science first, then decide', items: ['不盲目嘗試 | Don\'t experiment blindly', '不聽信偏方 | Don\'t believe quacks', '不過度鍛煉 | Don\'t over-exercise', '不忽視症狀 | Don\'t ignore symptoms', '不停止檢查 | Don\'t skip checkups', '不冒然禁食 | Don\'t fast without guidance', '不否定醫學 | Don\'t reject medicine', '不延遲治療 | Don\'t delay treatment'] },
+                    { num: 348, title: '好回饋降低偏差', en_title: 'Good Feedback Reduces Deviation', principle: '用身體狀況調整', en_principle: 'Use body signals to adjust', items: ['能量水準是回饋 | Energy level = feedback', '睡眠品質是回饋 | Sleep quality = feedback', '運動表現是回饋 | Exercise performance = feedback', '檢查報告是回饋 | Lab results = feedback', '身體感受是回饋 | Physical sensations = feedback', '情緒狀態是回饋 | Mood = feedback', '病痛訊號是回饋 | Pain signals = feedback', '生活品質是回饋 | Life quality = feedback'] },
+                    { num: 349, title: '好更新降低誤差', en_title: 'Good Updates Reduce Errors', principle: '每月更新健康策略', en_principle: 'Update health strategy monthly', items: ['更新睡眠習慣 | Update sleep habits', '更新運動計畫 | Update exercise plan', '更新飲食方案 | Update nutrition plan', '更新檢查項目 | Update health checks', '更新補充方式 | Update supplements', '更新壓力管理 | Update stress management', '更新健康知識 | Update health knowledge', '更新長期目標 | Update long-term goals'] },
+                    { num: 350, title: '好決策放大成果', en_title: 'Good Decisions Amplify Results', principle: '選預防大於治療', en_principle: 'Choose prevention over treatment', items: ['選睡眠，不熬夜 | Choose sleep, not all-nighters', '選運動，不久坐 | Choose exercise, not sedentary', '選天然，不加工 | Choose natural, not processed', '選恢復，不透支 | Choose recovery, not depletion', '選AI管理，不感覺 | Use AI, not guessing', '選每日1%改善 | 1% daily improvement', '選投資健康 | Invest in health', '健康是最好投資 | Health is the best investment'] }
+                ]
+            },
+            finance: {
+                title: '💰 財務自由 - 財富系統',
+                en_title: 'Finance - Financial Freedom',
+                items: [
+                    { num: 341, title: '好策略降低成本', en_title: 'Good Strategy Lowers Cost', principle: '找最大槓桿，不是一直努力', en_principle: 'Find maximum leverage, not just work harder', items: ['解決高價值問題 | Solve high-value problems', '建立品牌信任 | Build brand trust', '建立會員制 | Create membership model', '建立AI自動化 | Automate with AI', '建立內容資產 | Create content assets', '建立可複製SOP | Build repeatable processes', '建立現金流 | Create cash flow', '每日20%高價值=80%成果 | 20% high-value = 80% results'] },
+                    { num: 342, title: '好系統降低內耗', en_title: 'Good Systems Reduce Friction', principle: '建立收入與投資系統', en_principle: 'Build income and investment systems', items: ['建立收入系統 | Income system', '建立記帳系統 | Accounting system', '建立預算系統 | Budget system', '建立自動儲蓄 | Automatic savings', '建立投資系統 | Investment system', '建立AI工作流程 | AI workflows', '建立客戶管理 | Customer management', '建立學習系統 | Learning system'] },
+                    { num: 343, title: '好流程降低錯誤', en_title: 'Good Processes Reduce Errors', principle: '標準化財務決策', en_principle: 'Standardize financial decisions', items: ['收入→記帳→分析→投資→評估 | Income→Record→Analyze→Invest→Assess', '開支→記錄→檢查→調整預算 | Expense→Record→Check→Budget', '投資→研究→決策→執行→追蹤 | Invest→Research→Decide→Execute→Track', '每月記帳檢查 | Monthly audit', '每季投資評估 | Quarterly assessment', '每年財務規劃 | Annual planning'] },
+                    { num: 344, title: '好習慣降低意志力', en_title: 'Good Habits Reduce Willpower Drain', principle: '每天固定財務習慣', en_principle: 'Daily financial habits', items: ['每天記帳 | Record daily', '每天檢查現金流 | Check cash flow', '每週檢查支出 | Weekly expense check', '每週評估投資 | Weekly investment review', '每月做財務檢討 | Monthly review', '每月設定儲蓄目標 | Monthly savings goal', '每季審視投資組合 | Quarterly portfolio review', '每年更新財務計畫 | Annual financial plan'] },
+                    { num: 345, title: '好環境降低誘惑', en_title: 'Good Environment Reduces Temptation', principle: '環境設計>自制力', en_principle: 'Environmental design > Self-discipline', items: ['設定自動儲蓄 | Automatic savings setup', '限制衝動消費 | Limit impulse spending', '取消不必要訂閱 | Cancel unnecessary subscriptions', '與投資人合作 | Partner with investors', '參加財務課程 | Join finance programs', '善用理財App | Use finance apps', '建立消費提醒 | Spending alerts', '計畫主要開支 | Plan major expenses'] },
+                    { num: 346, title: '好模型降低風險', en_title: 'Good Models Reduce Risk', principle: '用財務模型做決定', en_principle: 'Use financial models for decisions', items: ['資產配置模型 | Asset allocation model', '風險評估模型 | Risk assessment model', '投資報酬模型 | Return on investment model', '現金流預測模型 | Cash flow forecast model', '稅務規劃模型 | Tax planning model', '多元收入模型 | Multiple income model', '資產保護模型 | Asset protection model', '財務獨立計算 | FIRE calculation'] },
+                    { num: 347, title: '好判斷降低損失', en_title: 'Good Judgment Reduces Loss', principle: '先研究，再投資', en_principle: 'Research first, invest second', items: ['不急著投資 | Don\'t rush to invest', '不跟風炒作 | Don\'t follow hype', '不過度槓桿 | Don\'t over-leverage', '不忽視風險 | Don\'t ignore risk', '不追高殺低 | Don\'t panic buy/sell', '不逃避虧損 | Don\'t avoid losses', '不忽視稅務 | Don\'t neglect taxes', '不集中投資 | Don\'t concentrate'] },
+                    { num: 348, title: '好回饋降低偏差', en_title: 'Good Feedback Reduces Deviation', principle: '用成績調整策略', en_principle: 'Use results to adjust strategy', items: ['投資報酬是回饋 | Investment returns = feedback', '現金流是回饋 | Cash flow = feedback', '資產增長是回饋 | Asset growth = feedback', '支出減少是回饋 | Expense reduction = feedback', '淨資產增加是回饋 | Net worth increase = feedback', '收入增長是回饋 | Income growth = feedback', '稅後收益是回饋 | After-tax returns = feedback', '財務自由進度是回饋 | FIRE progress = feedback'] },
+                    { num: 349, title: '好更新降低誤差', en_title: 'Good Updates Reduce Errors', principle: '每月更新財務策略', en_principle: 'Update strategy monthly', items: ['更新市場知識 | Update market knowledge', '更新投資工具 | Update investment tools', '更新稅務法規 | Update tax laws', '更新收入來源 | Update income sources', '更新資產配置 | Update asset allocation', '更新支出預算 | Update budget', '更新風險管理 | Update risk management', '更新財務目標 | Update financial goals'] },
+                    { num: 350, title: '好決策放大成果', en_title: 'Good Decisions Amplify Results', principle: '選對槓桿大於投入', en_principle: 'Right leverage > investment amount', items: ['選建立資產，不增加負債 | Build assets, not liabilities', '選提高能力，不等加薪 | Build skills, don\'t wait', '選建立品牌，不出售時間 | Build brand, not time', '選建立現金流，不只追求收入 | Build cash flow, not income', '選投資自己，不衝動消費 | Invest in self, not stuff', '選AI協作，不重複勞動 | Use AI, not repetition', '每天改善1%，財富複利 | 1% daily = wealth compounding', '選創造價值，獲利成自然結果 | Create value, profits follow'] }
+                ]
+            },
+            relationship: {
+                title: '💕 親密關係 - 伴侶系統',
+                en_title: 'Relationship - Partnership Excellence',
+                items: [
+                    { num: 341, title: '好策略降低成本', en_title: 'Good Strategy Lowers Cost', principle: '修復關係，不改變對方', en_principle: 'Repair relationships, don\'t change partners', items: ['先理解對方，再希望被理解 | Understand first, be understood second', '先處理情緒，再討論事情 | Handle emotions, then discuss', '先建立安全感，再談改變 | Build safety, then change', '先解決真正需求，不是表面衝突 | Address real needs, not surface conflicts', '先修復信任，再解決事件 | Restore trust, then resolve issues', '每天增加一分理解 | Add understanding daily', '看見彼此共同目標 | See shared goals', '建立長期互信 | Build long-term trust'] },
+                    { num: 342, title: '好系統降低內耗', en_title: 'Good Systems Reduce Friction', principle: '建立固定溝通系統', en_principle: 'Build consistent communication systems', items: ['每天固定聊天20分鐘 | Daily 20-min chat', '每週固定約會時間 | Weekly date night', '每月婚姻檢討時間 | Monthly relationship check', '建立共同家庭財務 | Joint finances', '建立共同家務分工 | Shared chores', '建立固定感恩分享 | Regular gratitude', '建立衝突修復機制 | Conflict resolution', '建立共同夢想規劃 | Shared dreaming'] },
+                    { num: 343, title: '好流程降低錯誤', en_title: 'Good Processes Reduce Errors', principle: '標準化溝通與衝突解決', en_principle: 'Standardize communication and conflict resolution', items: ['問題→理解→討論→決策→執行 | Issue→Understand→Discuss→Decide→Execute', '衝突→暫停→冷靜→聆聽→解決 | Conflict→Pause→Calm→Listen→Solve', '決策→協商→同意→執行→檢討 | Decision→Negotiate→Agree→Execute→Review', '每日早安與晚安儀式 | Daily hello/goodbye rituals', '每週一次深度談話 | Weekly deep conversation', '每月一次關係評估 | Monthly relationship assessment'] },
+                    { num: 344, title: '好習慣降低意志力', en_title: 'Good Habits Reduce Willpower Drain', principle: '每天固定親密習慣', en_principle: 'Daily intimacy habits', items: ['每天問候彼此 | Daily greetings', '每天表達感謝 | Daily gratitude', '每天肢體接觸 | Daily physical touch', '每天共同進餐 | Daily meals together', '每天分享心情 | Daily sharing', '每週一次約會 | Weekly date', '每月一次特別時光 | Monthly special time', '每年規劃共同旅行 | Annual trip'] },
+                    { num: 345, title: '好環境降低誘惑', en_title: 'Good Environment Reduces Temptation', principle: '建立親密環境', en_principle: 'Create intimate environment', items: ['關閉工作相關通知 | Turn off work notifications', '建立無干擾談話時間 | Uninterrupted talk time', '建立溫暖家庭環境 | Warm home environment', '與友誼夫妻來往 | Spend time with healthy couples', '參加親密關係課程 | Take relationship classes', '聘請關係諮商師 | Get counseling if needed', '建立家庭儀式 | Create family rituals', '消除外在誘惑與陷阱 | Remove external temptations'] },
+                    { num: 346, title: '好模型降低風險', en_title: 'Good Models Reduce Risk', principle: '用親密關係理論', en_principle: 'Use relationship theory', items: ['愛的語言模型 | Love languages model', '衝突解決模型 | Conflict resolution model', '信任重建模型 | Trust rebuilding model', '溝通型態分析 | Communication patterns', '情感需求模型 | Emotional needs model', '夫妻生命週期 | Marital lifecycle', '親子互動模型 | Parent-child interaction', '共同目標願景 | Shared vision'] },
+                    { num: 347, title: '好判斷降低損失', en_title: 'Good Judgment Reduces Loss', principle: '先溝通，再決定', en_principle: 'Communicate first, then decide', items: ['不急著爭辯 | Don\'t rush to argue', '不帶情緒指責 | Don\'t criticize emotionally', '不翻舊帳 | Don\'t bring up the past', '不忽視對方感受 | Don\'t ignore feelings', '不逃避溝通 | Don\'t avoid talking', '不冷戰 | Don\'t give silent treatment', '不輕視小事情 | Don\'t dismiss small things', '不放棄親密關係 | Don\'t give up'] },
+                    { num: 348, title: '好回饋降低偏差', en_title: 'Good Feedback Reduces Deviation', principle: '用彼此反應調整', en_principle: 'Use mutual response to adjust', items: ['伴侶反應是回饋 | Partner response = feedback', '衝突是回饋 | Conflict = feedback', '親密度是回饋 | Intimacy level = feedback', '溝通品質是回饋 | Communication quality = feedback', '性生活滿意度是回饋 | Sexual satisfaction = feedback', '金錢狀況是回饋 | Financial status = feedback', '家務協調是回饋 | Chore coordination = feedback', '共同計畫進展是回饋 | Joint plans = feedback'] },
+                    { num: 349, title: '好更新降低誤差', en_title: 'Good Updates Reduce Errors', principle: '每月更新親密策略', en_principle: 'Update relationship strategy monthly', items: ['更新溝通方式 | Update communication', '更新共同目標 | Update goals', '更新性生活 | Update intimacy', '更新家務分工 | Update chores', '更新財務計畫 | Update finances', '更新親子互動 | Update parenting', '更新社交圈 | Update social life', '更新生活方式 | Update lifestyle'] },
+                    { num: 350, title: '好決策放大成果', en_title: 'Good Decisions Amplify Results', principle: '選擇理解大於爭辯', en_principle: 'Choose understanding over debate', items: ['選理解，不批評 | Choose understanding, not criticism', '選陪伴，不控制 | Choose companionship, not control', '選合作，不競爭 | Choose cooperation, not competition', '選鼓勵，不抱怨 | Choose encouragement, not complaints', '選信任，不懷疑 | Choose trust, not suspicion', '選修復，不冷戰 | Choose repair, not silence', '選共同成長，不互相要求 | Choose growth, not demands', '每天改善1%，關係複利 | 1% daily = relationship compounding'] }
+                ]
+            },
+            time: {
+                title: '⏰ 時間管理 - 時間系統',
+                en_title: 'Time Management - Mastery',
+                items: [
+                    { num: 341, title: '好策略降低成本', en_title: 'Good Strategy Lowers Cost', principle: '優先做最重要的，不是最緊急的', en_principle: 'Prioritize important, not urgent', items: ['優先做高槓桿工作 | High-leverage work first', '優先做長期有影響的工作 | Long-term impact work', '優先做與目標相關的工作 | Goal-aligned work', '每天只做最重要的3件事 | Only 3 priorities daily', '每週優先週目標 | Weekly goals', '每月優先月目標 | Monthly goals', '每年優先年目標 | Annual goals', '每日20%時間=80%成果 | 20% time = 80% results'] },
+                    { num: 342, title: '好系統降低內耗', en_title: 'Good Systems Reduce Friction', principle: '系統管理時間', en_principle: 'System-based time management', items: ['建立每日時間區塊制 | Daily time blocks', '建立優先順序系統 | Priority system', '建立專注時間保護 | Focus time protection', '建立行事曆管理 | Calendar management', '建立休息時間系統 | Rest time system', '建立年度規劃系統 | Annual planning system', '建立季度檢查系統 | Quarterly checks', '建立每日回顧系統 | Daily review system'] },
+                    { num: 343, title: '好流程降低錯誤', en_title: 'Good Processes Reduce Errors', principle: '標準化時間規劃', en_principle: 'Standardize time planning', items: ['計畫→分配→執行→追蹤→調整 | Plan→Allocate→Execute→Track→Adjust', '晨間規劃→工作→中午檢查→下午調整→晚間回顧 | Morning→Work→Noon check→Adjust→Evening review', '週計畫→日執行→週檢查→月評估 | Weekly→Daily→Check→Monthly review', '每日建立工作清單 | Daily task list', '每週做週計畫 | Weekly plan', '每月做月檢查 | Monthly check'] },
+                    { num: 344, title: '好習慣降低意志力', en_title: 'Good Habits Reduce Willpower Drain', principle: '每天固定時間習慣', en_principle: 'Daily time habits', items: ['每天固定晨起時間 | Fixed wake time', '每天固定規劃時間 | Planning time', '每天固定休息時間 | Rest time', '每天固定運動時間 | Exercise time', '每天固定進食時間 | Meal time', '每天固定睡眠時間 | Sleep time', '每天固定反思時間 | Reflection time', '每週固定休息日 | Weekly rest day'] },
+                    { num: 345, title: '好環境降低誘惑', en_title: 'Good Environment Reduces Temptation', principle: '環境設計>自制力', en_principle: 'Environmental design > Self-discipline', items: ['設定專注工作時間 | Focus time blocks', '關閉工作時間通知 | Disable work notifications', '建立無干擾工作區 | Distraction-free space', '減少會議數量 | Fewer meetings', '統一檢查信息時間 | Unified message times', '設定自動回覆 | Auto-reply setup', '善用行事曆阻擋時間 | Calendar blocking', '建立時間提醒系統 | Reminder system'] },
+                    { num: 346, title: '好模型降低風險', en_title: 'Good Models Reduce Risk', principle: '用時間管理模型', en_principle: 'Use time management models', items: ['四象限管理法 | Eisenhower Matrix', '時間區塊制 | Time blocking', '番茄時鐘法 | Pomodoro technique', '80/20法則 | Pareto principle', '關鍵路徑分析 | Critical path analysis', '優先順序矩陣 | Priority matrix', '目標管理OKR | OKR system', '時間預算制 | Time budgeting'] },
+                    { num: 347, title: '好判斷降低損失', en_title: 'Good Judgment Reduces Loss', principle: '先優先，再執行', en_principle: 'Prioritize first, execute second', items: ['不急著回應 | Don\'t respond immediately', '不輕易答應 | Don\'t over-commit', '不把忙碌當有效 | Busyness ≠ effectiveness', '不忽視休息 | Don\'t ignore rest', '不逃避規劃 | Don\'t skip planning', '不過度承諾 | Don\'t over-promise', '不常改計畫 | Don\'t constantly change plans', '不消耗休息時間 | Don\'t sacrifice rest'] },
+                    { num: 348, title: '好回饋降低偏差', en_title: 'Good Feedback Reduces Deviation', principle: '用完成度調整', en_principle: 'Use completion rate to adjust', items: ['工作完成度是回饋 | Completion rate = feedback', '時間預估準確度是回饋 | Estimation accuracy = feedback', '優先順序設定是回饋 | Priority setting = feedback', '壓力水準是回饋 | Stress level = feedback', '睡眠品質是回饋 | Sleep quality = feedback', '身體狀況是回饋 | Physical health = feedback', '工作品質是回饋 | Work quality = feedback', '生活滿意度是回饋 | Life satisfaction = feedback'] },
+                    { num: 349, title: '好更新降低誤差', en_title: 'Good Updates Reduce Errors', principle: '每週更新時間策略', en_principle: 'Update strategy weekly', items: ['更新優先順序 | Update priorities', '更新時間分配 | Update allocation', '更新工作流程 | Update workflows', '更新目標計畫 | Update goals', '更新休息方式 | Update rest methods', '更新時間工具 | Update time tools', '更新行事曆 | Update calendar', '更新習慣設定 | Update habits'] },
+                    { num: 350, title: '好決策放大成果', en_title: 'Good Decisions Amplify Results', principle: '選對時間分配大於工時', en_principle: 'Right allocation > Hours worked', items: ['選重要，不緊急 | Choose important, not urgent', '選長期，不短期 | Choose long-term, not short-term', '選深度，不淺度 | Choose deep, not shallow', '選規劃，不隨意 | Choose planned, not random', '選休息，不透支 | Choose rest, not depletion', '選專注，不多工 | Choose focus, not multitask', '選完成，不忙碌 | Choose completion, not busyness', '每日安排更優，效果更好 | Better arrangement = better results'] }
+                ]
+            },
+            emotion: {
+                title: '🧠 情緒韌性 - 心理系統',
+                en_title: 'Emotional Resilience - Mental Health',
+                items: [
+                    { num: 341, title: '好策略降低成本', en_title: 'Good Strategy Lowers Cost', principle: '先處理情緒，再解決問題', en_principle: 'Handle emotion first, solve problem second', items: ['提前識別情緒 | Identify emotions early', '建立情緒覺察習慣 | Build emotion awareness', '學會呼吸放鬆技巧 | Learn breathing techniques', '認識情緒模式 | Understand emotion patterns', '建立支持網絡 | Build support network', '定期心理檢查 | Regular check-ins', '使用AI情緒追蹤 | Use emotion tracking', '每日20%情緒=80%狀態 | 20% emotion work = 80% well-being'] },
+                    { num: 342, title: '好系統降低內耗', en_title: 'Good Systems Reduce Friction', principle: '建立情緒管理系統', en_principle: 'Build emotion management systems', items: ['建立每日情緒紀錄 | Daily emotion log', '建立冥想習慣 | Meditation practice', '建立表達方式 | Expression methods', '建立壓力釋放機制 | Stress relief', '建立睡眠系統 | Sleep system', '建立運動習慣 | Exercise routine', '建立社交系統 | Social connection', '建立自我照顧系統 | Self-care system'] },
+                    { num: 343, title: '好流程降低錯誤', en_title: 'Good Processes Reduce Errors', principle: '標準化情緒處理', en_principle: 'Standardize emotion processing', items: ['識別→承認→理解→接納→調整 | Identify→Acknowledge→Understand→Accept→Adjust', '壓力→暫停→冷靜→反思→行動 | Stress→Pause→Calm→Reflect→Act', '衝突→冷靜→傾聽→理解→溝通 | Conflict→Calm→Listen→Understand→Communicate', '每日情緒檢查 | Daily check-in', '每週情緒回顧 | Weekly review', '每月情緒評估 | Monthly assessment'] },
+                    { num: 344, title: '好習慣降低意志力', en_title: 'Good Habits Reduce Willpower Drain', principle: '每天固定情緒習慣', en_principle: 'Daily emotion habits', items: ['每天冥想10分鐘 | Meditate 10 min', '每天記錄情緒 | Log emotions', '每天運動30分鐘 | Exercise 30 min', '每天感謝練習 | Gratitude practice', '每天充足睡眠 | Sleep well', '每天與親友聯繫 | Connect with loved ones', '每週一次療癒活動 | Weekly healing activity', '每月一次心理檢查 | Monthly check-up'] },
+                    { num: 345, title: '好環境降低誘惑', en_title: 'Good Environment Reduces Temptation', principle: '建立療癒環境', en_principle: 'Create healing environment', items: ['整理居家環境 | Organize home', '降低噪音干擾 | Reduce noise', '建立冥想空間 | Meditation space', '與積極朋友來往 | Positive friendships', '參加支持團體 | Support groups', '聘請心理諮商師 | Therapy access', '善用冥想App | Meditation apps', '建立節慶儀式 | Celebration rituals'] },
+                    { num: 346, title: '好模型降低風險', en_title: 'Good Models Reduce Risk', principle: '用心理模型理解', en_principle: 'Use psychological models', items: ['認知行為模型 | Cognitive behavioral model', '情緒調節模型 | Emotion regulation model', '壓力應對模型 | Stress coping model', '韌性建構模型 | Resilience model', '創傷修復模型 | Trauma recovery model', '自我同情模型 | Self-compassion model', '意義找尋模型 | Meaning-making model', '關係療癒模型 | Relationship healing'] },
+                    { num: 347, title: '好判斷降低損失', en_title: 'Good Judgment Reduces Loss', principle: '先冷靜，再決定', en_principle: 'Calm first, decide second', items: ['不急著反應 | Don\'t react immediately', '不帶情緒說話 | Don\'t speak emotionally', '不做衝動決定 | Don\'t decide impulsively', '不逃避情緒 | Don\'t avoid emotions', '不否認感受 | Don\'t deny feelings', '不自責過度 | Don\'t over-blame self', '不孤立自己 | Don\'t isolate', '不放棄希望 | Don\'t give up hope'] },
+                    { num: 348, title: '好回饋降低偏差', en_title: 'Good Feedback Reduces Deviation', principle: '用心理狀態調整', en_principle: 'Use mental state to adjust', items: ['心情是回饋 | Mood = feedback', '睡眠品質是回饋 | Sleep = feedback', '壓力指數是回饋 | Stress = feedback', '人際互動品質 | Relationships = feedback', '工作表現是回饋 | Performance = feedback', '身體反應是回饋 | Physical signs = feedback', '直覺感受是回饋 | Intuition = feedback', '生活滿意度是回饋 | Satisfaction = feedback'] },
+                    { num: 349, title: '好更新降低誤差', en_title: 'Good Updates Reduce Errors', principle: '每週更新情緒策略', en_principle: 'Update strategy weekly', items: ['更新認知模式 | Update thinking patterns', '更新放鬆技巧 | Update relaxation', '更新支持網絡 | Update support system', '更新療癒方法 | Update healing methods', '更新邊界設定 | Update boundaries', '更新自我照顧 | Update self-care', '更新處理方式 | Update coping', '更新成長目標 | Update growth goals'] },
+                    { num: 350, title: '好決策放大成果', en_title: 'Good Decisions Amplify Results', principle: '選擇成長大於逃避', en_principle: 'Choose growth over avoidance', items: ['選成長，不逃避 | Choose growth, not avoidance', '選理解，不批評 | Choose understanding, not criticism', '選接納，不抗拒 | Choose acceptance, not resistance', '選行動，不紛擾 | Choose action, not worry', '選療癒，不麻痺 | Choose healing, not numbing', '選連結，不孤立 | Choose connection, not isolation', '選希望，不絕望 | Choose hope, not despair', '每天改善1%，心理複利 | 1% daily = mental compounding'] }
+                ]
+            },
+            parent: {
+                title: '👨‍👩‍👧 父母教養 - 教養系統',
+                en_title: 'Parenting - Family Excellence',
+                items: [
+                    { num: 341, title: '好策略降低成本', en_title: 'Good Strategy Lowers Cost', principle: '建立教養原則，不隨意懲罰', en_principle: 'Build principles, not arbitrary punishment', items: ['明確教養目標 | Clear parenting goals', '建立家庭規則 | Family rules', '做好榜樣示範 | Model behavior', '建立正面溝通 | Positive communication', '理解孩子發展階段 | Understand child development', '建立信任關係 | Build trust', '定期家庭會議 | Family meetings', '每日20%高質量陪伴=80%效果 | Quality > quantity time'] },
+                    { num: 342, title: '好系統降低內耗', en_title: 'Good Systems Reduce Friction', principle: '建立教養系統', en_principle: 'Build parenting systems', items: ['建立每日陪伴時間 | Daily time together', '建立家務分工 | Chore distribution', '建立家庭儀式 | Family rituals', '建立溝通慣例 | Communication routines', '建立獎勵系統 | Reward system', '建立學習支持系統 | Learning support', '建立休閒活動計畫 | Activity planning', '建立危機應對機制 | Crisis protocol'] },
+                    { num: 343, title: '好流程降低錯誤', en_title: 'Good Processes Reduce Errors', principle: '標準化教養流程', en_principle: 'Standardize parenting processes', items: ['問題→理解→討論→決策→執行→檢討 | Problem→Understand→Discuss→Decide→Execute→Review', '衝突→冷靜→傾聽→理解→解決 | Conflict→Calm→Listen→Understand→Resolve', '學習→引導→支持→檢查→鼓勵 | Learning→Guide→Support→Check→Encourage', '每日親子時光 | Daily time', '每週家庭會議 | Weekly meeting', '每月教養評估 | Monthly assessment'] },
+                    { num: 344, title: '好習慣降低意志力', en_title: 'Good Habits Reduce Willpower Drain', principle: '每天固定教養習慣', en_principle: 'Daily parenting habits', items: ['每天親子對話 | Daily conversation', '每天問候擁抱 | Daily hugs', '每天陪伴讀書 | Daily reading', '每天正面鼓勵 | Daily encouragement', '每天家庭進餐 | Family meals', '每週親子活動 | Weekly activity', '每月家庭出遊 | Monthly outing', '每年家庭檢查 | Annual review'] },
+                    { num: 345, title: '好環境降低誘惑', en_title: 'Good Environment Reduces Temptation', principle: '建立家庭環境', en_principle: 'Create home environment', items: ['建立溫暖家庭氛圍 | Warm atmosphere', '減少3C誘惑 | Limit screen time', '建立學習環境 | Learning space', '與志同道合家長交流 | Connect with other parents', '參加家庭教育課程 | Parenting classes', '建立家族傳統 | Family traditions', '善用教養資源 | Use parenting resources', '建立家庭支持 | Family support'] },
+                    { num: 346, title: '好模型降低風險', en_title: 'Good Models Reduce Risk', principle: '用教養理論', en_principle: 'Use parenting theory', items: ['發展心理學模型 | Developmental psychology', '溝通型態分析 | Communication styles', '管教風格評估 | Discipline styles', '獨立性培養模型 | Independence building', '學習動力建構 | Motivation building', '生活技能教養 | Life skills', '品格養成模型 | Character building', '危機應對框架 | Crisis response'] },
+                    { num: 347, title: '好判斷降低損失', en_title: 'Good Judgment Reduces Loss', principle: '先理解，再教導', en_principle: 'Understand first, teach second', items: ['不急著訓斥 | Don\'t scold immediately', '不過度保護 | Don\'t over-protect', '不比較孩子 | Don\'t compare', '不忽視孩子需求 | Don\'t ignore needs', '不逃避責任 | Don\'t avoid responsibility', '不放任 | Don\'t be permissive', '不用孩子彌補遺憾 | Don\'t project onto child', '不影響孩子自尊 | Don\'t damage self-esteem'] },
+                    { num: 348, title: '好回饋降低偏差', en_title: 'Good Feedback Reduces Deviation', principle: '用孩子反應調整', en_principle: 'Use child\'s response to adjust', items: ['孩子行為是回饋 | Behavior = feedback', '孩子情緒是回饋 | Emotions = feedback', '學業表現是回饋 | Academic performance = feedback', '親子互動品質 | Interaction quality = feedback', '孩子主動性是回饋 | Initiative = feedback', '家庭和樂度是回饋 | Family harmony = feedback', '孩子自信心是回饋 | Confidence = feedback', '親子關係品質 | Relationship = feedback'] },
+                    { num: 349, title: '好更新降低誤差', en_title: 'Good Updates Reduce Errors', principle: '每月更新教養策略', en_principle: 'Update parenting strategy monthly', items: ['更新孩子狀況理解 | Update child understanding', '更新教養方法 | Update methods', '更新溝通方式 | Update communication', '更新學習支持 | Update learning support', '更新邊界設定 | Update boundaries', '更新獎勵系統 | Update rewards', '更新家庭規則 | Update rules', '更新長期目標 | Update goals'] },
+                    { num: 350, title: '好決策放大成果', en_title: 'Good Decisions Amplify Results', principle: '選擇教養大於控制', en_principle: 'Choose guidance over control', items: ['選引導，不控制 | Choose guidance, not control', '選鼓勵，不批評 | Choose encouragement, not criticism', '選傾聽，不說教 | Choose listening, not lecturing', '選合作，不命令 | Choose cooperation, not command', '選信任，不懷疑 | Choose trust, not suspicion', '選陪伴，不忽視 | Choose presence, not absence', '選成長，不完美 | Choose growth, not perfection', '每日改善1%，親子複利 | 1% daily = parenting compounding'] }
+                ]
+            },
+            marriage: {
+                title: '💑 婚姻 - 伴侶系統',
+                en_title: 'Marriage - Partnership Excellence',
+                items: [
+                    { num: 341, title: '好策略降低成本', en_title: 'Good Strategy Lowers Cost', principle: '建立婚姻目標，不跟風期望', en_principle: 'Build your goals, not follow expectations', items: ['明確婚姻願景 | Clear marriage vision', '建立共同價值 | Shared values', '做財務規劃 | Financial planning', '建立家庭願景 | Family vision', '規劃人生階段 | Life stages plan', '建立性生活計畫 | Intimacy planning', '規劃育兒計畫 | Parenting plan', '每日20%溝通=80%幸福 | 20% communication = 80% happiness'] },
+                    { num: 342, title: '好系統降低內耗', en_title: 'Good Systems Reduce Friction', principle: '建立婚姻系統', en_principle: 'Build marriage systems', items: ['建立每日溝通時間 | Daily communication', '建立每週約會日 | Weekly date', '建立每月深度談話 | Monthly deep talk', '建立財務共管系統 | Financial management', '建立家務分工 | Chore division', '建立親密時光 | Intimacy time', '建立度假計畫 | Vacation planning', '建立危機應對機制 | Crisis protocol'] },
+                    { num: 343, title: '好流程降低錯誤', en_title: 'Good Processes Reduce Errors', principle: '標準化婚姻溝通', en_principle: 'Standardize marriage communication', items: ['議題→傾聽→理解→討論→決策→執行 | Topic→Listen→Understand→Discuss→Decide→Execute', '衝突→暫停→冷靜→表達→解決 | Conflict→Pause→Calm→Express→Resolve', '決策→協商→同意→執行→檢討 | Decision→Negotiate→Agree→Execute→Review', '每週婚姻檢查 | Weekly check', '每月關係評估 | Monthly assessment', '每年婚姻檢視 | Annual review'] },
+                    { num: 344, title: '好習慣降低意志力', en_title: 'Good Habits Reduce Willpower Drain', principle: '每天固定婚姻習慣', en_principle: 'Daily marriage habits', items: ['每天問候擁抱 | Daily greetings', '每天表達感謝 | Daily gratitude', '每天肢體接觸 | Daily touch', '每天分享 | Daily sharing', '每週一次約會 | Weekly date', '每月一次浪漫時光 | Monthly romance', '每年一次蜜月旅行 | Annual getaway', '每年一次婚姻檢查 | Annual review'] },
+                    { num: 345, title: '好環境降低誘惑', en_title: 'Good Environment Reduces Temptation', principle: '建立婚姻環境', en_principle: 'Create marriage environment', items: ['關閉工作相關通知 | Turn off work notifications', '建立無干擾談話時間 | Uninterrupted time', '建立溫暖臥室 | Warm bedroom', '與幸福夫妻來往 | Positive couple friendships', '參加婚姻課程 | Marriage classes', '聘請婚姻諮商師 | Counseling access', '建立家庭儀式 | Family rituals', '消除外在誘惑 | Remove temptations'] },
+                    { num: 346, title: '好模型降低風險', en_title: 'Good Models Reduce Risk', principle: '用婚姻理論', en_principle: 'Use marriage theory', items: ['愛的語言模型 | Love languages', '衝突解決模型 | Conflict resolution', '信任重建模型 | Trust rebuilding', '溝通型態分析 | Communication styles', '性親密模型 | Sexual intimacy', '財務管理模型 | Money management', '人生階段模型 | Life stages', '幸福指數評估 | Happiness assessment'] },
+                    { num: 347, title: '好判斷降低損失', en_title: 'Good Judgment Reduces Loss', principle: '先溝通，再決定', en_principle: 'Communicate first, decide second', items: ['不急著爭論 | Don\'t argue', '不冷戰 | Don\'t go silent', '不翻舊帳 | Don\'t bring up past', '不忽視感受 | Don\'t dismiss feelings', '不逃避溝通 | Don\'t avoid talking', '不妥協原則 | Don\'t compromise values', '不放棄關係 | Don\'t give up', '不外遇 | Don\'t cheat'] },
+                    { num: 348, title: '好回饋降低偏差', en_title: 'Good Feedback Reduces Deviation', principle: '用互動品質調整', en_principle: 'Use interaction quality to adjust', items: ['伴侶反應是回饋 | Partner response = feedback', '衝突是回饋 | Conflict = feedback', '親密度是回饋 | Intimacy = feedback', '溝通滿意度是回饋 | Communication = feedback', '性生活滿意度是回饋 | Sexual satisfaction = feedback', '財務狀況是回饋 | Finances = feedback', '共同計畫進展是回饋 | Joint plans = feedback', '幸福指數是回饋 | Happiness = feedback'] },
+                    { num: 349, title: '好更新降低誤差', en_title: 'Good Updates Reduce Errors', principle: '每月更新婚姻策略', en_principle: 'Update marriage strategy monthly', items: ['更新溝通方式 | Update communication', '更新共同目標 | Update goals', '更新親密方式 | Update intimacy', '更新財務計畫 | Update finances', '更新人生規劃 | Update life plan', '更新性生活 | Update sex life', '更新親子關係 | Update parenting', '更新社交生活 | Update social life'] },
+                    { num: 350, title: '好決策放大成果', en_title: 'Good Decisions Amplify Results', principle: '選擇投資婚姻大於其他', en_principle: 'Prioritize marriage over all else', items: ['選婚姻，不事業 | Choose marriage, not career', '選陪伴，不忽視 | Choose presence, not absence', '選溝通，不沉默 | Choose talk, not silence', '選修復，不冷戰 | Choose repair, not silence', '選理解，不批評 | Choose understanding, not criticism', '選合作，不對抗 | Choose cooperation, not conflict', '選成長，不停滯 | Choose growth, not stagnation', '每日改善1%，婚姻複利 | 1% daily = marriage compounding'] }
+                ]
+            },
+            retirement: {
+                title: '🌅 退休 - 人生規劃',
+                en_title: 'Retirement - Life Encore',
+                items: [
+                    { num: 341, title: '好策略降低成本', en_title: 'Good Strategy Lowers Cost', principle: '提前規劃，不臨時抱佛腳', en_principle: 'Plan ahead, don\'t scramble at end', items: ['建立退休願景 | Retirement vision', '計算退休金需求 | Calculate needs', '建立多元收入 | Diversify income', '整理遺產規劃 | Legacy planning', '建立健康基礎 | Health foundation', '建立人際關係 | Relationships', '培養興趣嗜好 | Hobbies', '每年20%規劃=80%準備 | 20% planning = 80% ready'] },
+                    { num: 342, title: '好系統降低內耗', en_title: 'Good Systems Reduce Friction', principle: '建立退休生活系統', en_principle: 'Build retirement lifestyle systems', items: ['建立每日作息規律 | Daily routine', '建立興趣活動計畫 | Activity planning', '建立社交圈子 | Social circles', '建立志願服務 | Volunteer work', '建立健康管理 | Health management', '建立財務管理 | Financial management', '建立人際維繫 | Relationship maintenance', '建立終身學習 | Lifelong learning'] },
+                    { num: 343, title: '好流程降低錯誤', en_title: 'Good Processes Reduce Errors', principle: '標準化退休管理', en_principle: 'Standardize retirement management', items: ['退休→調整→建立→探索→成長 | Retire→Adjust→Build→Explore→Grow', '財務→管理→分配→投資→檢查 | Finance→Manage→Allocate→Invest→Check', '健康→檢查→預防→運動→享受 | Health→Check→Prevent→Exercise→Enjoy', '每月財務檢查 | Monthly finances', '每季活動評估 | Quarterly check', '每年生活檢視 | Annual review'] },
+                    { num: 344, title: '好習慣降低意志力', en_title: 'Good Habits Reduce Willpower Drain', principle: '每天固定退休習慣', en_principle: 'Daily retirement habits', items: ['每天規律作息 | Regular schedule', '每天運動30分鐘 | Exercise 30 min', '每天社交互動 | Social interaction', '每天學習活動 | Learning', '每週志願服務 | Weekly volunteer', '每月朋友聚會 | Monthly gathering', '每季家族出遊 | Quarterly trip', '每年人生回顧 | Annual review'] },
+                    { num: 345, title: '好環境降低誘惑', en_title: 'Good Environment Reduces Temptation', principle: '建立退休環境', en_principle: 'Create retirement environment', items: ['整理居家環境 | Organize home', '建立興趣空間 | Hobby space', '與志同道合朋友來往 | Like-minded friends', '參加社團活動 | Join groups', '建立學習課程 | Learning programs', '設定志願工作 | Volunteer roles', '計畫休閒活動 | Plan leisure', '建立家庭聚首 | Family gatherings'] },
+                    { num: 346, title: '好模型降低風險', en_title: 'Good Models Reduce Risk', principle: '用人生規劃模型', en_principle: 'Use life planning models', items: ['退休財務模型 | Retirement finance', '健康預期壽命模型 | Longevity planning', '社會參與模型 | Social engagement', '終身學習模型 | Learning model', '人生意義模型 | Life purpose', '遺產規劃模型 | Legacy planning', '人際維繫模型 | Relationship model', '人生階段轉換 | Life transition'] },
+                    { num: 347, title: '好判斷降低損失', en_title: 'Good Judgment Reduces Loss', principle: '先評估，再決定', en_principle: 'Evaluate first, decide second', items: ['不倉促退休 | Don\'t rush', '不過度花費 | Don\'t overspend', '不完全閒置 | Don\'t be idle', '不忽視健康 | Don\'t ignore health', '不放棄學習 | Don\'t stop learning', '不隔離自己 | Don\'t isolate', '不失去目標 | Don\'t lose purpose', '不只被動享受 | Don\'t be passive'] },
+                    { num: 348, title: '好回饋降低偏差', en_title: 'Good Feedback Reduces Deviation', principle: '用生活品質調整', en_principle: 'Use life quality to adjust', items: ['幸福指數是回饋 | Happiness = feedback', '健康狀況是回饋 | Health = feedback', '人際互動品質 | Relationships = feedback', '生活滿足感是回饋 | Fulfillment = feedback', '精神狀態是回饋 | Mental state = feedback', '財務充足度是回饋 | Finances = feedback', '社會貢獻是回饋 | Contribution = feedback', '生命意義是回饋 | Purpose = feedback'] },
+                    { num: 349, title: '好更新降低誤差', en_title: 'Good Updates Reduce Errors', principle: '每季更新退休計畫', en_principle: 'Update quarterly', items: ['更新健康目標 | Update health goals', '更新活動計畫 | Update activities', '更新社交圈 | Update social life', '更新興趣嗜好 | Update hobbies', '更新學習方向 | Update learning', '更新財務配置 | Update finances', '更新人生目標 | Update goals', '更新志願服務 | Update volunteer'] },
+                    { num: 350, title: '好決策放大成果', en_title: 'Good Decisions Amplify Results', principle: '選擇成長大於安逸', en_principle: 'Choose growth over comfort', items: ['選成長，不衰落 | Choose growth, not decline', '選貢獻，不消費 | Choose contribution, not consumption', '選連結，不孤立 | Choose connection, not isolation', '選學習，不停滯 | Choose learning, not stagnation', '選健康，不放縱 | Choose health, not indulgence', '選意義，不空虛 | Choose purpose, not emptiness', '選智慧，不抱怨 | Choose wisdom, not complaints', '每日改善1%，人生複利 | 1% daily = life compounding'] }
+                ]
+            },
+            startup: {
+                title: '🚀 創業 - 創業系統',
+                en_title: 'Startup - Business Building',
+                items: [
+                    { num: 341, title: '好策略降低成本', en_title: 'Good Strategy Lowers Cost', principle: '解決高價值問題，不增加產品', en_principle: 'Solve high-value problems, not add products', items: ['明確客戶需求 | Understand customer needs', '聚焦核心價值 | Focus on core value', '建立獨特優勢 | Build unique advantage', '規劃營收模式 | Design revenue model', '建立品牌定位 | Position brand', '測試市場反應 | Test market', '優化成本結構 | Optimize costs', '每日20%核心=80%成果 | 20% core = 80% results'] },
+                    { num: 342, title: '好系統降低內耗', en_title: 'Good Systems Reduce Friction', principle: '建立創業系統', en_principle: 'Build startup systems', items: ['建立組織結構 | Organization', '建立流程標準 | Processes', '建立財務管理 | Finances', '建立客戶管理 | CRM', '建立產品開發 | Product development', '建立銷售系統 | Sales', '建立人才招募 | Recruitment', '建立績效管理 | Performance'] },
+                    { num: 343, title: '好流程降低錯誤', en_title: 'Good Processes Reduce Errors', principle: '標準化創業流程', en_principle: 'Standardize startup processes', items: ['想法→驗證→測試→改進→擴展 | Idea→Validate→Test→Improve→Scale', '產品→開發→測試→反饋→迭代 | Product→Dev→Test→Feedback→Iterate', '銷售→定位→策略→執行→評估 | Sales→Position→Strategy→Execute→Assess', '每週工作檢查 | Weekly check', '每月績效評估 | Monthly assessment', '每季策略調整 | Quarterly adjustment'] },
+                    { num: 344, title: '好習慣降低意志力', en_title: 'Good Habits Reduce Willpower Drain', principle: '每天固定創業習慣', en_principle: 'Daily startup habits', items: ['每天晨會規劃 | Daily planning', '每天優先核心工作 | Core work priority', '每天客戶互動 | Customer interaction', '每天數據檢查 | Data review', '每天團隊溝通 | Team sync', '每周策略會議 | Weekly strategy', '每月績效檢討 | Monthly review', '每季方向調整 | Quarterly adjustment'] },
+                    { num: 345, title: '好環境降低誘惑', en_title: 'Good Environment Reduces Temptation', principle: '建立創業環境', en_principle: 'Create startup environment', items: ['建立辦公環境 | Office space', '招聘優秀團隊 | Great team', '建立顧問團隊 | Advisors', '與創業者交流 | Peer network', '參加創業活動 | Startup events', '善用創業資源 | Resources', '建立融資渠道 | Funding sources', '建立夥伴網絡 | Partner network'] },
+                    { num: 346, title: '好模型降低風險', en_title: 'Good Models Reduce Risk', principle: '用商業模型', en_principle: 'Use business models', items: ['商業模式畫布 | Business model canvas', '客戶獲取模型 | CAC model', '收入預測模型 | Revenue forecast', '競爭分析框架 | Competitive analysis', '風險評估模型 | Risk assessment', '融資規劃模型 | Funding model', '團隊組建模型 | Team building', '市場進入策略 | Market entry'] },
+                    { num: 347, title: '好判斷降低損失', en_title: 'Good Judgment Reduces Loss', principle: '先驗證，再投入', en_principle: 'Validate first, then invest', items: ['不盲目創業 | Don\'t jump in', '不忽視市場調研 | Research market', '不過度燒錢 | Don\'t overspend', '不忽視團隊 | Don\'t ignore team', '不冒然擴展 | Don\'t expand fast', '不逃避困難 | Face challenges', '不失去焦點 | Stay focused', '不過度自信 | Stay humble'] },
+                    { num: 348, title: '好回饋降低偏差', en_title: 'Good Feedback Reduces Deviation', principle: '用數據調整策略', en_principle: 'Use data to adjust strategy', items: ['客戶反饋是回饋 | Customer feedback = feedback', '銷售數據是回饋 | Sales data = feedback', '用戶增長是回饋 | Growth = feedback', '財務狀況是回饋 | Finances = feedback', '團隊績效是回饋 | Team performance = feedback', '市場反應是回饋 | Market response = feedback', '投資者信心是回饋 | Investor confidence = feedback', '員工滿意度是回饋 | Employee satisfaction = feedback'] },
+                    { num: 349, title: '好更新降低誤差', en_title: 'Good Updates Reduce Errors', principle: '每月更新創業策略', en_principle: 'Update strategy monthly', items: ['更新市場理解 | Update market knowledge', '更新產品方向 | Update product', '更新銷售策略 | Update sales', '更新財務計畫 | Update finances', '更新團隊目標 | Update team goals', '更新競爭分析 | Update competition', '更新融資計畫 | Update funding', '更新長期願景 | Update vision'] },
+                    { num: 350, title: '好決策放大成果', en_title: 'Good Decisions Amplify Results', principle: '選對槓桿大於投入', en_principle: 'Right leverage > investment', items: ['選對市場，不跟風 | Right market, no trends', '選對團隊，不獨行 | Right team, no solo', '選對投資者，不濫竽 | Right investors', '選對方向，不固執 | Right direction', '選對速度，不莽撞 | Right pace', '選對風險管理 | Risk management', '選對長期規劃 | Long-term plan', '每日改善1%，事業複利 | 1% daily = business compounding'] }
+                ]
+            },
+            sales: {
+                title: '🎯 銷售 - 銷售系統',
+                en_title: 'Sales - Sales Excellence',
+                items: [
+                    { num: 341, title: '好策略降低成本', en_title: 'Good Strategy Lowers Cost', principle: '解決客戶問題，不只推銷產品', en_principle: 'Solve customer problems, not just sell', items: ['理解客戶需求 | Understand needs', '聚焦核心價值 | Focus on value', '建立信任關係 | Build trust', '規劃銷售漏斗 | Sales funnel', '建立轉介系統 | Referral system', '優化銷售流程 | Optimize process', '提高成交率 | Improve closing', '每日20%高價值=80%成果 | 20% high-value = 80% results'] },
+                    { num: 342, title: '好系統降低內耗', en_title: 'Good Systems Reduce Friction', principle: '建立銷售系統', en_principle: 'Build sales systems', items: ['建立客戶管理系統 | CRM', '建立銷售流程 | Sales process', '建立跟進系統 | Follow-up', '建立提案模板 | Proposals', '建立成交話術 | Closing scripts', '建立客戶分類 | Segmentation', '建立績效追蹤 | Performance tracking', '建立轉介激勵 | Referral rewards'] },
+                    { num: 343, title: '好流程降低錯誤', en_title: 'Good Processes Reduce Errors', principle: '標準化銷售流程', en_principle: 'Standardize sales process', items: ['開發→接觸→需求→提案→成交→服務→轉介 | Prospect→Contact→Qualify→Propose→Close→Serve→Refer', '每日開發→溝通→跟進→成交→檢查 | Daily: Prospect→Communicate→Follow→Close→Check', '每週銷售檢查 | Weekly check', '每月績效評估 | Monthly assessment', '每季策略調整 | Quarterly adjustment'] },
+                    { num: 344, title: '好習慣降低意志力', en_title: 'Good Habits Reduce Willpower Drain', principle: '每天固定銷售習慣', en_principle: 'Daily sales habits', items: ['每天開發客戶 | Prospect daily', '每天跟進潛在客 | Follow-up daily', '每天提升技能 | Skill building', '每天客戶互動 | Customer time', '每周銷售會議 | Weekly meeting', '每月績效檢討 | Monthly review', '每季拜訪分析 | Quarterly analysis', '每年銷售回顧 | Annual review'] },
+                    { num: 345, title: '好環境降低誘惑', en_title: 'Good Environment Reduces Temptation', principle: '建立銷售環境', en_principle: 'Create sales environment', items: ['建立銷售團隊 | Sales team', '建立客戶資源 | Customer base', '建立激勵機制 | Incentives', '與頂尖銷售學習 | Learn from top sellers', '參加銷售訓練 | Sales training', '建立同儕支持 | Peer support', '善用銷售工具 | Sales tools', '建立成功案例 | Case studies'] },
+                    { num: 346, title: '好模型降低風險', en_title: 'Good Models Reduce Risk', principle: '用銷售模型', en_principle: 'Use sales models', items: ['銷售漏斗模型 | Sales funnel', '客戶旅程模型 | Customer journey', '成交話術模型 | Closing scripts', '異議處理模型 | Objection handling', '客戶生命週期 | Customer lifecycle', '轉介激勵模型 | Referral model', '價值提案框架 | Value proposition', '競爭定位策略 | Competitive positioning'] },
+                    { num: 347, title: '好判斷降低損失', en_title: 'Good Judgment Reduces Loss', principle: '先理解，再銷售', en_principle: 'Understand first, sell second', items: ['不急著推銷 | Don\'t rush', '不忽視客戶需求 | Listen to needs', '不夸大產品 | Don\'t exaggerate', '不冷漠跟進 | Be warm', '不逃避異議 | Address objections', '不放棄潛在客 | Don\'t give up', '不負面表述 | Stay positive', '不只追求短期成交 | Long-term thinking'] },
+                    { num: 348, title: '好回饋降低偏差', en_title: 'Good Feedback Reduces Deviation', principle: '用成交率調整策略', en_principle: 'Use close rate to adjust', items: ['成交率是回饋 | Close rate = feedback', '客戶反應是回饋 | Customer response = feedback', '異議類型是回饋 | Objection types = feedback', '轉介數是回饋 | Referrals = feedback', '客戶滿意度是回饋 | Satisfaction = feedback', '客戶流失是回饋 | Churn = feedback', '銷售週期是回饋 | Sales cycle = feedback', '平均客戶價值是回饋 | AOV = feedback'] },
+                    { num: 349, title: '好更新降低誤差', en_title: 'Good Updates Reduce Errors', principle: '每週更新銷售策略', en_principle: 'Update strategy weekly', items: ['更新客戶名單 | Update prospects', '更新產品知識 | Update product', '更新話術 | Update scripts', '更新成交技巧 | Update closing', '更新客戶資訊 | Update data', '更新市場趨勢 | Update market', '更新競爭對手 | Update competition', '更新激勵目標 | Update targets'] },
+                    { num: 350, title: '好決策放大成果', en_title: 'Good Decisions Amplify Results', principle: '選對策略大於努力', en_principle: 'Right strategy > effort', items: ['選關係，不交易 | Build relationships', '選理解，不推銷 | Understand, not sell', '選轉介，不陌生開發 | Referrals > cold', '選高價值客，不全面 | Quality > quantity', '選長期，不短期 | Long-term focus', '選協作，不競爭 | Collaborate, compete', '選專業，不濫竽 | Professional', '每日改善1%，業績複利 | 1% daily = sales compounding'] }
+                ]
+            },
+            caregiver: {
+                title: '🤝 長照 - 照護系統',
+                en_title: 'Caregiving - Care Excellence',
+                items: [
+                    { num: 341, title: '好策略降低成本', en_title: 'Good Strategy Lowers Cost', principle: '建立支持網絡，不獨自承擔', en_principle: 'Build support network, don\'t go alone', items: ['建立照護計畫 | Care plan', '整合醫療資源 | Healthcare coordination', '申請社會福利 | Social benefits', '建立家庭支持 | Family support', '學習照護技巧 | Care skills', '建立心理支持 | Mental health support', '規劃財務 | Financial planning', '每日20%有效=80%狀態 | 20% effective = 80% wellbeing'] },
+                    { num: 342, title: '好系統降低內耗', en_title: 'Good Systems Reduce Friction', principle: '建立照護系統', en_principle: 'Build care systems', items: ['建立每日照護流程 | Daily care routine', '建立藥物管理 | Medication management', '建立營養管理 | Nutrition management', '建立活動計畫 | Activity planning', '建立醫療追蹤 | Medical tracking', '建立家務分工 | Chore division', '建立家庭輪值 | Care rotation', '建立緊急應對 | Emergency protocol'] },
+                    { num: 343, title: '好流程降低錯誤', en_title: 'Good Processes Reduce Errors', principle: '標準化照護流程', en_principle: 'Standardize care processes', items: ['早晨→照顧→進食→運動→醫療→檢查 | Morning→Care→Meals→Activity→Medical→Check', '每日照護檢查表 | Daily checklist', '每週評估狀況 | Weekly assessment', '每月醫療檢查 | Monthly check-up', '每季計畫調整 | Quarterly adjustment'] },
+                    { num: 344, title: '好習慣降低意志力', en_title: 'Good Habits Reduce Willpower Drain', principle: '每天固定照護習慣', en_principle: 'Daily care habits', items: ['每天定時照護 | Scheduled care', '每天檢查狀況 | Status check', '每天溝通陪伴 | Communication', '每天記錄日誌 | Record keeping', '每週醫療檢查 | Weekly check', '每月家庭會議 | Monthly meeting', '每季專業評估 | Professional review', '每年計畫檢視 | Annual review'] },
+                    { num: 345, title: '好環境降低誘惑', en_title: 'Good Environment Reduces Temptation', principle: '建立照護環境', en_principle: 'Create care environment', items: ['整理居家安全 | Home safety', '建立無障礙環境 | Accessibility', '申請照護協助 | Care assistance', '參加照護課程 | Caregiver classes', '加入支持團體 | Support groups', '聘請專業協助 | Professional help', '善用照護工具 | Care tools', '建立家庭支持 | Family support'] },
+                    { num: 346, title: '好模型降低風險', en_title: 'Good Models Reduce Risk', principle: '用照護模型', en_principle: 'Use care models', items: ['失能評估模型 | Disability assessment', '照護計畫模型 | Care planning', '風險管理模型 | Risk management', '營養支持模型 | Nutrition support', '心理調適模型 | Mental health', '家庭資源模型 | Family resources', '長期照護規劃 | Long-term care', '緊急應對框架 | Emergency response'] },
+                    { num: 347, title: '好判斷降低損失', en_title: 'Good Judgment Reduces Loss', principle: '先評估，再決定', en_principle: 'Assess first, decide second', items: ['不過度照護 | Don\'t over-care', '不忽視自己健康 | Caregiver health', '不拒絕幫助 | Accept help', '不放棄專業支持 | Get professional help', '不生氣責備 | Don\'t blame', '不隱瞞問題 | Be transparent', '不冒然決定 | Think carefully', '不只依賴一人 | Share responsibility'] },
+                    { num: 348, title: '好回饋降低偏差', en_title: 'Good Feedback Reduces Deviation', principle: '用照護效果調整', en_principle: 'Use care outcomes to adjust', items: ['被照護者狀況是回饋 | Care recipient status = feedback', '生活品質是回饋 | Quality of life = feedback', '照護者壓力是回饋 | Caregiver stress = feedback', '醫療成效是回饋 | Medical outcomes = feedback', '家庭和諧度是回饋 | Family harmony = feedback', '社會參與是回饋 | Social engagement = feedback', '心理狀態是回饋 | Mental state = feedback', '支持系統品質 | Support quality = feedback'] },
+                    { num: 349, title: '好更新降低誤差', en_title: 'Good Updates Reduce Errors', principle: '每月更新照護計畫', en_principle: 'Update care plan monthly', items: ['更新健康狀況 | Update health', '更新照護方式 | Update methods', '更新藥物管理 | Update medications', '更新營養計畫 | Update nutrition', '更新活動內容 | Update activities', '更新醫療追蹤 | Update medical', '更新家庭分工 | Update division', '更新心理支持 | Update mental health'] },
+                    { num: 350, title: '好決策放大成果', en_title: 'Good Decisions Amplify Results', principle: '選擇整合資源大於獨行', en_principle: 'Integrate resources, don\'t go solo', items: ['選尋求幫助 | Ask for help', '選建立網絡 | Build network', '選專業協助 | Get professional', '選照護者自己 | Self-care first', '選長期規劃 | Long-term plan', '選心理支持 | Mental health', '選社會福利 | Use benefits', '每日改善1%，照護品質 | 1% daily = care quality'] }
+                ]
+            },
+            chronic: {
+                title: '⚕️ 慢性病 - 疾病管理',
+                en_title: 'Chronic Disease - Management',
+                items: [
+                    { num: 341, title: '好策略降低成本', en_title: 'Good Strategy Lowers Cost', principle: '建立完整管理計畫', en_principle: 'Build complete management plan', items: ['理解疾病機制 | Understand disease', '建立監測系統 | Monitoring system', '規劃治療方案 | Treatment plan', '建立生活調整 | Lifestyle adjustment', '學習自我管理 | Self-management', '建立醫患合作 | Doctor partnership', '規劃預防措施 | Prevention', '每日20%有效=80%控制 | 20% effective = 80% controlled'] },
+                    { num: 342, title: '好系統降低內耗', en_title: 'Good Systems Reduce Friction', principle: '建立管理系統', en_principle: 'Build management systems', items: ['建立每日檢測 | Daily monitoring', '建立用藥系統 | Medication system', '建立飲食系統 | Nutrition system', '建立運動計畫 | Exercise plan', '建立定期檢查 | Regular check-ups', '建立知識庫 | Knowledge base', '建立支持網絡 | Support network', '建立應急計畫 | Emergency plan'] },
+                    { num: 343, title: '好流程降低錯誤', en_title: 'Good Processes Reduce Errors', principle: '標準化管理流程', en_principle: 'Standardize management process', items: ['診斷→規劃→實施→監測→調整 | Diagnose→Plan→Implement→Monitor→Adjust', '每日檢測→記錄→分析→調整 | Test→Record→Analyze→Adjust', '每週評估→調整→檢查 | Weekly assess→adjust→check', '每月檢查→評估→計畫調整 | Monthly check→assess→plan'] },
+                    { num: 344, title: '好習慣降低意志力', en_title: 'Good Habits Reduce Willpower Drain', principle: '每天固定習慣', en_principle: 'Daily habits', items: ['每天按時用藥 | Take meds on time', '每天檢測指標 | Test metrics', '每天記錄日誌 | Keep log', '每天適度運動 | Exercise', '每天健康飲食 | Eat well', '每周檢查狀況 | Weekly check', '每月醫療檢查 | Monthly check-up', '每季計畫檢視 | Quarterly review'] },
+                    { num: 345, title: '好環境降低誘惑', en_title: 'Good Environment Reduces Temptation', principle: '建立支持環境', en_principle: 'Create supportive environment', items: ['建立無干擾環境 | Distraction-free', '提醒藥物時間 | Medication reminder', '準備健康食物 | Healthy food', '與醫生密切溝通 | Doctor communication', '參加病友支持 | Support group', '聘請健康顧問 | Health coach', '善用管理工具 | Management tools', '建立家庭支持 | Family support'] },
+                    { num: 346, title: '好模型降低風險', en_title: 'Good Models Reduce Risk', principle: '用醫學知識', en_principle: 'Use medical knowledge', items: ['疾病理解模型 | Disease understanding', '治療決策框架 | Treatment decisions', '風險評估模型 | Risk assessment', '營養管理模型 | Nutrition model', '運動規劃模型 | Exercise model', '情緒管理模型 | Emotion management', '併發症預防 | Complication prevention', '長期管理規劃 | Long-term planning'] },
+                    { num: 347, title: '好判斷降低損失', en_title: 'Good Judgment Reduces Loss', principle: '先理解，再決定', en_principle: 'Understand first, decide second', items: ['不擅自停藥 | Don\'t stop meds', '不忽視症狀 | Don\'t ignore symptoms', '不盲目嘗試 | Don\'t experiment', '不過度焦慮 | Don\'t panic', '不放棄治療 | Don\'t give up', '不隱瞞醫師 | Tell your doctor', '不冒然改飲食 | Discuss diet changes', '不忽視預防 | Prevent problems'] },
+                    { num: 348, title: '好回饋降低偏差', en_title: 'Good Feedback Reduces Deviation', principle: '用檢測數據調整', en_principle: 'Use data to adjust', items: ['檢測數值是回饋 | Test results = feedback', '症狀變化是回饋 | Symptoms = feedback', '治療反應是回饋 | Treatment response = feedback', '併發症警訊是回饋 | Warning signs = feedback', '生活品質是回饋 | Quality of life = feedback', '運動耐受性是回饋 | Exercise tolerance = feedback', '藥物副作用是回饋 | Side effects = feedback', '整體健康狀況 | Overall health = feedback'] },
+                    { num: 349, title: '好更新降低誤差', en_title: 'Good Updates Reduce Errors', principle: '每月更新管理計畫', en_principle: 'Update plan monthly', items: ['更新治療方案 | Update treatment', '更新監測指標 | Update monitoring', '更新飲食計畫 | Update diet', '更新運動強度 | Update exercise', '更新藥物管理 | Update meds', '更新知識理解 | Update knowledge', '更新生活調整 | Update lifestyle', '更新預防措施 | Update prevention'] },
+                    { num: 350, title: '好決策放大成果', en_title: 'Good Decisions Amplify Results', principle: '選擇預防大於治療', en_principle: 'Prevention > treatment', items: ['選理解機制 | Understand mechanism', '選主動管理 | Active management', '選定期檢查 | Regular check-ups', '選專業協助 | Professional help', '選健康生活 | Healthy lifestyle', '選心態正向 | Positive mindset', '選持續學習 | Keep learning', '每日改善1%，健康複利 | 1% daily = health compounding'] }
+                ]
+            },
+            legacy: {
+                title: '📖 智慧傳承 - 傳承系統',
+                en_title: 'Legacy - Wisdom Inheritance',
+                items: [
+                    { num: 341, title: '好策略降低成本', en_title: 'Good Strategy Lowers Cost', principle: '整理最核心的智慧', en_principle: 'Organize core wisdom', items: ['梳理人生經驗 | Reflect on life', '整理關鍵教訓 | Key lessons', '記錄重要故事 | Important stories', '整理家族價值 | Family values', '記錄財務規劃 | Financial wisdom', '整理人生哲學 | Life philosophy', '記錄對下一代的期望 | Hopes for next generation', '每日20%記錄=80%傳承 | 20% recording = 80% legacy'] },
+                    { num: 342, title: '好系統降低內耗', en_title: 'Good Systems Reduce Friction', principle: '建立傳承系統', en_principle: 'Build legacy systems', items: ['建立寫作計畫 | Writing plan', '建立錄音計畫 | Recording plan', '建立家族檔案 | Family archive', '建立信件寫作 | Letter writing', '建立教導時間 | Teaching time', '建立故事分享 | Story sharing', '建立家族聚集 | Family gathering', '建立遺產規劃 | Estate planning'] },
+                    { num: 343, title: '好流程降低錯誤', en_title: 'Good Processes Reduce Errors', principle: '標準化傳承流程', en_principle: 'Standardize legacy process', items: ['思考→整理→記錄→檢查→分享 | Think→Organize→Record→Check→Share', '經驗→故事→教訓→應用→傳承 | Experience→Story→Lesson→Apply→Legacy', '每月整理一個故事 | Monthly story', '每季檢查傳承進度 | Quarterly check'] },
+                    { num: 344, title: '好習慣降低意志力', en_title: 'Good Habits Reduce Willpower Drain', principle: '每天固定傳承習慣', en_principle: 'Daily legacy habits', items: ['每天記錄心得 | Daily journal', '每週寫一封信 | Weekly letter', '每月分享一個故事 | Monthly story', '每季一次家庭教導 | Quarterly teaching', '每年一次大回顧 | Annual review', '每年更新計畫 | Annual update', '定期與下一代溝通 | Regular family talks'] },
+                    { num: 345, title: '好環境降低誘惑', en_title: 'Good Environment Reduces Temptation', principle: '建立傳承環境', en_principle: 'Create legacy environment', items: ['建立寫作空間 | Writing space', '建立家族聚集地 | Family gathering place', '錄製家庭錄音 | Record voice', '整理家族照片 | Organize photos', '建立家族故事會 | Story sessions', '制定家族規則 | Family rules', '建立家族傳統 | Family traditions', '建立下一代接班 | Succession planning'] },
+                    { num: 346, title: '好模型降低風險', en_title: 'Good Models Reduce Risk', principle: '用傳承理論', en_principle: 'Use legacy theory', items: ['人生故事模型 | Life story model', '家族價值傳承 | Family values', '財務遺產規劃 | Financial legacy', '品格養成模型 | Character model', '人生哲學框架 | Philosophy framework', '領導力傳承 | Leadership legacy', '智慧分享方式 | Wisdom sharing', '代際溝通模型 | Generational communication'] },
+                    { num: 347, title: '好判斷降低損失', en_title: 'Good Judgment Reduces Loss', principle: '先思考，再行動', en_principle: 'Think first, act second', items: ['不急著講道理 | Don\'t lecture', '不強加價值觀 | Don\'t impose values', '不遺漏重要故事 | Don\'t forget stories', '不放棄記錄 | Keep recording', '不忽視下一代 | Listen to them', '不只物質遺產 | More than money', '不保留遺憾 | Share wisdom', '不延遲傳承 | Don\'t delay'] },
+                    { num: 348, title: '好回饋降低偏差', en_title: 'Good Feedback Reduces Deviation', principle: '用接受度調整', en_principle: 'Use acceptance to adjust', items: ['下一代反應是回饋 | Response = feedback', '理解程度是回饋 | Understanding = feedback', '應用情況是回饋 | Application = feedback', '家庭凝聚力是回饋 | Family bond = feedback', '傳承效果是回饋 | Legacy impact = feedback', '故事接納度是回饋 | Story acceptance = feedback', '價值認同度是回饋 | Value alignment = feedback', '代際溝通品質 | Communication = feedback'] },
+                    { num: 349, title: '好更新降低誤差', en_title: 'Good Updates Reduce Errors', principle: '定期更新傳承內容', en_principle: 'Update legacy regularly', items: ['更新人生故事 | Update stories', '更新家族價值 | Update values', '更新財務計畫 | Update finances', '更新人生教訓 | Update lessons', '更新對下代期望 | Update expectations', '更新傳承方式 | Update methods', '更新家庭規則 | Update rules', '更新長期遺產 | Update legacy'] },
+                    { num: 350, title: '好決策放大成果', en_title: 'Good Decisions Amplify Results', principle: '選擇傳承大於保留', en_principle: 'Choose sharing over keeping', items: ['選分享，不保密 | Share, don\'t hide', '選記錄，不遺忘 | Record, don\'t forget', '選對話，不沉默 | Talk, don\'t silence', '選智慧，不金錢 | Wisdom, not money', '選故事，不訓話 | Stories, not lectures', '選引導，不控制 | Guide, don\'t control', '選相信，不擔心 | Trust, don\'t worry', '代代相傳，家族複利 | Generations, family compounding'] }
+                ]
+            },
+            wealth: {
+                title: '💎 財務2.0 - 財富進階',
+                en_title: 'Wealth Building 2.0',
+                items: [
+                    { num: 341, title: '好策略降低成本', en_title: 'Good Strategy Lowers Cost', principle: '建立多元收入，不依賴單一', en_principle: 'Diversify income, don\'t rely on one', items: ['建立主業收入 | Primary income', '建立副業收入 | Side income', '建立投資收入 | Investment income', '建立資產收入 | Passive income', '建立內容收入 | Content income', '建立諮詢收入 | Consulting income', '建立品牌收入 | Brand income', '每日20%高槓桿=80%財富 | 20% leverage = 80% wealth'] },
+                    { num: 342, title: '好系統降低內耗', en_title: 'Good Systems Reduce Friction', principle: '建立財富系統', en_principle: 'Build wealth systems', items: ['建立收入系統 | Income system', '建立儲蓄自動化 | Auto-savings', '建立投資組合 | Investment portfolio', '建立資產分配 | Asset allocation', '建立稅務規劃 | Tax planning', '建立風險管理 | Risk management', '建立財務檢查 | Financial check', '建立長期規劃 | Long-term plan'] },
+                    { num: 343, title: '好流程降低錯誤', en_title: 'Good Processes Reduce Errors', principle: '標準化財務流程', en_principle: 'Standardize financial process', items: ['收入→儲蓄→分類→投資→檢查→調整 | Income→Save→Categorize→Invest→Check→Adjust', '每月檢查收支 | Monthly audit', '每季評估投資 | Quarterly review', '每年全面檢視 | Annual review'] },
+                    { num: 344, title: '好習慣降低意志力', en_title: 'Good Habits Reduce Willpower Drain', principle: '每天固定財務習慣', en_principle: 'Daily wealth habits', items: ['每天記帳 | Track spending', '每週檢查現金流 | Weekly cash flow', '每月財務檢討 | Monthly review', '每季投資評估 | Quarterly check', '每年財務規劃 | Annual plan', '定期收入提升 | Income growth', '定期學習財商 | Financial learning', '定期優化配置 | Rebalance portfolio'] },
+                    { num: 345, title: '好環境降低誘惑', en_title: 'Good Environment Reduces Temptation', principle: '環境設計>自制力', en_principle: 'Environmental design > Self-discipline', items: ['自動儲蓄設定 | Auto-save setup', '限制衝動消費 | Limit impulse buys', '取消不必要訂閱 | Cancel subscriptions', '與投資人交流 | Investor network', '參加財務課程 | Finance classes', '聘請財務顧問 | Financial advisor', '善用財務工具 | Financial tools', '建立投資紀律 | Investment discipline'] },
+                    { num: 346, title: '好模型降低風險', en_title: 'Good Models Reduce Risk', principle: '用財務模型', en_principle: 'Use financial models', items: ['資產配置模型 | Asset allocation', '風險評估模型 | Risk assessment', '財務自由計算 | FIRE calculation', '投資決策框架 | Investment framework', '稅務規劃模型 | Tax planning', '退休規劃模型 | Retirement plan', '遺產規劃模型 | Estate planning', '財富增長預測 | Wealth forecast'] },
+                    { num: 347, title: '好判斷降低損失', en_title: 'Good Judgment Reduces Loss', principle: '先分析，再投資', en_principle: 'Analyze first, invest second', items: ['不跟風投資 | Don\'t follow hype', '不過度槓桿 | Don\'t over-leverage', '不忽視風險 | Don\'t ignore risk', '不集中投資 | Don\'t concentrate', '不追高殺低 | Don\'t panic sell', '不逃避虧損 | Face losses', '不忽視稅務 | Plan taxes', '不冒然創業 | Think carefully'] },
+                    { num: 348, title: '好回饋降低偏差', en_title: 'Good Feedback Reduces Deviation', principle: '用財務指標調整', en_principle: 'Use financial metrics to adjust', items: ['淨資產增長是回饋 | Net worth = feedback', '現金流充足度是回饋 | Cash flow = feedback', '投資報酬是回饋 | Returns = feedback', '收入增長是回饋 | Income = feedback', '支出減少是回饋 | Savings = feedback', '資產多元度是回饋 | Diversification = feedback', '風險水準是回饋 | Risk level = feedback', '財務自由進度是回饋 | FIRE progress = feedback'] },
+                    { num: 349, title: '好更新降低誤差', en_title: 'Good Updates Reduce Errors', principle: '每季更新財務策略', en_principle: 'Update strategy quarterly', items: ['更新收入計畫 | Update income plan', '更新投資組合 | Update portfolio', '更新風險評估 | Update risk', '更新稅務計畫 | Update tax plan', '更新支出預算 | Update budget', '更新財務目標 | Update goals', '更新市場分析 | Update market', '更新長期規劃 | Update long-term'] },
+                    { num: 350, title: '好決策放大成果', en_title: 'Good Decisions Amplify Results', principle: '選對策略大於投入', en_principle: 'Right strategy > amount invested', items: ['選資產，不負債 | Assets, not liabilities', '選現金流，不營業額 | Cash flow, not revenue', '選安全，不冒險 | Safety, not risk', '選分散，不集中 | Diversified, not concentrated', '選長期，不短期 | Long-term, not short-term', '選學習，不盲目 | Learn, don\'t guess', '選專業，不自行 | Expert, not DIY', '財富複利，永續增長 | Wealth compounds forever'] }
+                ]
+            }
+        };
+
+        function initApp() {
+            renderScenarios();
+        }
+
+        function renderScenarios() {
+            const list = document.getElementById('scenarioList');
+            scenarios.forEach(scenario => {
+                const btn = document.createElement('button');
+                btn.className = 'scenario-btn';
+                btn.onclick = () => selectScenario(scenario.id);
+                btn.innerHTML = `<span class="scenario-emoji">${scenario.emoji}</span><span>${scenario.name}</span>`;
+                list.appendChild(btn);
+            });
+        }
+
+        function selectScenario(scenarioId) {
+            document.querySelectorAll('.scenario-btn').forEach((btn, idx) => {
+                if (scenarios[idx].id === scenarioId) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+            renderContent(scenarioId);
+        }
+
+        function renderContent(scenarioId) {
+            const framework = frameworks[scenarioId];
+            if (!framework) return;
+
+            let html = `<div class="scenario-header"><h2>${framework.title}</h2><p>${framework.en_title}</p></div>`;
+
+            framework.items.forEach(item => {
+                html += `<div class="framework-section">
+                    <div class="framework-number">${item.num}</div>
+                    <div class="framework-title">${item.title}</div>
+                    <div class="framework-subtitle">${item.en_title}</div>
+                    <div class="principle-box">
+                        <div class="principle-label">💡 ${item.principle}</div>
+                        <div class="principle-text english">${item.en_principle}</div>
+                        <button class="tts-btn" onclick="speakText('${item.en_principle}', this)">🔊</button>
+                    </div>
+                    <div class="item-list">
+                        ${item.items.map(i => `<div class="item">${i}</div>`).join('')}
+                    </div>
+                </div>`;
+            });
+
+            document.getElementById('contentArea').innerHTML = html;
+            applyLanguageFilter();
+        }
+
+        function setLanguage(lang) {
+            currentLanguage = lang;
+            document.querySelectorAll('.btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            applyLanguageFilter();
+        }
+
+        function applyLanguageFilter() {
+            document.querySelectorAll('.english').forEach(el => {
+                el.style.display = currentLanguage === 'chinese' ? 'none' : '';
+            });
+        }
+
+        function speakText(text, btn) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const u = new SpeechSynthesisUtterance(text);
+                u.lang = 'en-US';
+                u.rate = 0.85;
+                btn.classList.add('playing');
+                u.onend = () => btn.classList.remove('playing');
+                window.speechSynthesis.speak(u);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', initApp);
+    </script>
+</body>
+</html>
