@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Life OS Decision Tree - 人生決策樹</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Microsoft JhengHei', 'Segoe UI', sans-serif; background-color: #ffffff; color: #0D1B3E; line-height: 1.8; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        header { background: linear-gradient(135deg, #0D1B3E 0%, #1a2a5a 100%); color: #ffffff; padding: 40px 20px; margin-bottom: 30px; border-radius: 8px; text-align: center; }
+        header h1 { font-size: 36px; margin-bottom: 10px; font-weight: bold; }
+        .bilingual { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 15px 0; }
+        .lang-block { background: #f8f9fa; padding: 12px; border-radius: 6px; border-left: 3px solid #006B7D; }
+        .lang-label { font-size: 11px; font-weight: bold; color: #0D1B3E; margin-bottom: 5px; text-transform: uppercase; opacity: 0.7; }
+        .lang-content { font-size: 15px; line-height: 1.6; color: #333; }
+        .layer-indicator { background-color: #B8860B; color: #ffffff; padding: 8px 16px; border-radius: 20px; display: inline-block; margin: 20px 0; font-size: 13px; font-weight: bold; }
+        .section { margin-bottom: 40px; }
+        .section-title { font-size: 24px; color: #0D1B3E; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 3px solid #006B7D; font-weight: bold; }
+        .category-section { margin-bottom: 30px; background: #f8f9fa; padding: 20px; border-radius: 8px; border-left: 4px solid #006B7D; }
+        .category-header { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; padding-bottom: 12px; border-bottom: 2px solid #006B7D; }
+        .category-icon { font-size: 28px; }
+        .category-info h3 { color: #0D1B3E; font-size: 18px; margin-bottom: 3px; font-weight: bold; }
+        .category-info p { color: #666; font-size: 13px; }
+        .event-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; }
+        .event-card { background: #ffffff; border: 2px solid #006B7D; border-radius: 6px; padding: 10px; cursor: pointer; transition: all 0.3s ease; font-size: 13px; font-weight: 500; }
+        .event-card:hover { background: #B8860B; color: #ffffff; border-color: #B8860B; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(184, 134, 11, 0.2); }
+        .event-card-cn { font-weight: bold; margin-bottom: 3px; }
+        .event-card-en { font-size: 11px; opacity: 0.8; }
+        .diagnosis-box { background: #f0f4f8; border: 2px solid #006B7D; border-radius: 8px; padding: 20px; margin: 20px 0; }
+        .diagnosis-title { background: #006B7D; color: #ffffff; padding: 10px 15px; border-radius: 6px; font-weight: bold; margin-bottom: 12px; font-size: 14px; }
+        .exposure-narrative { background: #ffffff; border-left: 4px solid #B8860B; padding: 15px; margin: 15px 0; border-radius: 6px; line-height: 1.8; }
+        .exposure-step { display: flex; gap: 15px; margin-bottom: 12px; align-items: flex-start; }
+        .exposure-chain-num { background: #B8860B; color: #ffffff; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-weight: bold; font-size: 14px; }
+        .exposure-step-content { flex: 1; font-size: 14px; }
+        .exposure-step-content .chain-title { color: #0D1B3E; font-weight: bold; margin-bottom: 5px; }
+        .exposure-step-content .chain-detail { color: #333; font-size: 14px; line-height: 1.6; margin-bottom: 8px; }
+        .exposure-step-content .chain-en { color: #666; font-size: 12px; font-style: italic; }
+        .ability-tree-container { background: #f0f4f8; padding: 20px; border-radius: 8px; border: 2px solid #006B7D; margin: 20px 0; }
+        .ability-tree-title { color: #0D1B3E; font-weight: bold; margin-bottom: 15px; font-size: 16px; }
+        .ability-tree-flow { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; flex-wrap: wrap; }
+        .ability-level-card { background: #ffffff; border: 2px solid #006B7D; border-radius: 6px; padding: 12px; flex: 1; min-width: 150px; text-align: center; }
+        .ability-level-card .level { font-size: 12px; color: #B8860B; font-weight: bold; margin-bottom: 5px; }
+        .ability-level-card .name { font-size: 14px; font-weight: bold; color: #0D1B3E; }
+        .ability-arrow { font-size: 20px; color: #006B7D; font-weight: bold; }
+        .ability-detail { background: #ffffff; border: 2px solid #006B7D; border-radius: 8px; padding: 20px; margin: 15px 0; overflow: hidden; }
+        .ability-detail-header { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; padding-bottom: 12px; border-bottom: 2px solid #006B7D; cursor: pointer; }
+        .ability-detail-number { background: #B8860B; color: #ffffff; width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-weight: bold; font-size: 16px; }
+        .ability-detail-info h3 { color: #0D1B3E; font-size: 18px; margin-bottom: 5px; }
+        .ability-detail-info p { color: #666; font-size: 13px; line-height: 1.5; }
+        .ability-detail-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+        .ability-detail-content.expanded { max-height: 3000px; }
+        .detail-section { margin-bottom: 20px; }
+        .detail-section-title { background: #f0f4f8; padding: 10px 15px; border-radius: 6px; color: #0D1B3E; font-weight: bold; font-size: 14px; margin-bottom: 10px; border-left: 4px solid #006B7D; }
+        .detail-item { background: #f9f9f9; padding: 12px 15px; margin: 8px 0; border-radius: 6px; border-left: 3px solid #B8860B; font-size: 14px; line-height: 1.6; }
+        .detail-item strong { color: #0D1B3E; display: block; margin-bottom: 4px; }
+        .detail-item .detail-sub { color: #666; font-size: 12px; margin-top: 4px; }
+        .chevron { display: inline-block; transition: transform 0.3s ease; margin-left: auto; font-size: 20px; }
+        .chevron.expanded { transform: rotate(180deg); }
+        .tts-button { background: #006B7D; color: #ffffff; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-size: 14px; font-weight: bold; transition: all 0.2s; margin: 10px 0; }
+        .tts-button:hover { background: #004d5a; }
+        .button-group { display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap; }
+        .btn { padding: 12px 24px; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 500; transition: all 0.3s; }
+        .btn-primary { background: #B8860B; color: #ffffff; }
+        .btn-primary:hover { background: #d4a63a; transform: translateY(-2px); }
+        .btn-secondary { background: #006B7D; color: #ffffff; }
+        .btn-secondary:hover { background: #004d5a; transform: translateY(-2px); }
+        .btn-reset { background: #e0e0e0; color: #0D1B3E; }
+        .btn-reset:hover { background: #c0c0c0; }
+        .hidden { display: none !important; }
+        .fade-in { animation: fadeIn 0.3s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @media (max-width: 768px) { header h1 { font-size: 24px; } .bilingual { grid-template-columns: 1fr; } .event-grid { grid-template-columns: 1fr; } .section-title { font-size: 18px; } .category-header { flex-direction: column; align-items: flex-start; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🌳 Life OS Decision Tree</h1>
+            <div class="bilingual">
+                <div class="lang-block">
+                    <div class="lang-label">中文</div>
+                    <div class="lang-content">人生決策樹 | 51 個生活事件 × 12 能力樹 × 完整診斷</div>
+                </div>
+                <div class="lang-block">
+                    <div class="lang-label">English</div>
+                    <div class="lang-content">Life Decision Navigator | 51 life events × 12 ability trees × complete diagnosis</div>
+                </div>
+            </div>
+        </header>
+
+        <div id="layer1" class="section fade-in">
+            <div class="layer-indicator">第一層｜Layer 1 - 51 個生活事件</div>
+            <h2 class="section-title">選擇你正在面對的生活事件 | Select Your Life Event</h2>
+            <div id="eventCategories"></div>
+        </div>
+
+        <div id="layer2" class="section hidden">
+            <div class="layer-indicator">第二層｜Layer 2 - 真正問題診斷</div>
+            <h2 class="section-title">真正問題診斷 <span class="tts-button" onclick="readDiagnosis()">🔊 Read in English</span></h2>
+            <div id="diagnosisDisplay" class="diagnosis-box"></div>
+        </div>
+
+        <div id="layer3" class="section hidden">
+            <div class="layer-indicator">第三層｜Layer 3 - 能力樹</div>
+            <h2 class="section-title">你的能力養成路徑｜Your Ability Tree</h2>
+            <div id="abilityTreeDisplay"></div>
+        </div>
+
+        <div class="button-group" style="margin-top: 40px;">
+            <button class="btn btn-secondary" onclick="goBack()">← 上一步 Back</button>
+            <button class="btn btn-primary" onclick="goNext()">下一步 Next →</button>
+            <button class="btn btn-reset" onclick="reset()">🔄 重新開始 Reset</button>
+        </div>
+    </div>
+
+    <script>
+        // ========== 完整能力庫 ==========
+        const abilityLibrary = {
+            "01": { name_cn: "認知能力", name_en: "Cognitive Ability", desc_cn: "看懂世界的本質，建立正確的心智模型", desc_en: "Understand world's essence, build correct mental models", behaviors: [{ cn: "識別相同現象背後的深層模式", en: "Identify deep patterns" }, { cn: "追問『為什麼』找到根本原因", en: "Keep asking 'why'" }, { cn: "發現自己的認知盲點", en: "Discover cognitive blind spots" }, { cn: "用多個視角看同一件事", en: "View from multiple angles" }], nodes: [{ cn: "第一性原理", en: "First principles" }, { cn: "心智模型", en: "Mental models" }, { cn: "認知偏差", en: "Cognitive bias" }, { cn: "系統理解", en: "Systems" }], strategies: [{ cn: "每週『五問』練習", en: "Weekly 'five why'" }, { cn: "記錄推翻的信念", en: "Log wrong beliefs" }, { cn: "跨領域學習", en: "Cross-domain learning" }, { cn: "思維對立練習", en: "Steelman exercises" }], prerequisites: [] },
+            "02": { name_cn: "學習能力", name_en: "Learning Ability", desc_cn: "高效吸收、內化、應用知識", desc_en: "Efficiently absorb, internalize, apply", behaviors: [{ cn: "主動構建知識連結", en: "Connect knowledge actively" }, { cn: "用『教別人』檢驗理解", en: "Teach to verify understanding" }, { cn: "定期複習和升級知識", en: "Review and upgrade regularly" }, { cn: "從被動輸入改為主動輸出", en: "Shift to active output" }], nodes: [{ cn: "深度理解", en: "Deep understanding" }, { cn: "知識轉移", en: "Knowledge transfer" }, { cn: "自主學習", en: "Self-directed learning" }, { cn: "記憶長期化", en: "Memory consolidation" }], strategies: [{ cn: "學完立刻『用自己的話說'", en: "Explain in your own words" }, { cn: "建立個人知識系統", en: "Build knowledge system" }, { cn: "『教一個人』你學到的", en: "Teach one person" }, { cn: "每週回顧『三月後還記得'", en: "3-month retention review" }], prerequisites: ["01"] },
+            "03": { name_cn: "思維能力", name_en: "Thinking Ability", desc_cn: "分析、推理、預測、系統化思考", desc_en: "Analyze, reason, predict, think systemically", behaviors: [{ cn: "看到事件自動思考因果", en: "Think causation automatically" }, { cn: "預測未來結果", en: "Predict outcomes" }, { cn: "考慮長期後果", en: "Long-term consequences" }, { cn: "看到系統回饋迴圈", en: "See feedback loops" }], nodes: [{ cn: "因果模型", en: "Causal models" }, { cn: "概率思維", en: "Probabilistic" }, { cn: "長期視角", en: "Long-term view" }, { cn: "系統思考", en: "Systems thinking" }], strategies: [{ cn: "每天『時間軸思考'", en: "Daily timeline thinking" }, { cn: "記錄錯誤預測", en: "Log wrong predictions" }, { cn: "學習系統動力學", en: "Learn systems dynamics" }, { cn: "最壞情況規劃", en: "Worst case plan" }], prerequisites: ["01"] },
+            "04": { name_cn: "決策能力", name_en: "Decision Ability", desc_cn: "在不確定下做出更好選擇", desc_en: "Make better choices under uncertainty", behaviors: [{ cn: "清楚什麼最重要", en: "Know what matters" }, { cn: "有限資源下做選擇", en: "Choose with constraints" }, { cn: "說出決策理由", en: "Explain reasoning" }, { cn: "定期檢視決策", en: "Review decisions regularly" }], nodes: [{ cn: "價值觀明確", en: "Clear values" }, { cn: "取捨框架", en: "Tradeoff framework" }, { cn: "決策透明", en: "Decision transparency" }, { cn: "決策回溯", en: "Retrospective" }], strategies: [{ cn: "列出人生 5 個價值", en: "List top 5 values" }, { cn: "決策前寫利弊表", en: "Pros/cons table" }, { cn: "決策複盤日期", en: "Review date" }, { cn: "聽取他人反饋", en: "Get feedback" }], prerequisites: ["03"] },
+            "05": { name_cn: "執行能力", name_en: "Execution Ability", desc_cn: "把計畫付諸行動", desc_en: "Turn plans into action", behaviors: [{ cn: "分解最小行動", en: "Smallest next action" }, { cn: "開始而不無限準備", en: "Start before ready" }, { cn: "快速反饋調整", en: "Fast feedback loop" }, { cn: "建立日常習慣", en: "Daily habits" }], nodes: [{ cn: "任務分解", en: "Task breakdown" }, { cn: "行動啟動", en: "Action start" }, { cn: "反饋迴圈", en: "Feedback loop" }, { cn: "習慣系統", en: "Habit system" }], strategies: [{ cn: "『今天一個行動'代替『3 月目標'", en: "Today's action vs 3-month goal" }, { cn: "習慣堆疊", en: "Habit stacking" }, { cn: "每日檢視", en: "Daily review" }, { cn: "執行問題記錄", en: "Log problems" }], prerequisites: ["04"] },
+            "06": { name_cn: "時間管理", name_en: "Time Management", desc_cn: "清楚優先順序，重要事重要時做", desc_en: "Priorities clear, right time for right things", behaviors: [{ cn: "區分緊急 vs 重要", en: "Distinguish urgent/important" }, { cn: "無打擾時段", en: "Deep work blocks" }, { cn: "定期時間審視", en: "Time audits" }, { cn: "優雅地拒絕", en: "Graceful no" }], nodes: [{ cn: "優先矩陣", en: "Priority matrix" }, { cn: "時間塊規劃", en: "Time blocking" }, { cn: "中斷管理", en: "Interrupt management" }, { cn: "說不的能力", en: "Saying no" }], strategies: [{ cn: "每週列『本週 3 要事'", en: "Weekly top 3" }, { cn: "日曆標記無打擾", en: "Mark deep work" }, { cn: "月度時間審計", en: "Monthly audit" }, { cn: "準備『温和拒絕詞'", en: "Prepare refusal" }], prerequisites: ["04"] },
+            "07": { name_cn: "情緒管理", name_en: "Emotion Management", desc_cn: "理解調節情緒，不被情緒綁架", desc_en: "Manage emotions, not hijacked by them", behaviors: [{ cn: "『名字化』情緒", en: "Name emotions" }, { cn: "情緒高漲時停止決策", en: "Pause when emotional" }, { cn: "找到情緒觸發點", en: "Find triggers" }, { cn: "建立調節工具箱", en: "Regulation toolkit" }], nodes: [{ cn: "情緒識別", en: "Identification" }, { cn: "根源探尋", en: "Root finding" }, { cn: "身體覺察", en: "Somatic awareness" }, { cn: "調節技能", en: "Regulation skills" }], strategies: [{ cn: "每天『情緒記錄' 5 分", en: "Daily 5-min log" }, { cn: "『決策禁區'清單", en: "Decision zone" }, { cn: "『緊急調節清單'", en: "Emergency list" }, { cn: "『和信任的人談'", en: "Talk with trusted" }], prerequisites: [] },
+            "08": { name_cn: "預測能力", name_en: "Prediction Ability", desc_cn: "基於信息預測未來，評估不確定", desc_en: "Predict from info, assess uncertainty", behaviors: [{ cn: "決策前寫預測", en: "Write predictions" }, { cn: "定期檢查準確度", en: "Check accuracy" }, { cn: "區分知道和猜測", en: "Know vs guess" }, { cn: "加『信心度'", en: "Add confidence" }], nodes: [{ cn: "信息蒐集", en: "Info gathering" }, { cn: "模型建立", en: "Model building" }, { cn: "概率評估", en: "Probability" }, { cn: "偏差修正", en: "Bias correction" }], strategies: [{ cn: "『預測日記'", en: "Prediction journal" }, { cn: "『骨牌理論'", en: "Domino theory" }, { cn: "『貝葉斯思考'", en: "Bayesian thinking" }, { cn: "『預測複盤'", en: "Prediction postmortem" }], prerequisites: ["03"] },
+            "09": { name_cn: "溝通能力", name_en: "Communication", desc_cn: "清楚表達，真正聽懂", desc_en: "Express clearly, truly understand", behaviors: [{ cn: "說話前先想", en: "Think before speak" }, { cn: "『積極傾聽'", en: "Active listen" }, { cn: "『確認'代替『假設'", en: "Confirm, don't assume" }, { cn: "『我的感受'而非『你的錯'", en: "'I feel' not 'you fault'" }], nodes: [{ cn: "表達清晰", en: "Clarity" }, { cn: "聽取能力", en: "Listening" }, { cn: "衝突對話", en: "Conflict talk" }, { cn: "同理心", en: "Empathy" }], strategies: [{ cn: "『暫停法': 數三下", en: "Pause rule: count 3" }, { cn: "『複述法'", en: "Repeat back" }, { cn: "『I feel...因為...'", en: "'I feel...because...'" }, { cn: "『每週深度對話'", en: "Weekly deep talk" }], prerequisites: [] },
+            "10": { name_cn: "關係建立", name_en: "Relationship Building", desc_cn: "建立真實、深層連結", desc_en: "Build genuine, deep relationships", behaviors: [{ cn: "『主動接觸'", en: "Reach out" }, { cn: "『展現真實'", en: "Be authentic" }, { cn: "『給予幫助'", en: "Give help" }, { cn: "『記住細節'", en: "Remember details" }], nodes: [{ cn: "主動維持", en: "Active maintain" }, { cn: "真實連結", en: "Authentic" }, { cn: "互惠給予", en: "Reciprocal" }, { cn: "信任建立", en: "Trust" }], strategies: [{ cn: "『月度接觸清單'", en: "Monthly contact" }, { cn: "『關係記錄本'", en: "Relationship notebook" }, { cn: "『貢獻先行'", en: "Give first" }, { cn: "『深層對話'", en: "Deepen" }], prerequisites: ["09"] },
+            "11": { name_cn: "財務管理", name_en: "Financial Mgmt", desc_cn: "清楚金錢流向，理性決策", desc_en: "Understand money flow, rational decisions", behaviors: [{ cn: "『追蹤支出'", en: "Track spending" }, { cn: "『區分投資 vs 消費'", en: "Invest vs consume" }, { cn: "『制定預算'", en: "Create budget" }, { cn: "『定期審查'", en: "Regular review" }], nodes: [{ cn: "支出透明", en: "Transparency" }, { cn: "預算規劃", en: "Budget plan" }, { cn: "資源配置", en: "Allocation" }, { cn: "長期規劃", en: "Long-term" }], strategies: [{ cn: "『支出追蹤 30 天'", en: "Track 30 days" }, { cn: "『50/30/20 法則'", en: "50/30/20 rule" }, { cn: "『月度財務審視'", en: "Monthly review" }, { cn: "『年度計畫'", en: "Annual plan" }], prerequisites: ["04"] },
+            "12": { name_cn: "資源配置", name_en: "Resource Allocation", desc_cn: "有限資源最優配置", desc_en: "Optimize under constraints", behaviors: [{ cn: "『識別瓶頸'", en: "Find bottleneck" }, { cn: "『投入產出分析'", en: "ROI analysis" }, { cn: "『機會成本思考'", en: "Opportunity cost" }, { cn: "『動態調整'", en: "Dynamic adjust" }], nodes: [{ cn: "效率分析", en: "Efficiency" }, { cn: "優先級排序", en: "Priority" }, { cn: "機會成本", en: "Cost" }, { cn: "槓桿效應", en: "Leverage" }], strategies: [{ cn: "『資源審計'", en: "Resource audit" }, { cn: "『投入產出表'", en: "IO table" }, { cn: "『槓桿點識別'", en: "Leverage point" }, { cn: "『季度重新配置'", en: "Quarterly rebalance" }], prerequisites: ["04", "11"] }
+        };
+
+        // ========== 事件-能力映射 ==========
+        const eventAbilityMap = {
+            "A001": ["01", "02", "03"], "A002": ["02", "04"], "A003": ["02", "03"], "A004": ["02", "03"], "A005": ["02"], "A006": ["04", "05", "06"], "A007": ["06"], "A008": ["04", "01"], "A009": ["02", "05"],
+            "B001": ["06", "05"], "B002": ["09"], "B003": ["06", "09"], "B004": ["04", "01"], "B005": ["04"], "B006": ["04", "01"],
+            "C001": ["06", "07"], "C002": ["07"], "C003": ["07"], "C004": ["05"], "C005": ["11", "04"], "C006": ["07", "11"], "C007": ["07"], "C008": ["07"],
+            "D001": ["08", "07"], "D002": ["08", "07"], "D003": ["10", "09"], "D004": ["04", "01"], "D005": ["05", "07"], "D006": ["09"], "D007": ["04", "01"], "D008": ["03", "01"],
+            "E001": ["09", "07"], "E002": ["09", "10"], "E003": ["10"], "E004": ["09", "07"], "E005": ["04", "07"], "E006": ["04", "07"],
+            "F001": ["11"], "F002": ["11", "04"], "F003": ["08", "03"], "F004": ["12", "05"], "F005": ["04", "06"], "F006": ["01", "04"],
+            "G001": ["09"], "G002": ["03"], "G003": ["05", "04"], "G004": ["09"],
+            "H001": ["01", "04"], "H002": ["04", "01"], "H003": ["01", "10"], "H004": ["04", "01"]
+        };
+
+        // ========== 完整 51 個事件 ==========
+        const allEvents = {
+            "A001": { name_cn: "考不好", name_en: "Poor Grades", problem_cn: "考不好≠笨，而是學習方法沒對", problem_en: "Grades ≠ smart, but method", insight_cn: "大腦要靠『理解→應用→教人』真正學會", insight_en: "Learn through understand→apply→teach", chain: { num: "083", title_cn: "證據暴露推論錯誤", title_en: "Evidence", detail_cn: "讀過卻不會", detail_en: "Read but not know" } },
+            "A002": { name_cn: "不想讀", name_en: "No Motivation", problem_cn: "不想讀≠懶，而是沒意義", problem_en: "No motivation ≠ lazy", insight_cn: "知道『為什麼讀』才有動力", insight_en: "Know 'why' = motivation", chain: { num: "125", title_cn: "熱情暴露價值", title_en: "Passion", detail_cn: "看別人發光", detail_en: "See others shine" } },
+            "A003": { name_cn: "英文不好", name_en: "Poor English", problem_cn: "英文不好≠天份差，而是缺環境", problem_en: "English ≠ talent, but immersion", insight_cn: "英文是習慣，不是知識", insight_en: "Habit, not knowledge", chain: { num: "087", title_cn: "成長暴露學習能力", title_en: "Growth", detail_cn: "看到進步方法差異", detail_en: "See method difference" } },
+            "A004": { name_cn: "數學不好", name_en: "Poor Math", problem_cn: "數學不好≠思維差，而是沒看本質", problem_en: "Math ≠ thinking, but essence", insight_cn: "大多死記公式，沒看根本", insight_en: "Memorize vs understand", chain: { num: "130", title_cn: "第一性思考暴露本質", title_en: "First principles", detail_cn: "明白『為什麼』就清晰", detail_en: "'Why' makes it clear" } },
+            "A005": { name_cn: "容易忘", name_en: "Forgetful", problem_cn: "容易忘≠記憶差，而是沒注意", problem_en: "Forget ≠ bad memory", insight_cn: "注意力沒打在書上", insight_en: "Attention not there", chain: { num: "107", title_cn: "記憶暴露注意焦點", title_en: "Memory", detail_cn: "手機移開就記住", detail_en: "Remove phone, remember" } },
+            "A006": { name_cn: "拖延", name_en: "Procrastination", problem_cn: "拖延≠懶，而是不知『什麼最重要'", problem_en: "Procrastination ≠ lazy", insight_cn: "有 10 件事時大腦不知先做什麼", insight_en: "10 things = no priority", chain: { num: "081", title_cn: "現實暴露幻想", title_en: "Reality", detail_cn: "明天再做，時間沒了", detail_en: "Tomorrow, no time left" } },
+            "A007": { name_cn: "分心", name_en: "Distraction", problem_cn: "分心≠自制差，而是環境差", problem_en: "Distraction ≠ discipline", insight_cn: "大腦自動被新刺激吸引", insight_en: "Brain auto-focuses novelty", chain: { num: "114", title_cn: "習慣暴露環境設計", title_en: "Habits", detail_cn: "手機移遠就專注", detail_en: "Move phone, focused" } },
+            "A008": { name_cn: "沒動力", name_en: "No Drive", problem_cn: "沒動力≠沒上進，而是沒連結『我的價值'", problem_en: "No drive ≠ no ambition", insight_cn: "連結到真正想要的，動力就出現", insight_en: "Link to true want = drive", chain: { num: "149", title_cn: "存在價值暴露意義", title_en: "Meaning", detail_cn: "找到真想做的事就有動力", detail_en: "Find true want, drive" } },
+            "A009": { name_cn: "讀久沒效", name_en: "No Progress", problem_cn: "讀久沒效≠努力不足，而是沒『檢視'", problem_en: "No progress ≠ not enough", insight_cn: "要問『我真的理解嗎'", insight_en: "Ask 'do I understand'", chain: { num: "164", title_cn: "更新速度暴露效率", title_en: "Update", detail_cn: "不同方法效果差 10 倍", detail_en: "10x difference" } },
+            "B001": { name_cn: "加班", name_en: "Overtime", problem_cn: "加班≠工作重要，而是時間管理不清", problem_en: "Overtime ≠ work important", insight_cn: "白天被打斷，晚上被迫加班", insight_en: "Day interrupted = night work", chain: { num: "109", title_cn: "價值排序暴露目標", title_en: "Value", detail_cn: "沒做過真正的優先順序", detail_en: "Never prioritized" } },
+            "B002": { name_cn: "主管罵", name_en: "Boss Angry", problem_cn: "被罵≠你差，而是溝通不一致", problem_en: "Yelling ≠ you bad", insight_cn: "『你做的』不是『他想要的'", insight_en: "'You did' ≠ 'they want'", chain: { num: "082", title_cn: "真相暴露信念差", title_en: "Truth", detail_cn: "對的定義完全不同", detail_en: "'Right' different" } },
+            "B003": { name_cn: "升遷失敗", name_en: "Promotion Fail", problem_cn: "升遷失敗≠能力不足，而是『沒被看見'", problem_en: "Promotion fail ≠ incapable", insight_cn: "升遷看『別人知不知道你好'", insight_en: "Others need to know", chain: { num: "116", title_cn: "系統暴露設計能力", title_en: "Systems", detail_cn: "定期匯報，升遷機會提高", detail_en: "Report often, chance up" } },
+            "B004": { name_cn: "找工作難", name_en: "Job Search Hard", problem_cn: "找工作難≠市場差，而是『定位不清'", problem_en: "Job search ≠ bad market", insight_cn: "不知道自己想做什麼，或沒展現出來", insight_en: "Unclear want or no show", chain: { num: "149", title_cn: "存在價值暴露意義", title_en: "Meaning", detail_cn: "投 100 份還沒回應", detail_en: "100 resumes, no reply" } },
+            "B005": { name_cn: "想離職", name_en: "Want Quit", problem_cn: "想離職≠工作不好，而是『下一步不清'", problem_en: "Quit ≠ job bad", insight_cn: "離職前要想清楚『為什麼'", insight_en: "Before quit, ask 'why'", chain: { num: "110", title_cn: "目標暴露方向", title_en: "Goals", detail_cn: "不知道『要去哪裡'", detail_en: "Where to go" } },
+            "B006": { name_cn: "被資遣", name_en: "Laid Off", problem_cn: "被資遣≠沒價值，而是『市場改變'", problem_en: "Laid off ≠ no value", insight_cn: "公司決定，不是你的錯", insight_en: "Company decision", chain: { num: "146", title_cn: "更新需求暴露下步", title_en: "Update", detail_cn: "被迫思考『市場新需求'", detail_en: "Market's new need" } },
+            "C001": { name_cn: "失眠", name_en: "Insomnia", problem_cn: "失眠≠身體差，而是『習慣和焦慮'", problem_en: "Insomnia ≠ body", insight_cn: "調整咖啡因、手機、作息", insight_en: "Caffeine, phone, sleep", chain: { num: "114", title_cn: "習慣暴露環境", title_en: "Habits", detail_cn: "放下手機就睡好", detail_en: "Phone down, sleep good" } },
+            "C002": { name_cn: "疲勞", name_en: "Fatigue", problem_cn: "疲勞≠身體差，而是『沒真正休息'", problem_en: "Fatigue ≠ weak", insight_cn: "真正休息是『完全放下'", insight_en: "Real rest = let go", chain: { num: "139", title_cn: "包容暴露穩定", title_en: "Tolerance", detail_cn: "放假完全不工作就恢復", detail_en: "Full break, recover" } },
+            "C003": { name_cn: "胃痛", name_en: "Stomach Pain", problem_cn: "胃痛≠胃有問題，而是『情緒壓力'", problem_en: "Stomach ≠ stomach issue", insight_cn: "胃和情緒直接相連", insight_en: "Stomach-emotion link", chain: { num: "140", title_cn: "穩定暴露安全感", title_en: "Stability", detail_cn: "解決心理問題，胃就好", detail_en: "Solve worry, pain gone" } },
+            "C004": { name_cn: "便秘", name_en: "Constipation", problem_cn: "便秘≠消化差，而是『不規律'", problem_en: "Constipation ≠ digest", insight_cn: "腸道喜歡規律和纖維", insight_en: "Gut likes routine", chain: { num: "113", title_cn: "人格暴露習慣", title_en: "Personality", detail_cn: "一週規律就改善", detail_en: "Week routine works" } },
+            "C005": { name_cn: "肥胖", name_en: "Obesity", problem_cn: "肥胖≠自制差，而是『吃的東西'", problem_en: "Obesity ≠ discipline", insight_cn: "減肥是『吃對』不是『少吃'", insight_en: "Right food, not less", chain: { num: "153", title_cn: "價值函數暴露配置", title_en: "Values", detail_cn: "追蹤飲食發現『真正價值'", detail_en: "Track, see real values" } },
+            "C006": { name_cn: "血糖失控", name_en: "Blood Sugar", problem_cn: "血糖≠遺傳差，而是『飲食作息'", problem_en: "Blood sugar ≠ genetics", insight_cn: "改變飲食和作息就改善", insight_en: "Change diet/sleep works", chain: { num: "178", title_cn: "生命系統暴露穩態", title_en: "Systems", detail_cn: "三週內數值明顯改善", detail_en: "3 weeks better" } },
+            "C007": { name_cn: "高血壓", name_en: "High BP", problem_cn: "高血壓≠年紀大，而是『壓力和鹽'", problem_en: "High BP ≠ age", insight_cn: "減鹽、運動、管理壓力", insight_en: "Less salt, exercise", chain: { num: "140", title_cn: "穩定暴露安全感", title_en: "Stability", detail_cn: "一個月內數值下降", detail_en: "1 month, BP drops" } },
+            "C008": { name_cn: "慢性發炎", name_en: "Inflammation", problem_cn: "發炎≠無法治，而是『生活方式'", problem_en: "Inflammation ≠ incurable", insight_cn: "改變生活方式就緩退", insight_en: "Change lifestyle works", chain: { num: "162", title_cn: "生存智慧暴露品質", title_en: "Wisdom", detail_cn: "三個月血液指標下降", detail_en: "3 months better" } },
+            "D001": { name_cn: "焦慮", name_en: "Anxiety", problem_cn: "焦慮≠心理病，而是『不確定感'", problem_en: "Anxiety ≠ mental issue", insight_cn: "寫下擔心的事、制定計畫", insight_en: "Write worries, make plan", chain: { num: "099", title_cn: "預測暴露模型品質", title_en: "Prediction", detail_cn: "預測的『萬一』通常沒發生", detail_en: "Predictions usually wrong" } },
+            "D002": { name_cn: "害怕", name_en: "Fear", problem_cn: "害怕≠膽小，而是『預測不確定'", problem_en: "Fear ≠ cowardly", insight_cn: "害怕的通常是『想像'的壞事", insight_en: "Fear imagined, not real", chain: { num: "081", title_cn: "現實暴露幻想", title_en: "Reality", detail_cn: "真的面對後發現『沒那麼糟'", detail_en: "Face it, not that bad" } },
+            "D003": { name_cn: "孤單", name_en: "Loneliness", problem_cn: "孤單≠沒人，而是『沒深度連結'", problem_en: "Loneliness ≠ no people", insight_cn: "需要『能真正理解你的人'", insight_en: "Need 'someone gets me'", chain: { num: "141", title_cn: "安全感暴露依附", title_en: "Security", detail_cn: "找一個真正聽你說的人", detail_en: "Find one listener" } },
+            "D004": { name_cn: "空虛", name_en: "Emptiness", problem_cn: "空虛≠沒目標，而是『沒連結意義'", problem_en: "Emptiness ≠ no goals", insight_cn: "『達成別人期待'沒有意義", insight_en: "'Others' goals' empty", chain: { num: "149", title_cn: "存在價值暴露意義", title_en: "Meaning", detail_cn: "找『對自己有意義的事'", detail_en: "Find meaningful work" } },
+            "D005": { name_cn: "憂鬱", name_en: "Depression", problem_cn: "憂鬱≠情緒，而是『沒動力改變'", problem_en: "Depression ≠ mood", insight_cn: "最難的是『開始'", insight_en: "Hardest is start", chain: { num: "123", title_cn: "自主暴露驅動", title_en: "Autonomy", detail_cn: "每天一個微小行動會改善", detail_en: "Tiny daily action helps" } },
+            "D006": { name_cn: "委屈", name_en: "Wronged", problem_cn: "委屈≠被冤，而是『沒被看見'", problem_en: "Wronged ≠ actually", insight_cn: "主動說『我的感受'", insight_en: "Say 'my feeling'", chain: { num: "082", title_cn: "真相暴露信念差", title_en: "Truth", detail_cn: "對方可能根本不知道", detail_en: "They don't know" } },
+            "D007": { name_cn: "自責", name_en: "Self-blame", problem_cn: "自責≠有原則，而是『背不該的責'", problem_en: "Self-blame ≠ principled", insight_cn: "有些事真的不是你的錯", insight_en: "Not all your fault", chain: { num: "104", title_cn: "身份暴露信念", title_en: "Identity", detail_cn: "問『這真的是我的責任嗎'", detail_en: "Is this truly mine" } },
+            "D008": { name_cn: "後悔", name_en: "Regret", problem_cn: "後悔≠決定錯，而是『沒學到東西'", problem_en: "Regret ≠ bad decision", insight_cn: "提取教訓，下次用上", insight_en: "Extract lesson, use next", chain: { num: "101", title_cn: "修正暴露更新", title_en: "Correction", detail_cn: "後悔就會轉成『智慧'", detail_en: "Becomes wisdom" } },
+            "E001": { name_cn: "夫妻冷", name_en: "Marital Cold", problem_cn: "冷戰≠不愛，而是『沒溝通'", problem_en: "Coldness ≠ no love", insight_cn: "被傷害後開始保護自己", insight_en: "Hurt led to protection", chain: { num: "127", title_cn: "一致性暴露品格", title_en: "Consistency", detail_cn: "『誰先打破冷戰'就能修復", detail_en: "Someone break silence" } },
+            "E002": { name_cn: "親子衝", name_en: "Parent-Child", problem_cn: "衝突≠立場差，而是『不理解'", problem_en: "Conflict ≠ views", insight_cn: "先聽對方『為什麼'想", insight_en: "Listen their 'why'", chain: { num: "083", title_cn: "證據暴露推論", title_en: "Evidence", detail_cn: "才發現自己理解完全錯", detail_en: "I misunderstood" } },
+            "E003": { name_cn: "朋友疏", name_en: "Friends Drift", problem_cn: "疏遠≠不好，而是『沒維持'", problem_en: "Drifting ≠ you bad", insight_cn: "友誼需要定期澆水", insight_en: "Friendship needs water", chain: { num: "115", title_cn: "環境暴露系統", title_en: "Environment", detail_cn: "主動約就立刻恢復", detail_en: "Reach out, restored" } },
+            "E004": { name_cn: "外遇", name_en: "Infidelity", problem_cn: "外遇≠感情淡，而是『需求不滿'", problem_en: "Infidelity ≠ love faded", insight_cn: "某個需求在伴侶身上得不到", insight_en: "Unmet need elsewhere", chain: { num: "151", title_cn: "目標函數暴露原則", title_en: "Goal", detail_cn: "『溝通完全失敗'的信號", detail_en: "Communication failed" } },
+            "E005": { name_cn: "分手", name_en: "Breakup", problem_cn: "分手≠不適，而是『方向不同'", problem_en: "Breakup ≠ incompatible", insight_cn: "3-6 個月後痛會變珍貴", insight_en: "Pain becomes precious", chain: { num: "105", title_cn: "信念暴露過去", title_en: "Belief", detail_cn: "『怎麼愛'的理解完全改變", detail_en: "Learn how to love" } },
+            "E006": { name_cn: "離婚", name_en: "Divorce", problem_cn: "離婚≠失敗，而是『轉折'", problem_en: "Divorce ≠ failure", insight_cn: "重要是『下一步是什麼'", insight_en: "'What's next' matters", chain: { num: "147", title_cn: "下步暴露使命", title_en: "Next", detail_cn: "『痛苦後重生'才是轉機", detail_en: "Rebirth after pain" } },
+            "F001": { name_cn: "沒錢", name_en: "No Money", problem_cn: "沒錢≠賺少，而是『支出結構'", problem_en: "No money ≠ low income", insight_cn: "追蹤 30 天看『錢去哪'", insight_en: "Track, see money flow", chain: { num: "107", title_cn: "記憶暴露注意", title_en: "Memory", detail_cn: "『完全沒注意』支出", detail_en: "Unnoticed spending" } },
+            "F002": { name_cn: "負債", name_en: "Debt", problem_cn: "負債≠無救，而是『沒計畫'", problem_en: "Debt ≠ no recovery", insight_cn: "制定還款計畫就能放心", insight_en: "Plan = peace", chain: { num: "151", title_cn: "目標函數暴露", title_en: "Goal", detail_cn: "知道『何時還完』壓力降", detail_en: "Know when = relief" } },
+            "F003": { name_cn: "投資虧", name_en: "Investment Loss", problem_cn: "虧≠運氣差，而是『沒做功課'", problem_en: "Loss ≠ bad luck", insight_cn: "虧損是最好的學費", insight_en: "Loss is tuition", chain: { num: "099", title_cn: "預測暴露模型", title_en: "Prediction", detail_cn: "『為什麼預測錯'","detail_en": "Why wrong" } },
+            "F004": { name_cn: "創業失", name_en: "Startup Fail", problem_cn: "失敗≠無能，而是『執行問題'", problem_en: "Fail ≠ incapable", insight_cn: "先做『最小可行產品'測試", insight_en: "MVP first", chain: { num: "116", title_cn: "系統暴露設計", title_en: "Systems", detail_cn: "『做的時候'才會發現問題", detail_en: "Problems in execution" } },
+            "F005": { name_cn: "沒客", name_en: "No Customers", problem_cn: "沒客≠產品差，而是『沒人知'", problem_en: "No customers ≠ bad product", insight_cn: "好產品也要告訴對的人", insight_en: "Tell right people", chain: { num: "108", title_cn: "注意力暴露價值", title_en: "Attention", detail_cn: "花 90% 做，10% 說", detail_en: "90% make, 10% tell" } },
+            "F006": { name_cn: "收入降", name_en: "Income Drop", problem_cn: "降≠市場差，而是『市場變'", problem_en: "Drop ≠ bad market", insight_cn: "市場需求改變，你沒跟進", insight_en: "Market changed", chain: { num: "146", title_cn: "更新需求暴露", title_en: "Update", detail_cn: "被迫『思考新需求'才進化", detail_en: "Forced evolution" } },
+            "G001": { name_cn: "不會 Prompt", name_en: "Can't Prompt", problem_cn: "不會≠笨，而是『沒學'", problem_en: "Can't prompt ≠ not smart", insight_cn: "秘訣是『具體、背景、例子'", insight_en: "Specific, context, example", chain: { num: "083", title_cn: "證據暴露", title_en: "Evidence", detail_cn: "改詞就品質提升", detail_en: "Reword, quality jumps" } },
+            "G002": { name_cn: "不知怎問", name_en: "What to Ask", problem_cn: "不知≠不會想，而是『問題不清'", problem_en: "What to ask ≠ can't think", insight_cn: "需要『2-3 輪對話'才找到真問題", insight_en: "Takes 2-3 rounds", chain: { num: "125", title_cn: "熱情暴露", title_en: "Passion", detail_cn: "『真正想問什麼'需要厘清", detail_en: "Clarify true question" } },
+            "G003": { name_cn: "不知做 APP", name_en: "Can't Build APP", problem_cn: "不知≠不懂，而是『沒方法'", problem_en: "Can't build ≠ no tech", insight_cn: "設計→架構→功能", insight_en: "Design→structure→features", chain: { num: "116", title_cn: "系統暴露", title_en: "Systems", detail_cn: "『按系統流程'就能做", detail_en: "Follow process works" } },
+            "G004": { name_cn: "AI 回不好", name_en: "Bad AI Answer", problem_cn: "不好≠AI 差，而是『問不清'", problem_en: "Bad answer ≠ AI sucks", insight_cn: "加『背景'就品質提升", insight_en: "Add context improves", chain: { num: "082", title_cn: "真相暴露", title_en: "Truth", detail_cn: "『好回答'來自『好問題'", detail_en: "Good Q = good A" } },
+            "H001": { name_cn: "沒方向", name_en: "No Direction", problem_cn: "沒方≠無能，而是『沒想清'", problem_en: "No direction ≠ incapable", insight_cn: "花 2 週每天 30 分鐘想", insight_en: "2 weeks 30 min/day", chain: { num: "125", title_cn: "熱情暴露", title_en: "Passion", detail_cn: "看別人發光才發現自己沒", detail_en: "See others shine" } },
+            "H002": { name_cn: "沒目標", name_en: "No Goals", problem_cn: "沒≠沒野心，而是『價值不清'", problem_en: "No goals ≠ no ambition", insight_cn: "連結到真正想要的", insight_en: "Link to true want", chain: { num: "149", title_cn: "存在暴露意義", title_en: "Existence", detail_cn: "『為什麼要'才有動力", detail_en: "'Why' drives" } },
+            "H003": { name_cn: "沒意義", name_en: "No Meaning", problem_cn: "沒≠空虛，而是『沒影響他人'", problem_en: "No meaning ≠ empty", insight_cn: "幫助別人、創造、傳承", insight_en: "Help, create, teach", chain: { num: "162", title_cn: "生存暴露品質", title_en: "Wisdom", detail_cn: "看『別人因你成長'才懂意義", detail_en: "See others grow" } },
+            "H004": { name_cn: "迷茫", name_en: "Confused", problem_cn: "迷茫≠無能，而是『想太多'", problem_en: "Confused ≠ incapable", insight_cn: "寫下『人生 3 個最重要的值'", insight_en: "Write top 3 values", chain: { num: "110", title_cn: "目標暴露", title_en: "Goals", detail_cn: "『決策變簡單'", detail_en: "Decisions become simple" } }
+        };
+
+        // 類別
+        const categories = {
+            "A_學習": { icon: "📚", name_cn: "學習", name_en: "Learning", desc_cn: "讀書、考試、學習方法", desc_en: "Study, exams, methods" },
+            "B_工作": { icon: "💼", name_cn: "工作", name_en: "Work", desc_cn: "職業、加班、升遷", desc_en: "Career, overtime, promotion" },
+            "C_健康": { icon: "🏥", name_cn: "健康", name_en: "Health", desc_cn: "睡眠、疲勞、身體", desc_en: "Sleep, fatigue, health" },
+            "D_情緒": { icon: "😊", name_cn: "情緒", name_en: "Emotion", desc_cn: "焦慮、害怕、空虛", desc_en: "Anxiety, fear, empty" },
+            "E_關係": { icon: "👥", name_cn: "關係", name_en: "Relationship", desc_cn: "家庭、朋友、愛情", desc_en: "Family, friends, love" },
+            "F_金錢": { icon: "💰", name_cn: "金錢", name_en: "Money", desc_cn: "收入、支出、投資", desc_en: "Income, spending, invest" },
+            "G_AI": { icon: "🤖", name_cn: "AI", name_en: "AI", desc_cn: "提問、工具、應用", desc_en: "Prompt, tools, use" },
+            "H_人生": { icon: "🌟", name_cn: "人生", name_en: "Life", desc_cn: "方向、意義、目標", desc_en: "Direction, meaning, goals" }
+        };
+
+        let currentState = { currentLayer: 1, selectedEvent: null, selectedEventData: null, selectedAbilities: [] };
+
+        function init() { renderLayer1(); }
+
+        function renderLayer1() {
+            const container = document.getElementById('eventCategories');
+            container.innerHTML = '';
+            
+            const organized = {};
+            for (const [key, event] of Object.entries(allEvents)) {
+                const catKey = 'ABCDEFGH'[['A','B','C','D','E','F','G','H'].indexOf(key[0])] + '_' + ['學習','工作','健康','情緒','關係','金錢','AI','人生'][['A','B','C','D','E','F','G','H'].indexOf(key[0])];
+                if (!organized[catKey]) organized[catKey] = [];
+                organized[catKey].push({ key, ...event });
+            }
+
+            for (const [catKey, events] of Object.entries(organized)) {
+                const catData = categories[catKey];
+                if (!catData) continue;
+                
+                const section = document.createElement('div');
+                section.className = 'category-section fade-in';
+                
+                const header = document.createElement('div');
+                header.className = 'category-header';
+                header.innerHTML = `
+                    <div class="category-icon">${catData.icon}</div>
+                    <div class="category-info">
+                        <h3>${catData.name_cn} | ${catData.name_en}</h3>
+                        <p>${catData.desc_cn} | ${catData.desc_en}</p>
+                    </div>
+                `;
+                section.appendChild(header);
+                
+                const grid = document.createElement('div');
+                grid.className = 'event-grid';
+                
+                events.forEach(event => {
+                    const card = document.createElement('div');
+                    card.className = 'event-card';
+                    card.innerHTML = `<div class="event-card-cn">${event.name_cn}</div><div class="event-card-en">${event.name_en}</div>`;
+                    card.onclick = () => selectEvent(event.key, event);
+                    grid.appendChild(card);
+                });
+                
+                section.appendChild(grid);
+                container.appendChild(section);
+            }
+        }
+
+        function selectEvent(eventKey, eventData) {
+            currentState.selectedEvent = eventKey;
+            currentState.selectedEventData = eventData;
+            currentState.selectedAbilities = eventAbilityMap[eventKey] || [];
+            currentState.currentLayer = 2;
+            renderDiagnosis();
+            scrollToLayer(2);
+        }
+
+        function renderDiagnosis() {
+            const display = document.getElementById('diagnosisDisplay');
+            const data = currentState.selectedEventData;
+            
+            let html = `
+                <div style="margin-bottom: 20px;">
+                    <h3 style="color: #0D1B3E; margin-bottom: 15px;">事件 | Event</h3>
+                    <div style="background: #ffffff; padding: 12px; border-radius: 6px; border-left: 4px solid #B8860B;">
+                        <div style="font-size: 16px; font-weight: bold; color: #B8860B;">${data.name_cn}</div>
+                        <div style="font-size: 13px; color: #666; margin-top: 4px;">${data.name_en}</div>
+                    </div>
+                </div>
+
+                <div class="diagnosis-title">🎯 真正問題 | Problem</div>
+                <div class="bilingual">
+                    <div class="lang-block"><div class="lang-label">中文</div><div class="lang-content">${data.problem_cn}</div></div>
+                    <div class="lang-block"><div class="lang-label">English</div><div class="lang-content">${data.problem_en}</div></div>
+                </div>
+
+                <div class="diagnosis-title" style="margin-top: 15px;">💡 解析 | Insight</div>
+                <div class="bilingual">
+                    <div class="lang-block"><div class="lang-label">中文</div><div class="lang-content">${data.insight_cn}</div></div>
+                    <div class="lang-block"><div class="lang-label">English</div><div class="lang-content">${data.insight_en}</div></div>
+                </div>
+
+                <div class="diagnosis-title" style="margin-top: 15px;">🔗 暴露鏈 | Exposure</div>
+                <div class="exposure-narrative">
+                    <div class="exposure-step">
+                        <div class="exposure-chain-num">${data.chain.num}</div>
+                        <div class="exposure-step-content">
+                            <div class="chain-title">${data.chain.title_cn} | ${data.chain.title_en}</div>
+                            <div class="chain-detail">${data.chain.detail_cn}</div>
+                            <div class="chain-en">${data.chain.detail_en}</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            display.innerHTML = html;
+            document.getElementById('layer2').classList.remove('hidden');
+            renderAbilityTree();
+        }
+
+        function renderAbilityTree() {
+            const display = document.getElementById('abilityTreeDisplay');
+            display.innerHTML = '';
+            
+            const abilityIds = currentState.selectedAbilities;
+            if (abilityIds.length === 0) {
+                display.innerHTML = '<p>未找到對應能力</p>';
+                document.getElementById('layer3').classList.remove('hidden');
+                return;
+            }
+
+            const treeContainer = document.createElement('div');
+            treeContainer.className = 'ability-tree-container fade-in';
+            
+            const treeTitle = document.createElement('div');
+            treeTitle.className = 'ability-tree-title';
+            treeTitle.textContent = `🌳 為解決『${currentState.selectedEventData.name_cn}』，需養成：`;
+            treeContainer.appendChild(treeTitle);
+
+            const flowDiv = document.createElement('div');
+            flowDiv.className = 'ability-tree-flow';
+            
+            abilityIds.forEach((abilityId, index) => {
+                const ability = abilityLibrary[abilityId];
+                if (!ability) return;
+
+                const card = document.createElement('div');
+                card.className = 'ability-level-card';
+                card.innerHTML = `<div class="level">能力 ${abilityId}</div><div class="name">${ability.name_cn}</div>`;
+                flowDiv.appendChild(card);
+
+                if (index < abilityIds.length - 1) {
+                    const arrow = document.createElement('div');
+                    arrow.className = 'ability-arrow';
+                    arrow.textContent = '→';
+                    flowDiv.appendChild(arrow);
+                }
+            });
+            
+            treeContainer.appendChild(flowDiv);
+            display.appendChild(treeContainer);
+
+            abilityIds.forEach(abilityId => {
+                const ability = abilityLibrary[abilityId];
+                if (!ability) return;
+
+                const detailDiv = document.createElement('div');
+                detailDiv.className = 'ability-detail fade-in';
+                
+                const header = document.createElement('div');
+                header.className = 'ability-detail-header';
+                header.style.cursor = 'pointer';
+                header.innerHTML = `
+                    <div class="ability-detail-number">${abilityId}</div>
+                    <div class="ability-detail-info">
+                        <h3>${ability.name_cn} | ${ability.name_en}</h3>
+                        <p>${ability.desc_cn}</p>
+                    </div>
+                    <div class="chevron">▼</div>
+                `;
+                
+                const content = document.createElement('div');
+                content.className = 'ability-detail-content';
+                
+                let section = document.createElement('div');
+                section.className = 'detail-section';
+                section.innerHTML = '<div class="detail-section-title">🎯 具體行為 | Behaviors</div>';
+                ability.behaviors.forEach(b => {
+                    const item = document.createElement('div');
+                    item.className = 'detail-item';
+                    item.innerHTML = `<strong>${b.cn}</strong><div class="detail-sub">${b.en}</div>`;
+                    section.appendChild(item);
+                });
+                content.appendChild(section);
+
+                section = document.createElement('div');
+                section.className = 'detail-section';
+                section.innerHTML = '<div class="detail-section-title">💡 核心節點 | Nodes</div>';
+                ability.nodes.forEach(n => {
+                    const item = document.createElement('div');
+                    item.className = 'detail-item';
+                    item.innerHTML = `<strong>${n.cn}</strong><div class="detail-sub">${n.en}</div>`;
+                    section.appendChild(item);
+                });
+                content.appendChild(section);
+
+                section = document.createElement('div');
+                section.className = 'detail-section';
+                section.innerHTML = '<div class="detail-section-title">🛠️ 實踐策略 | Strategies</div>';
+                ability.strategies.forEach(s => {
+                    const item = document.createElement('div');
+                    item.className = 'detail-item';
+                    item.innerHTML = `<strong>${s.cn}</strong><div class="detail-sub">${s.en}</div>`;
+                    section.appendChild(item);
+                });
+                content.appendChild(section);
+
+                header.onclick = () => {
+                    content.classList.toggle('expanded');
+                    header.querySelector('.chevron').classList.toggle('expanded');
+                };
+
+                detailDiv.appendChild(header);
+                detailDiv.appendChild(content);
+                display.appendChild(detailDiv);
+            });
+
+            document.getElementById('layer3').classList.remove('hidden');
+        }
+
+        function readDiagnosis() {
+            const data = currentState.selectedEventData;
+            if ('speechSynthesis' in window) {
+                const text = `Event: ${data.name_en}. Problem: ${data.problem_en}. Insight: ${data.insight_en}`;
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'en-US';
+                utterance.rate = 0.85;
+                speechSynthesis.speak(utterance);
+            }
+        }
+
+        function goNext() {
+            currentState.currentLayer++;
+            if (currentState.currentLayer > 3) currentState.currentLayer = 3;
+            scrollToLayer(currentState.currentLayer);
+        }
+
+        function goBack() {
+            currentState.currentLayer--;
+            if (currentState.currentLayer < 1) currentState.currentLayer = 1;
+            scrollToLayer(currentState.currentLayer);
+        }
+
+        function reset() {
+            if (confirm('重新開始？Reset?')) {
+                currentState = { currentLayer: 1, selectedEvent: null, selectedEventData: null, selectedAbilities: [] };
+                for (let i = 1; i <= 3; i++) {
+                    const layer = document.getElementById(`layer${i}`);
+                    if (layer) layer.classList.add('hidden');
+                }
+                document.getElementById('layer1').classList.remove('hidden');
+                renderLayer1();
+                scrollToLayer(1);
+            }
+        }
+
+        function scrollToLayer(layer) {
+            if (layer > 3) layer = 3;
+            if (layer < 1) layer = 1;
+            const layerElement = document.getElementById(`layer${layer}`);
+            if (layerElement) layerElement.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        init();
+    </script>
+</body>
+</html>
