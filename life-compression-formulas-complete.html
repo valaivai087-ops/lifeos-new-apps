@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>人類意識的進化 × Life OS 互動導航 - 340個壓縮公式完整版</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: "Microsoft JhengHei", "Segoe UI", "Heebo", sans-serif;
+            background: #ffffff;
+            color: #1A2B5F;
+            line-height: 1.8;
+            font-size: 16px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            border-bottom: 3px solid #C9960C;
+            padding-bottom: 30px;
+        }
+        
+        h1 {
+            font-size: 2.5em;
+            color: #1A2B5F;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.2em;
+            color: #0A7A72;
+            margin-bottom: 5px;
+        }
+        
+        .tabs-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            border-bottom: 2px solid #E0E0E0;
+            padding-bottom: 15px;
+        }
+        
+        .tab-btn {
+            padding: 12px 20px;
+            background: #f5f5f5;
+            border: none;
+            cursor: pointer;
+            border-radius: 8px 8px 0 0;
+            font-size: 14px;
+            font-weight: bold;
+            color: #1A2B5F;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            white-space: nowrap;
+        }
+        
+        .tab-btn:hover {
+            background: #E8F0F7;
+            border-color: #0A7A72;
+        }
+        
+        .tab-btn.active {
+            background: #1A2B5F;
+            color: #ffffff;
+            border-color: #C9960C;
+        }
+        
+        .search-box {
+            margin-bottom: 30px;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .search-box input {
+            flex: 1;
+            padding: 15px;
+            border: 2px solid #0A7A72;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        
+        .search-box button {
+            padding: 15px 30px;
+            background: #0A7A72;
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s ease;
+        }
+        
+        .search-box button:hover {
+            background: #C9960C;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .section {
+            margin-bottom: 30px;
+            border-left: 4px solid #C9960C;
+            padding-left: 20px;
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        
+        .section h2 {
+            color: #1A2B5F;
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+        }
+        
+        .section h2:hover {
+            color: #0A7A72;
+        }
+        
+        .expand-icon {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            background: #C9960C;
+            color: #ffffff;
+            text-align: center;
+            line-height: 24px;
+            border-radius: 50%;
+            font-size: 14px;
+            font-weight: bold;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .expand-icon.open {
+            transform: rotate(180deg);
+        }
+        
+        .section-content {
+            display: none;
+            margin-top: 20px;
+        }
+        
+        .section-content.open {
+            display: block;
+        }
+        
+        .formula-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .formula-card {
+            background: #fff;
+            border: 2px solid #0A7A72;
+            border-radius: 8px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        
+        .formula-card:hover {
+            border-color: #C9960C;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transform: translateY(-3px);
+            background: #F5F5F5;
+        }
+        
+        .formula-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+        
+        .formula-num {
+            color: #C9960C;
+            font-weight: bold;
+            font-size: 13px;
+            background: #E8F0F7;
+            padding: 3px 8px;
+            border-radius: 4px;
+            min-width: 45px;
+            text-align: center;
+        }
+        
+        .tts-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #0A7A72;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s ease;
+            flex-shrink: 0;
+        }
+        
+        .tts-btn:hover {
+            background: #C9960C;
+        }
+        
+        .formula-text {
+            color: #1A2B5F;
+            font-size: 14px;
+            line-height: 1.6;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        
+        .formula-text-en {
+            color: #666;
+            font-size: 12px;
+            line-height: 1.5;
+            font-style: italic;
+        }
+        
+        .section-title {
+            background: linear-gradient(135deg, #1A2B5F 0%, #0A7A72 100%);
+            color: #ffffff;
+            padding: 15px 20px;
+            border-radius: 6px;
+            margin: 20px 0 15px 0;
+            font-size: 1.1em;
+            font-weight: bold;
+        }
+        
+        .core-concept {
+            background: linear-gradient(135deg, #1A2B5F 0%, #0A7A72 100%);
+            color: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .core-concept h3 {
+            font-size: 1.3em;
+            margin-bottom: 15px;
+        }
+        
+        .core-concept p {
+            font-size: 1.1em;
+            line-height: 1.8;
+        }
+        
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        .comparison-table th {
+            background: #1A2B5F;
+            color: #ffffff;
+            padding: 15px;
+            text-align: left;
+            font-weight: bold;
+        }
+        
+        .comparison-table td {
+            padding: 15px;
+            border-bottom: 1px solid #E0E0E0;
+        }
+        
+        .comparison-table tr:nth-child(even) {
+            background: #f5f5f5;
+        }
+        
+        .comparison-table tr:hover {
+            background: #E8F0F7;
+        }
+        
+        .highlight {
+            background: #FFF9E6;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+            color: #C9960C;
+        }
+        
+        .highlight-teal {
+            background: #E0F7F6;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+            color: #0A7A72;
+        }
+        
+        .formula-series {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+        
+        .formula-series-title {
+            color: #1A2B5F;
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #C9960C;
+        }
+        
+        .arrow {
+            color: #0A7A72;
+            font-weight: bold;
+            margin: 0 5px;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 60px;
+            padding-top: 20px;
+            border-top: 2px solid #E0E0E0;
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .stats {
+            background: #E8F0F7;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #1A2B5F;
+            font-weight: bold;
+        }
+        
+        @media (max-width: 768px) {
+            h1 { font-size: 1.8em; }
+            .tabs-container { flex-direction: column; }
+            .tab-btn { width: 100%; }
+            .formula-grid { grid-template-columns: 1fr; }
+            .comparison-table { font-size: 14px; }
+            .comparison-table th, .comparison-table td { padding: 10px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>人類意識的進化</h1>
+            <p class="subtitle">造物主、生成系統與生命更新</p>
+            <p class="subtitle">Life OS × 基督信仰 互動導航</p>
+            <p style="margin-top: 15px; font-size: 14px; color: #666;">編制 / Compiled by Anne Wang (王欣蓉)</p>
+        </header>
+
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="搜尋內容... Search content...">
+            <button onclick="searchContent()">搜尋 Search</button>
+        </div>
+
+        <div class="tabs-container">
+            <button class="tab-btn active" onclick="switchTab(event, 'core')">核心概念</button>
+            <button class="tab-btn" onclick="switchTab(event, 'structure')">結構層</button>
+            <button class="tab-btn" onclick="switchTab(event, 'mechanism')">機制層</button>
+            <button class="tab-btn" onclick="switchTab(event, 'understanding')">造物主理解</button>
+            <button class="tab-btn" onclick="switchTab(event, 'lifeos')">Life OS升維</button>
+            <button class="tab-btn" onclick="switchTab(event, 'christian')">基督信仰</button>
+            <button class="tab-btn" onclick="switchTab(event, 'formulas')">340個公式</button>
+        </div>
+
+        <!-- Core Concepts Tab -->
+        <div id="core" class="tab-content active">
+            <div class="core-concept">
+                <h3>【一句話核心】One-Sentence Core</h3>
+                <p>低維理解造物主，是創造者。<br>
+                高維理解造物主，是讓宇宙、生命、意識與經驗持續生成的底層結構。</p>
+            </div>
+
+            <div class="section">
+                <h2>
+                    【本體層 Ontology】
+                    <span class="expand-icon" onclick="toggleSection(this)">+</span>
+                </h2>
+                <div class="section-content">
+                    <p>真正的問題不是造物主是誰。真正的問題是：</p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>萬物如何生成？</li>
+                        <li>生命如何演化？</li>
+                        <li>意識如何形成？</li>
+                        <li>世界如何被經驗？</li>
+                    </ul>
+                    <p style="margin-top: 15px;">如果一切都有生成過程，那造物主就不只是某個存在，而是所有存在得以生成的條件。</p>
+                    <p style="margin-top: 10px;"><strong>造物主可以理解為：</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>生成的根源</li>
+                        <li>秩序的來源</li>
+                        <li>規律的母體</li>
+                        <li>存在的基礎</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Structure Tab -->
+        <div id="structure" class="tab-content">
+            <div class="section">
+                <h2>
+                    【結構層】人類對造物主的四次認知升維
+                    <span class="expand-icon" onclick="toggleSection(this)">+</span>
+                </h2>
+                <div class="section-content">
+                    <table class="comparison-table">
+                        <tr>
+                            <th>階段</th>
+                            <th>特徵</th>
+                            <th>理解</th>
+                        </tr>
+                        <tr>
+                            <td><span class="highlight">神話時代</span></td>
+                            <td>未知 → 神話 → 人格神</td>
+                            <td>人類用神話建立第一套世界模型</td>
+                        </tr>
+                        <tr>
+                            <td><span class="highlight">哲學時代</span></td>
+                            <td>萬物 → 規律 → 天道</td>
+                            <td>老子的道、柏拉圖的理念、亞里斯多德的第一因</td>
+                        </tr>
+                        <tr>
+                            <td><span class="highlight">科學時代</span></td>
+                            <td>觀察 → 實驗 → 自然法則</td>
+                            <td>造物主對應自然法則與宇宙規律</td>
+                        </tr>
+                        <tr>
+                            <td><span class="highlight">系統時代</span></td>
+                            <td>資訊+能量+結構+回饋+意識 → 持續生成</td>
+                            <td>世界是持續演化的複雜適應系統</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mechanism Tab -->
+        <div id="mechanism" class="tab-content">
+            <div class="section">
+                <h2>
+                    【機制層】生成的八個核心機制
+                    <span class="expand-icon" onclick="toggleSection(this)">+</span>
+                </h2>
+                <div class="section-content">
+                    <div class="formula-grid" id="mechanismGrid"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Understanding Tab -->
+        <div id="understanding" class="tab-content">
+            <div class="section">
+                <h2>
+                    【造物主的四種理解】
+                    <span class="expand-icon" onclick="toggleSection(this)">+</span>
+                </h2>
+                <div class="section-content">
+                    <table class="comparison-table">
+                        <tr>
+                            <th>層次</th>
+                            <th>理解</th>
+                        </tr>
+                        <tr>
+                            <td><span class="highlight">宗教層</span></td>
+                            <td>造物主是創造萬物的神</td>
+                        </tr>
+                        <tr>
+                            <td><span class="highlight">哲學層</span></td>
+                            <td>造物主是道、本源、第一因</td>
+                        </tr>
+                        <tr>
+                            <td><span class="highlight">科學層</span></td>
+                            <td>造物主對應自然法則與宇宙規律</td>
+                        </tr>
+                        <tr>
+                            <td><span class="highlight">系統層</span></td>
+                            <td>造物主是生成萬物的動態系統</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Life OS Tab -->
+        <div id="lifeos" class="tab-content">
+            <div class="section">
+                <h2>
+                    【Life OS視角】
+                    <span class="expand-icon" onclick="toggleSection(this)">+</span>
+                </h2>
+                <div class="section-content">
+                    <p><strong>痛苦的生成機制</strong></p>
+                    <p style="margin-top: 10px;">低維模型：痛苦 = 懲罰</p>
+                    <p>高維模型：痛苦 = 預測誤差</p>
+                    <p style="margin-top: 10px;">當現實與模型衝突。痛苦提醒：模型需要更新。</p>
+
+                    <p style="margin-top: 20px;"><strong>自由的真正來源</strong></p>
+                    <p style="margin-top: 10px;">很多人認為：自由就是沒有束縛。</p>
+                    <p>高維來看：自由 = 更新能力</p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>限制存在。但模型可以改變。</li>
+                        <li>信念可以更新。</li>
+                        <li>習慣可以重塑。</li>
+                        <li>能力可以建立。</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Christian Tab -->
+        <div id="christian" class="tab-content">
+            <div class="section">
+                <h2>
+                    【基督信仰 × Life OS 對話】
+                    <span class="expand-icon" onclick="toggleSection(this)">+</span>
+                </h2>
+                <div class="section-content">
+                    <table class="comparison-table">
+                        <tr>
+                            <th>項目</th>
+                            <th>Life OS</th>
+                            <th>基督信仰</th>
+                        </tr>
+                        <tr>
+                            <td><span class="highlight">本體層</span></td>
+                            <td>人活在自己的世界模型裡</td>
+                            <td>人活在自己的心、思想與靈的狀態裡</td>
+                        </tr>
+                        <tr>
+                            <td><span class="highlight">世界模型</span></td>
+                            <td>世界模型決定預測</td>
+                            <td>信心決定生命方向 (箴言23:7)</td>
+                        </tr>
+                        <tr>
+                            <td><span class="highlight">更新</span></td>
+                            <td>更新模型</td>
+                            <td>心意更新而變化 (羅馬書12:2)</td>
+                        </tr>
+                        <tr>
+                            <td><span class="highlight">悔改</span></td>
+                            <td>更新錯誤模型</td>
+                            <td>Metanoia - 改變心思、理解、方向</td>
+                        </tr>
+                        <tr>
+                            <td><span class="highlight">真理</span></td>
+                            <td>找到更接近真實的模型</td>
+                            <td>認識真理，真理叫人自由 (約翰8:32)</td>
+                        </tr>
+                        <tr>
+                            <td><span class="highlight">痛苦</span></td>
+                            <td>痛苦是更新通知</td>
+                            <td>試煉生忍耐，忍耐成全生命 (雅各1:2-4)</td>
+                        </tr>
+                        <tr>
+                            <td><span class="highlight">自由</span></td>
+                            <td>自由 = 更新能力</td>
+                            <td>自由 = 活在真理裡，不被罪綑綁 (加5:1)</td>
+                        </tr>
+                        <tr>
+                            <td><span class="highlight">身份</span></td>
+                            <td>更新身份模型</td>
+                            <td>新造的人，舊事已過 (哥後5:17)</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- 340 Formulas Tab -->
+        <div id="formulas" class="tab-content">
+            <div class="stats">
+                📊 共 340 個生命壓縮公式 | 340 Life Compression Formulas
+            </div>
+
+            <div id="formulasContainer"></div>
+
+            <footer>
+                <p>© 2025 人類意識的進化 × Life OS 互動系統<br>
+                Compiled by Anne Wang (王欣蓉) | Bilingual Traditional Chinese & English<br>
+                用最簡省Credit 最快完成 | Execute with maximum efficiency</p>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+        // Complete formula data - 340 formulas
+        const allFormulas = [
+            // 061-080
+            {num: 61, zh: "把每天壓縮成天天與主同行", en: "Compress each day into walking with God daily"},
+            {num: 62, zh: "把同行壓縮成生命成熟", en: "Compress companionship into life maturity"},
+            {num: 63, zh: "把成熟壓縮成基督樣式", en: "Compress maturity into Christ-likeness"},
+            {num: 64, zh: "把基督樣式壓縮成屬靈價值", en: "Compress Christ-likeness into spiritual value"},
+            {num: 65, zh: "把價值壓縮成忠心", en: "Compress value into faithfulness"},
+            {num: 66, zh: "把忠心壓縮成見證", en: "Compress faithfulness into witness"},
+            {num: 67, zh: "把見證壓縮成福音影響力", en: "Compress witness into gospel influence"},
+            {num: 68, zh: "把影響力壓縮成託付", en: "Compress influence into stewardship"},
+            {num: 69, zh: "把託付壓縮成呼召", en: "Compress stewardship into calling"},
+            {num: 70, zh: "把呼召壓縮成一生使命", en: "Compress calling into lifetime mission"},
+            {num: 71, zh: "把希望壓縮成信心", en: "Compress hope into faith"},
+            {num: 72, zh: "把信心壓縮成順服", en: "Compress faith into obedience"},
+            {num: 73, zh: "把順服壓縮成今天", en: "Compress obedience into today"},
+            {num: 74, zh: "把今天壓縮成忠心", en: "Compress today into faithfulness"},
+            {num: 75, zh: "把忠心壓縮成現在就開始", en: "Compress faithfulness into starting now"},
+            {num: 76, zh: "把未來壓縮成交給神", en: "Compress future into entrusting to God"},
+            {num: 77, zh: "把結果壓縮成忠心耕耘", en: "Compress results into faithful cultivation"},
+            {num: 78, zh: "把習慣壓縮成敬虔生活", en: "Compress habits into godly living"},
+            {num: 79, zh: "把身份壓縮成神的兒女", en: "Compress identity into God's child"},
+            {num: 80, zh: "把神的兒女壓縮成活出基督", en: "Compress God's child into living out Christ"},
+            
+            // 081-100
+            {num: 81, zh: "把神經迴路壓縮成生命習慣", en: "Compress neural pathways into life habits"},
+            {num: 82, zh: "把生命習慣壓縮成心意更新", en: "Compress life habits into renewed mind"},
+            {num: 83, zh: "把心意更新壓縮成信心", en: "Compress renewed mind into faith"},
+            {num: 84, zh: "把信心壓縮成一句應許", en: "Compress faith into one promise"},
+            {num: 85, zh: "把一句應許壓縮成永恆盼望", en: "Compress one promise into eternal hope"},
+            {num: 86, zh: "把世界壓縮成神的國", en: "Compress world into God's kingdom"},
+            {num: 87, zh: "把神的國壓縮成神的旨意", en: "Compress God's kingdom into God's will"},
+            {num: 88, zh: "把神的旨意壓縮成神的話", en: "Compress God's will into God's Word"},
+            {num: 89, zh: "把神的話壓縮成真理", en: "Compress God's Word into truth"},
+            {num: 90, zh: "把真理壓縮成基督", en: "Compress truth into Christ"},
+            {num: 91, zh: "把觀察壓縮成屬靈分辨", en: "Compress observation into spiritual discernment"},
+            {num: 92, zh: "把分辨壓縮成智慧", en: "Compress discernment into wisdom"},
+            {num: 93, zh: "把智慧壓縮成敬畏神", en: "Compress wisdom into fearing God"},
+            {num: 94, zh: "把敬畏神壓縮成天天遵行", en: "Compress fearing God into daily obedience"},
+            {num: 95, zh: "把遵行壓縮成門徒生活", en: "Compress obedience into discipleship"},
+            {num: 96, zh: "把生活壓縮成榮耀神", en: "Compress life into glorifying God"},
+            {num: 97, zh: "把命運壓縮成神的帶領", en: "Compress destiny into God's leading"},
+            {num: 98, zh: "把選擇壓縮成順服神", en: "Compress choice into obeying God"},
+            {num: 99, zh: "把順服壓縮成愛神", en: "Compress obedience into loving God"},
+            {num: 100, zh: "把愛神壓縮成愛人", en: "Compress loving God into loving others"},
+            
+            // 101-140
+            {num: 101, zh: "把聚焦壓縮成單單仰望主", en: "Compress focus into looking to God alone"},
+            {num: 102, zh: "把深度壓縮成扎根真理", en: "Compress depth into rooting in truth"},
+            {num: 103, zh: "把專業壓縮成忠心服事", en: "Compress expertise into faithful service"},
+            {num: 104, zh: "把不可取代壓縮成神所使用", en: "Compress irreplaceability into God using you"},
+            {num: 105, zh: "把核心能力壓縮成恩賜", en: "Compress core ability into gifting"},
+            {num: 106, zh: "把恩賜壓縮成造就教會", en: "Compress gift into building church"},
+            {num: 107, zh: "把資源壓縮成神的託付", en: "Compress resources into God's trust"},
+            {num: 108, zh: "把槓桿壓縮成祝福更多人", en: "Compress leverage into blessing more people"},
+            {num: 109, zh: "把成果壓縮成生命果子", en: "Compress results into fruit of life"},
+            {num: 110, zh: "把果子壓縮成榮耀神", en: "Compress fruit into glorifying God"},
+            {num: 111, zh: "把可信度壓縮成誠信", en: "Compress credibility into integrity"},
+            {num: 112, zh: "把金錢壓縮成神的供應", en: "Compress money into God's provision"},
+            {num: 113, zh: "把收入壓縮成忠心管家", en: "Compress income into faithful stewardship"},
+            {num: 114, zh: "把現金流壓縮成供應他人", en: "Compress cash flow into providing for others"},
+            {num: 115, zh: "把財富壓縮成甘心分享", en: "Compress wealth into willing sharing"},
+            {num: 116, zh: "把健康壓縮成身體是聖靈的殿", en: "Compress health into body as temple"},
+            {num: 117, zh: "把修復壓縮成神的醫治", en: "Compress repair into God's healing"},
+            {num: 118, zh: "把穩態壓縮成神所賜平安", en: "Compress stability into God-given peace"},
+            {num: 119, zh: "把適應壓縮成凡事知足", en: "Compress adaptation into contentment"},
+            {num: 120, zh: "把演化壓縮成生命成聖", en: "Compress evolution into sanctification"},
+            {num: 121, zh: "把更新壓縮成日日更新", en: "Compress renewal into daily renewal"},
+            {num: 122, zh: "把生命力壓縮成聖靈能力", en: "Compress vitality into Spirit power"},
+            {num: 123, zh: "把能量壓縮成神所賜力量", en: "Compress energy into God-given strength"},
+            {num: 124, zh: "把粒線體壓縮成珍惜神所造身體", en: "Compress mitochondria into treasuring God's creation"},
+            {num: 125, zh: "把代謝壓縮成生命管理", en: "Compress metabolism into life management"},
+            {num: 126, zh: "把能量流壓縮成忠心服事", en: "Compress energy flow into faithful service"},
+            {num: 127, zh: "把發炎壓縮成照顧身體提醒", en: "Compress inflammation into body care reminder"},
+            {num: 128, zh: "把修復壓縮成神的恩典", en: "Compress restoration into God's grace"},
+            {num: 129, zh: "把症狀壓縮成尋求智慧", en: "Compress symptoms into seeking wisdom"},
+            {num: 130, zh: "把警報壓縮成回到神面前", en: "Compress alarm into returning to God"},
+            {num: 131, zh: "把檢驗壓縮成檢視生命", en: "Compress testing into examining life"},
+            {num: 132, zh: "把數據壓縮成智慧管理", en: "Compress data into wise management"},
+            {num: 133, zh: "把AI壓縮成服事人的工具", en: "Compress AI into tool for serving people"},
+            {num: 134, zh: "把工具壓縮成善用恩賜", en: "Compress tools into using gifts well"},
+            {num: 135, zh: "把科技壓縮成管理世界的工具", en: "Compress tech into world stewardship"},
+            {num: 136, zh: "把教育壓縮成門徒培育", en: "Compress education into discipleship"},
+            {num: 137, zh: "把教學壓縮成傳遞真理", en: "Compress teaching into conveying truth"},
+            {num: 138, zh: "把領導壓縮成牧養群羊", en: "Compress leadership into shepherding"},
+            {num: 139, zh: "把管理壓縮成忠心管家", en: "Compress management into faithful stewardship"},
+            {num: 140, zh: "把人生壓縮成與神同行、效法基督、榮耀神", en: "Compress life into: walking with God, following Christ, glorifying God"},
+
+            // 241-280
+            {num: 241, zh: "把現象壓縮成神的作為", en: "Compress phenomena into God's actions"},
+            {num: 242, zh: "把機制壓縮成神的智慧", en: "Compress mechanism into God's wisdom"},
+            {num: 243, zh: "把規律壓縮成神的法則", en: "Compress laws into God's precepts"},
+            {num: 244, zh: "把模型壓縮成神的真理", en: "Compress models into God's truth"},
+            {num: 245, zh: "把真理壓縮成神的話", en: "Compress truth into God's Word"},
+            {num: 246, zh: "把神的話壓縮成生命能力", en: "Compress God's Word into life power"},
+            {num: 247, zh: "把能力壓縮成服事自由", en: "Compress power into freedom to serve"},
+            {num: 248, zh: "把自由壓縮成愛人的選擇", en: "Compress freedom into choice to love"},
+            {num: 249, zh: "把選擇壓縮成忠心", en: "Compress choice into faithfulness"},
+            {num: 250, zh: "把忠心壓縮成成熟", en: "Compress faithfulness into maturity"},
+            {num: 251, zh: "把成熟壓縮成基督樣式", en: "Compress maturity into Christ's image"},
+            {num: 252, zh: "把穩定壓縮成神所賜平安", en: "Compress stability into God's peace"},
+            {num: 253, zh: "把信任壓縮成彼此相愛", en: "Compress trust into mutual love"},
+            {num: 254, zh: "把合作壓縮成基督身體", en: "Compress cooperation into Christ's body"},
+            {num: 255, zh: "把共贏壓縮成彼此造就", en: "Compress win-win into mutual building"},
+            {num: 256, zh: "把永續壓縮成神國延續", en: "Compress sustainability into kingdom continuation"},
+            {num: 257, zh: "把文明壓縮成神國文化", en: "Compress civilization into kingdom culture"},
+            {num: 258, zh: "把智慧壓縮成敬畏神", en: "Compress wisdom into fearing God"},
+            {num: 259, zh: "把傳承壓縮成門徒訓練", en: "Compress inheritance into discipleship"},
+            {num: 260, zh: "把未來壓縮成今天忠心", en: "Compress future into today's faithfulness"},
+            {num: 261, zh: "把細節壓縮成神的心意", en: "Compress details into God's intention"},
+            {num: 262, zh: "把重點壓縮成愛神", en: "Compress priority into loving God"},
+            {num: 263, zh: "把核心壓縮成愛人", en: "Compress core into loving others"},
+            {num: 264, zh: "把原理壓縮成十字架", en: "Compress principle into cross"},
+            {num: 265, zh: "把一句話壓縮成跟隨基督", en: "Compress one word into following Christ"},
+            {num: 266, zh: "把方向壓縮成神的旨意", en: "Compress direction into God's will"},
+            {num: 267, zh: "把決定壓縮成順服", en: "Compress decision into obedience"},
+            {num: 268, zh: "把行動壓縮成信心", en: "Compress action into faith"},
+            {num: 269, zh: "把習慣壓縮成敬虔生活", en: "Compress habits into godly life"},
+            {num: 270, zh: "把人生壓縮成榮耀神", en: "Compress life into glorifying God"},
+            {num: 271, zh: "把資訊爆炸壓縮成神的真理", en: "Compress info explosion into God's truth"},
+            {num: 272, zh: "把知識圖譜壓縮成真理地圖", en: "Compress knowledge map into truth map"},
+            {num: 273, zh: "把能力地圖壓縮成門徒道路", en: "Compress ability map into discipleship path"},
+            {num: 274, zh: "把成長路徑壓縮成每日靈修", en: "Compress growth path into daily devotion"},
+            {num: 275, zh: "把每日任務壓縮成天天背十字架", en: "Compress daily task into carrying cross"},
+            {num: 276, zh: "把固定節奏壓縮成與主同行", en: "Compress rhythm into walking with Lord"},
+            {num: 277, zh: "把複利系統壓縮成日日成聖", en: "Compress compounding into daily sanctification"},
+            {num: 278, zh: "把長期優勢壓縮成基督生命", en: "Compress long-term advantage into Christ's life"},
+            {num: 279, zh: "把不可取代壓縮成神所使用", en: "Compress irreplaceability into God using you"},
+            {num: 280, zh: "把生命定位壓縮成神的呼召", en: "Compress life positioning into God's calling"},
+
+            // 281-320
+            {num: 281, zh: "把困惑壓縮成尋求神", en: "Compress confusion into seeking God"},
+            {num: 282, zh: "把疑問壓縮成禱告", en: "Compress doubts into prayer"},
+            {num: 283, zh: "把研究壓縮成查考聖經", en: "Compress research into studying Scripture"},
+            {num: 284, zh: "把驗證壓縮成生命見證", en: "Compress verification into life witness"},
+            {num: 285, zh: "把結論壓縮成信心", en: "Compress conclusion into faith"},
+            {num: 286, zh: "把決策依據壓縮成神的話", en: "Compress decision basis into God's Word"},
+            {num: 287, zh: "把行動原則壓縮成順服真理", en: "Compress action principle into obeying truth"},
+            {num: 288, zh: "把生活哲學壓縮成基督生命", en: "Compress life philosophy into Christ's life"},
+            {num: 289, zh: "把生命態度壓縮成謙卑", en: "Compress life attitude into humility"},
+            {num: 290, zh: "把日常選擇壓縮成永恆價值", en: "Compress daily choice into eternal value"},
+            {num: 291, zh: "把誘惑壓縮成信心考驗", en: "Compress temptation into faith test"},
+            {num: 292, zh: "把考驗壓縮成生命熬煉", en: "Compress testing into life refining"},
+            {num: 293, zh: "把驗證壓縮成忠心", en: "Compress verification into faithfulness"},
+            {num: 294, zh: "把實力壓縮成神所賜恩賜", en: "Compress strength into God-given gifts"},
+            {num: 295, zh: "把輸出壓縮成服事", en: "Compress output into service"},
+            {num: 296, zh: "把貢獻壓縮成愛人", en: "Compress contribution into loving others"},
+            {num: 297, zh: "把生命意義壓縮成榮耀神", en: "Compress life meaning into glorifying God"},
+            {num: 298, zh: "把存在價值壓縮成神的兒女", en: "Compress existence value into God's child"},
+            {num: 299, zh: "把喜樂壓縮成主裡滿足", en: "Compress joy into contentment in God"},
+            {num: 300, zh: "把平安壓縮成基督同在", en: "Compress peace into Christ's presence"},
+            {num: 301, zh: "把混亂資訊壓縮成真理", en: "Compress chaotic info into truth"},
+            {num: 302, zh: "把零碎知識壓縮成福音", en: "Compress fragmented knowledge into gospel"},
+            {num: 303, zh: "把零散系統壓縮成神國", en: "Compress scattered systems into kingdom"},
+            {num: 304, zh: "把母體壓縮成基督", en: "Compress matrix into Christ"},
+            {num: 305, zh: "把生成引擎壓縮成聖靈工作", en: "Compress generation engine into Spirit's work"},
+            {num: 306, zh: "把演化能力壓縮成生命更新", en: "Compress evolution into life renewal"},
+            {num: 307, zh: "把競爭力壓縮成見證能力", en: "Compress competitiveness into witness power"},
+            {num: 308, zh: "把影響力壓縮成福音感召", en: "Compress influence into gospel calling"},
+            {num: 309, zh: "把感召力壓縮成基督的愛", en: "Compress calling power into Christ's love"},
+            {num: 310, zh: "把信念力量壓縮成十字架", en: "Compress belief power into cross"},
+            {num: 311, zh: "把壓力事件壓縮成信心功課", en: "Compress stress event into faith lesson"},
+            {num: 312, zh: "把成長事件壓縮成神的帶領", en: "Compress growth event into God's leading"},
+            {num: 313, zh: "把生命故事壓縮成見證", en: "Compress life story into testimony"},
+            {num: 314, zh: "把人生智慧壓縮成聖經真理", en: "Compress life wisdom into Scripture truth"},
+            {num: 315, zh: "把一句金句壓縮成神的應許", en: "Compress one verse into God's promise"},
+            {num: 316, zh: "把一生原則壓縮成愛神愛人", en: "Compress lifetime principle into love God/others"},
+            {num: 317, zh: "把每日實踐壓縮成跟隨基督", en: "Compress daily practice into following Christ"},
+            {num: 318, zh: "把身份認同壓縮成神的兒女", en: "Compress identity into God's child"},
+            {num: 319, zh: "把生命風格壓縮成基督樣式", en: "Compress life style into Christ's image"},
+            {num: 320, zh: "把個人品牌壓縮成忠心見證", en: "Compress personal brand into faithful witness"},
+
+            // 321-340
+            {num: 321, zh: "把閱讀一本書壓縮成更認識神", en: "Compress reading one book into knowing God more"},
+            {num: 322, zh: "把上一堂課壓縮成一項恩賜操練", en: "Compress one class into gift practice"},
+            {num: 323, zh: "把一次失敗壓縮成神的塑造", en: "Compress one failure into God's shaping"},
+            {num: 324, zh: "把一次成功壓縮成感恩", en: "Compress one success into gratitude"},
+            {num: 325, zh: "把一次突破壓縮成神的恩典", en: "Compress one breakthrough into God's grace"},
+            {num: 326, zh: "把一次合作壓縮成肢體合一", en: "Compress one collaboration into body unity"},
+            {num: 327, zh: "把一次分享壓縮成傳揚福音", en: "Compress one sharing into proclaiming gospel"},
+            {num: 328, zh: "把一次服務壓縮成愛人如己", en: "Compress one service into loving others"},
+            {num: 329, zh: "把一次感恩壓縮成敬拜", en: "Compress one gratitude into worship"},
+            {num: 330, zh: "把一次原諒壓縮成十字架的愛", en: "Compress one forgiveness into cross love"},
+            {num: 331, zh: "把一次反省壓縮成悔改", en: "Compress one reflection into repentance"},
+            {num: 332, zh: "把一次更新壓縮成心意更新", en: "Compress one update into renewed mind"},
+            {num: 333, zh: "把今天的自己壓縮成更像基督", en: "Compress today's self into more like Christ"},
+            {num: 334, zh: "把昨天的錯誤壓縮成神的恩典", en: "Compress yesterday's error into God's grace"},
+            {num: 335, zh: "把今天的努力壓縮成忠心服事", en: "Compress today's effort into faithful service"},
+            {num: 336, zh: "把明天的能力壓縮成神的託付", en: "Compress tomorrow's ability into God's trust"},
+            {num: 337, zh: "把未來的價值壓縮成祝福萬民", en: "Compress future value into blessing nations"},
+            {num: 338, zh: "把世界的貢獻壓縮成神國擴展", en: "Compress world contribution into kingdom expansion"},
+            {num: 339, zh: "把生命的使命壓縮成天天跟隨主", en: "Compress life mission into following Lord daily"},
+            {num: 340, zh: "把每天的一件小事壓縮成一生忠心榮耀神", en: "Compress one daily act into lifetime glorifying God"},
+        ];
+
+        const mechanisms = [
+            {num: '①', zh: '規律 Law', desc: '沒有規律，就沒有穩定世界。'},
+            {num: '②', zh: '結構 Structure', desc: '規律形成可重複的組織。'},
+            {num: '③', zh: '資訊 Information', desc: '資訊保存生成方式。'},
+            {num: '④', zh: '能量 Energy', desc: '能量提供轉化能力。'},
+            {num: '⑤', zh: '回饋 Feedback', desc: '生成不是一次完成而是不斷修正。'},
+            {num: '⑥', zh: '演化 Evolution', desc: '適應環境，保留有效模型。'},
+            {num: '⑦', zh: '意識 Consciousness', desc: '生命開始建立世界模型。'},
+            {num: '⑧', zh: '更新 Update', desc: '真正自由是能更新限制。'},
+        ];
+
+        // Initialize formulas on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add click handlers to sections
+            document.querySelectorAll('.section h2').forEach(heading => {
+                heading.addEventListener('click', function(e) {
+                    if (e.target.classList.contains('expand-icon')) return;
+                    const icon = heading.querySelector('.expand-icon');
+                    if (icon) toggleSection(icon);
+                });
+            });
+
+            // Initialize mechanisms
+            const mechanismGrid = document.getElementById('mechanismGrid');
+            if (mechanismGrid) {
+                mechanismGrid.innerHTML = mechanisms.map(m => `
+                    <div class="formula-card">
+                        <div class="formula-num">${m.num}</div>
+                        <div class="formula-text">${m.zh}</div>
+                        <div class="formula-text-en">${m.desc}</div>
+                    </div>
+                `).join('');
+            }
+        });
+
+        // Switch tabs
+        function switchTab(e, tabName) {
+            e.preventDefault();
+            
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Remove active class from buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+            e.target.classList.add('active');
+            
+            // Load formulas if switching to formulas tab
+            if (tabName === 'formulas') {
+                loadFormulas();
+            }
+            
+            window.scrollTo(0, 0);
+        }
+
+        // Load and display all formulas
+        function loadFormulas() {
+            const container = document.getElementById('formulasContainer');
+            if (!container || container.children.length > 0) return; // Already loaded
+            
+            // Group formulas by series
+            const seriesGroups = [
+                {title: '061-080 生命壓縮公式 Series I', start: 61, end: 80},
+                {title: '081-100 生命壓縮公式 Series II', start: 81, end: 100},
+                {title: '101-140 生命壓縮公式 Series III', start: 101, end: 140},
+                {title: '241-280 生命壓縮公式 Series IV', start: 241, end: 280},
+                {title: '281-320 生命壓縮公式 Series V', start: 281, end: 320},
+                {title: '321-340 生命壓縮公式 Final Series', start: 321, end: 340},
+            ];
+            
+            let html = '';
+            
+            seriesGroups.forEach(series => {
+                const seriesFormulas = allFormulas.filter(f => f.num >= series.start && f.num <= series.end);
+                
+                html += `<div class="section-title">${series.title}</div>`;
+                html += '<div class="formula-grid">';
+                
+                seriesFormulas.forEach(formula => {
+                    html += `
+                        <div class="formula-card">
+                            <div class="formula-header">
+                                <span class="formula-num">#${formula.num}</span>
+                                <button class="tts-btn" onclick="speak('${formula.en.replace(/'/g, "\\'")}')">🔊</button>
+                            </div>
+                            <div class="formula-text">${formula.zh}</div>
+                            <div class="formula-text-en">${formula.en}</div>
+                        </div>
+                    `;
+                });
+                
+                html += '</div>';
+            });
+            
+            // Add final summary
+            html += `
+                <div class="section-title">【整本聖經最終壓縮公式 Final Compression Formula】</div>
+                <div class="formula-series">
+                    <p style="line-height: 2.5; text-align: center; color: #1A2B5F; font-size: 15px;">
+                        神的愛 God's Love 
+                        <span class="arrow">→</span>
+                        基督 Christ 
+                        <span class="arrow">→</span>
+                        十字架 Cross 
+                        <span class="arrow">→</span>
+                        恩典 Grace
+                        <br><br>
+                        信心 Faith 
+                        <span class="arrow">→</span>
+                        悔改 Repentance 
+                        <span class="arrow">→</span>
+                        心意更新 Renewed Mind 
+                        <span class="arrow">→</span>
+                        生命更新 Renewed Life
+                        <br><br>
+                        效法基督 Follow Christ 
+                        <span class="arrow">→</span>
+                        愛神 Love God 
+                        <span class="arrow">→</span>
+                        愛人 Love Others 
+                        <span class="arrow">→</span>
+                        榮耀神 Glorify God 
+                        <span class="arrow">→</span>
+                        永恆生命 Eternal Life
+                    </p>
+                </div>
+
+                <div class="section-title">【耶穌生命一句話 Jesus' Life in One Sentence】</div>
+                <div class="formula-series">
+                    <p style="text-align: center; font-size: 16px; color: #1A2B5F; font-weight: bold; line-height: 2;">
+                        不是活出自己。<br>而是活出基督。<br><br>
+                        Not living out yourself.<br>But living out Christ.
+                    </p>
+                </div>
+
+                <div class="section-title">【保羅生命一句話 Paul's Life in One Sentence】</div>
+                <div class="formula-series">
+                    <p style="text-align: center; font-size: 15px; color: #1A2B5F; font-weight: bold; line-height: 2;">
+                        現在活著的。不再是我。乃是基督在我裡面活著。<br><br>
+                        It is no longer I who live, but Christ who lives in me.<br>
+                        (加拉太書 Galatians 2:20)
+                    </p>
+                </div>
+
+                <div class="section-title">【基督信仰最高壓縮公式 Highest Christian Compression Formula】</div>
+                <div class="formula-series">
+                    <p style="line-height: 2.5; text-align: center; color: #1A2B5F; font-size: 15px;">
+                        神的愛 God's Love 
+                        <span class="arrow">→</span>
+                        基督 Christ 
+                        <span class="arrow">→</span>
+                        十字架 Cross 
+                        <span class="arrow">→</span>
+                        恩典 Grace 
+                        <span class="arrow">→</span>
+                        信心 Faith
+                        <br>
+                        悔改 Repentance 
+                        <span class="arrow">→</span>
+                        心意更新 Renewed Mind 
+                        <span class="arrow">→</span>
+                        生命更新 Life Renewal 
+                        <span class="arrow">→</span>
+                        效法基督 Follow Christ
+                        <br>
+                        愛神 Love God 
+                        <span class="arrow">→</span>
+                        愛人 Love Others 
+                        <span class="arrow">→</span>
+                        榮耀神 Glorify God 
+                        <span class="arrow">→</span>
+                        永恆生命 Eternal Life
+                    </p>
+                </div>
+            `;
+            
+            container.innerHTML = html;
+        }
+
+        // Toggle section
+        function toggleSection(element) {
+            const content = element.closest('h2').nextElementSibling;
+            content.classList.toggle('open');
+            element.classList.toggle('open');
+        }
+
+        // Text-to-speech - English
+        function speak(text) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'en-US';
+                utterance.rate = 0.85;
+                utterance.pitch = 1;
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        // Search functionality
+        function searchContent() {
+            const query = document.getElementById('searchInput').value.toLowerCase().trim();
+            if (query.length < 2) {
+                alert('請輸入至少 2 個字元 / Please enter at least 2 characters');
+                return;
+            }
+            
+            // Switch to formulas tab
+            document.getElementById('formulas').classList.add('active');
+            document.querySelectorAll('.tab-content').forEach(t => {
+                if (t !== document.getElementById('formulas')) t.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-btn')[6].classList.add('active');
+            
+            // Load formulas if not loaded
+            loadFormulas();
+            
+            // Highlight search results
+            const results = allFormulas.filter(f => 
+                f.zh.toLowerCase().includes(query) || 
+                f.en.toLowerCase().includes(query)
+            );
+            
+            if (results.length === 0) {
+                alert(`找不到包含 "${query}" 的公式 / No formulas found containing "${query}"`);
+                return;
+            }
+            
+            // Scroll to first result
+            window.scrollTo(0, 0);
+            alert(`找到 ${results.length} 個相關公式 / Found ${results.length} related formulas`);
+        }
+    </script>
+</body>
+</html>
