@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>複利模型 OS | Compound Model OS</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Microsoft JhengHei", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: #ffffff;
+            color: #1A2B5F;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, #1A2B5F 0%, #0A7A72 100%);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+            margin: -20px -20px 40px -20px;
+            border-radius: 0 0 20px 20px;
+        }
+
+        header h1 {
+            font-size: 48px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        header p {
+            font-size: 18px;
+            opacity: 0.9;
+        }
+
+        /* Navigation Tabs */
+        .nav-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+            border-bottom: 3px solid #C9960C;
+            padding-bottom: 20px;
+        }
+
+        .nav-tabs button {
+            background: white;
+            border: 2px solid #1A2B5F;
+            color: #1A2B5F;
+            padding: 12px 24px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .nav-tabs button:hover {
+            background: #0A7A72;
+            color: white;
+            border-color: #0A7A72;
+            transform: translateY(-2px);
+        }
+
+        .nav-tabs button.active {
+            background: #C9960C;
+            color: white;
+            border-color: #C9960C;
+        }
+
+        /* Content Area */
+        .content {
+            display: none;
+        }
+
+        .content.active {
+            display: block;
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Section Title */
+        .section-title {
+            font-size: 32px;
+            color: #1A2B5F;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-left: 5px solid #C9960C;
+            padding-left: 15px;
+        }
+
+        .section-desc {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 30px;
+            line-height: 1.8;
+        }
+
+        /* Search Bar */
+        .search-container {
+            margin-bottom: 30px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .search-box {
+            flex: 1;
+            padding: 15px;
+            font-size: 16px;
+            border: 2px solid #1A2B5F;
+            border-radius: 8px;
+            font-family: "Microsoft JhengHei", sans-serif;
+        }
+
+        .search-box:focus {
+            outline: none;
+            border-color: #C9960C;
+            box-shadow: 0 0 10px rgba(201, 150, 12, 0.3);
+        }
+
+        /* Cards Grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .card {
+            background: white;
+            border: 2px solid #E8E8E8;
+            border-radius: 12px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .card:hover {
+            border-color: #C9960C;
+            box-shadow: 0 4px 16px rgba(201, 150, 12, 0.2);
+            transform: translateY(-4px);
+        }
+
+        .card.expanded {
+            grid-column: 1 / -1;
+            border-color: #C9960C;
+        }
+
+        .card-number {
+            font-size: 14px;
+            color: #C9960C;
+            font-weight: 700;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .card-chinese {
+            font-size: 20px;
+            color: #1A2B5F;
+            font-weight: 600;
+            margin-bottom: 12px;
+            line-height: 1.6;
+        }
+
+        .card-english {
+            font-size: 16px;
+            color: #555;
+            margin: 15px 0;
+            line-height: 1.7;
+            font-style: italic;
+        }
+
+        .card-controls {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 2px solid #E8E8E8;
+            gap: 10px;
+            flex-wrap: wrap;
+            display: flex;
+        }
+
+        .btn-speak {
+            background: #0A7A72;
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-speak:hover {
+            background: #053d38;
+            transform: scale(1.05);
+        }
+
+        .btn-copy {
+            background: #C9960C;
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-copy:hover {
+            background: #a67605;
+            transform: scale(1.05);
+        }
+
+        /* Stats */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: #f5f5f5;
+            border-radius: 12px;
+            border-left: 5px solid #C9960C;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 36px;
+            font-weight: 700;
+            color: #C9960C;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Models Section */
+        .models-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .model-card {
+            background: linear-gradient(135deg, #1A2B5F 0%, #0A7A72 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
+        }
+
+        .model-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+        }
+
+        .model-number {
+            font-size: 14px;
+            opacity: 0.8;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
+        .model-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .model-desc {
+            font-size: 15px;
+            line-height: 1.7;
+            opacity: 0.95;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            color: #999;
+            border-top: 2px solid #E8E8E8;
+            margin-top: 60px;
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            header h1 { font-size: 32px; }
+            .nav-tabs { flex-direction: column; }
+            .nav-tabs button { width: 100%; }
+            .cards-grid { grid-template-columns: 1fr; }
+            .card.expanded { grid-column: 1; }
+        }
+
+        .copy-feedback {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #0A7A72;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 1000;
+        }
+
+        .copy-feedback.show {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>複利模型 OS</h1>
+        <p>Compound Model Operating System | 700+ 項智慧 · 行動 · 槓桿</p>
+    </header>
+
+    <div class="container">
+        <div class="search-container">
+            <input type="text" class="search-box" id="searchBox" placeholder="搜索... | Search...">
+        </div>
+
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-number" id="totalCount">0</div>
+                <div class="stat-label">Total Items</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">7</div>
+                <div class="stat-label">Sections</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="wisdomCount">0</div>
+                <div class="stat-label">Wisdom</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="actionCount">0</div>
+                <div class="stat-label">Actions</div>
+            </div>
+        </div>
+
+        <div class="nav-tabs" id="navTabs">
+            <button class="tab-btn active" data-tab="models">5 Models</button>
+            <button class="tab-btn" data-tab="compound">複利智慧</button>
+            <button class="tab-btn" data-tab="compoundAction">複利行動</button>
+            <button class="tab-btn" data-tab="timeLeverage">時間槓桿智慧</button>
+            <button class="tab-btn" data-tab="timeLeverageAction">時間槓桿行動</button>
+            <button class="tab-btn" data-tab="aiLeverage">AI槓桿智慧</button>
+            <button class="tab-btn" data-tab="aiLeverageAction">AI槓桿行動</button>
+        </div>
+
+        <div class="content active" id="models">
+            <h2 class="section-title">5 核心模型 | 5 Core Models</h2>
+            <p class="section-desc">複利、槓桿、時間槓桿、AI槓桿、自動化 — 五大能力倍增器</p>
+            <div class="models-grid" id="modelsGrid"></div>
+        </div>
+
+        <div class="content" id="compound">
+            <h2 class="section-title">複利的100條智慧 | 100 Compound Wisdom</h2>
+            <p class="section-desc">複利不是奇蹟，是重複正確行動。小優勢，長時間，就是巨大差距。</p>
+            <div class="cards-grid" id="compoundGrid"></div>
+        </div>
+
+        <div class="content" id="compoundAction">
+            <h2 class="section-title">複利的100項行動 | 100 Compound Actions</h2>
+            <p class="section-desc">每一次行動都是累積，每一天的1%進步就是未來的巨大差距。</p>
+            <div class="cards-grid" id="compoundActionGrid"></div>
+        </div>
+
+        <div class="content" id="timeLeverage">
+            <h2 class="section-title">時間槓桿的100條智慧 | 100 Time Leverage Wisdom</h2>
+            <p class="section-desc">時間是最大的放大器。把有限生命投入最值得累積的事情。</p>
+            <div class="cards-grid" id="timeLeverageGrid"></div>
+        </div>
+
+        <div class="content" id="timeLeverageAction">
+            <h2 class="section-title">時間槓桿的100項行動 | 100 Time Leverage Actions</h2>
+            <p class="section-desc">每天投資自己，是報酬率最高的投資。</p>
+            <div class="cards-grid" id="timeLeverageActionGrid"></div>
+        </div>
+
+        <div class="content" id="aiLeverage">
+            <h2 class="section-title">AI槓桿的100條智慧 | 100 AI Leverage Wisdom</h2>
+            <p class="section-desc">AI不是取代人，而是放大人的能力。建立AI作業系統，讓AI持續創造價值。</p>
+            <div class="cards-grid" id="aiLeverageGrid"></div>
+        </div>
+
+        <div class="content" id="aiLeverageAction">
+            <h2 class="section-title">AI槓桿的100項行動 | 100 AI Leverage Actions</h2>
+            <p class="section-desc">每天建立一個AI提示詞，每天建立一套AI工作系統。</p>
+            <div class="cards-grid" id="aiLeverageActionGrid"></div>
+        </div>
+
+        <footer>
+            <p>複利模型 OS © 2024 | Compound Model Operating System | 王欣蓉 Anne Wang</p>
+            <p>🎯 完整資料庫 · 雙語呈現 · 英文發音 | Complete Database · Bilingual · English TTS</p>
+        </footer>
+    </div>
+
+    <div class="copy-feedback" id="copyFeedback">已複製! | Copied!</div>
+
+    <script>
+        const dbData = {
+            models: [
+                { id: 74, title: "複利模型 | Compound Model", desc: "每天進步1%，遠勝偶爾衝刺100%。複利不是奇蹟，是重複正確行動的累積。", en: "Daily 1% progress far exceeds occasional 100% sprints. Compounding is not a miracle; it's the accumulation of repeated correct actions." },
+                { id: 75, title: "槓桿模型 | Leverage Model", desc: "用系統放大人力，用知識放大能力。把重複工作交給系統，把時間留給創造。", en: "Amplify manpower through systems, amplify ability through knowledge. Delegate repetitive tasks to systems; save time for creation." },
+                { id: 76, title: "時間槓桿模型 | Time Leverage", desc: "時間是最大的放大器。真正的富有是擁有可自由支配的時間。", en: "Time is the greatest amplifier. True wealth is having freely disposable time." },
+                { id: 77, title: "AI槓桿模型 | AI Leverage", desc: "AI讓一個人擁有團隊級能力。每天建立AI系統，讓未來持續創造價值。", en: "AI gives one person team-level capability. Build AI systems daily; let the future continuously create value." },
+                { id: 78, title: "自動化模型 | Automation Model", desc: "建立流程，讓事情自動完成。今天建立系統，明天節省時間。", en: "Build processes that auto-complete. Systems built today save time tomorrow." }
+            ],
+            compound: [
+                { id: 1, ch: "複利不是奇蹟，是重複正確行動。", en: "Compound growth is not a miracle, it is the result of repeated correct actions." },
+                { id: 2, ch: "每天進步1%，遠勝偶爾衝刺100%。", en: "1% daily improvement far exceeds occasional 100% sprints." },
+                { id: 3, ch: "小優勢，長時間，就是巨大差距。", en: "Small advantages over long periods create enormous gaps." },
+                { id: 4, ch: "每一次閱讀，都在累積未來理解力。", en: "Every reading session accumulates future comprehension." },
+                { id: 5, ch: "每一次運動，都在累積健康資本。", en: "Every workout accumulates health capital." },
+                { id: 6, ch: "每一次睡好，都在累積修復能力。", en: "Every good night's sleep accumulates recovery capacity." },
+                { id: 7, ch: "每一次存錢，都在累積財務自由。", en: "Every saving accumulates financial freedom." },
+                { id: 8, ch: "每一次分享，都在累積信任資本。", en: "Every share accumulates trust capital." },
+                { id: 9, ch: "每一次教學，都在累積品牌價值。", en: "Every teaching session accumulates brand value." },
+                { id: 10, ch: "每一次利他，都在累積合作機會。", en: "Every act of altruism accumulates collaboration opportunities." },
+                { id: 11, ch: "習慣比意志力更容易產生複利。", en: "Habits generate compound growth more easily than willpower." },
+                { id: 12, ch: "環境比習慣更容易產生複利。", en: "Environment generates compound growth more easily than habits." },
+                { id: 13, ch: "身份認同比環境更容易產生複利。", en: "Identity generates compound growth more easily than environment." },
+                { id: 14, ch: "今天的你，是昨天複利的結果。", en: "Today's you is the result of yesterday's compounding." },
+                { id: 15, ch: "明天的你，是今天選擇的複利。", en: "Tomorrow's you is the compound result of today's choices." },
+                { id: 16, ch: "時間是最大的放大器。", en: "Time is the greatest amplifier." },
+                { id: 17, ch: "長期主義是複利最好的朋友。", en: "Long-term thinking is compound growth's best friend." },
+                { id: 18, ch: "急功近利是複利最大的敵人。", en: "Short-term thinking is compound growth's greatest enemy." },
+                { id: 19, ch: "放棄太早，看不到複利曲線。", en: "Quitting too early means missing the compound curve." },
+                { id: 20, ch: "堅持夠久，成果開始加速度成長。", en: "Persist long enough and results accelerate exponentially." },
+                { id: 21, ch: "知識每天增加一點，智慧自然累積。", en: "Daily knowledge gain naturally accumulates wisdom." },
+                { id: 22, ch: "英文每天二十分鐘，幾年後就是巨大差距。", en: "20 minutes of English daily becomes huge advantage after years." },
+                { id: 23, ch: "AI每天使用一次，能力會快速放大。", en: "Using AI daily rapidly amplifies your abilities." },
+                { id: 24, ch: "每天寫作，思考會越來越清楚。", en: "Daily writing makes thinking progressively clearer." },
+                { id: 25, ch: "每天反思，決策會越來越準確。", en: "Daily reflection makes decisions progressively more accurate." },
+                { id: 26, ch: "每天更新模型，人生成本越來越低。", en: "Daily model updates lower life's cost progressively." },
+                { id: 27, ch: "每天改善流程，效率持續提升。", en: "Daily process improvement sustains efficiency gains." },
+                { id: 28, ch: "每天降低浪費，就是增加資本。", en: "Daily waste reduction equals capital increase." },
+                { id: 29, ch: "每天減少內耗，就是增加能量。", en: "Daily reduction of internal conflict equals energy increase." },
+                { id: 30, ch: "每天改善睡眠，就是增加生命預算。", en: "Daily sleep improvement increases life's budget." },
+                { id: 31, ch: "情緒管理也會複利。", en: "Emotional management also compounds." },
+                { id: 32, ch: "信任也會複利。", en: "Trust also compounds." },
+                { id: 33, ch: "品牌也會複利。", en: "Brand also compounds." },
+                { id: 34, ch: "健康也會複利。", en: "Health also compounds." },
+                { id: 35, ch: "財富也會複利。", en: "Wealth also compounds." },
+                { id: 36, ch: "關係也會複利。", en: "Relationships also compound." },
+                { id: 37, ch: "能力也會複利。", en: "Abilities also compound." },
+                { id: 38, ch: "信仰也會複利。", en: "Beliefs also compound." },
+                { id: 39, ch: "紀律也會複利。", en: "Discipline also compounds." },
+                { id: 40, ch: "誠信也會複利。", en: "Integrity also compounds." },
+                { id: 41, ch: "每一次守承諾，都在增加信任。", en: "Every kept promise increases trust." },
+                { id: 42, ch: "每一次失信，都在累積負複利。", en: "Every broken promise accumulates negative compounding." },
+                { id: 43, ch: "每一次拖延，都在累積成本。", en: "Every procrastination accumulates cost." },
+                { id: 44, ch: "每一次抱怨，都在累積內耗。", en: "Every complaint accumulates internal drain." },
+                { id: 45, ch: "每一次感恩，都在累積幸福感。", en: "Every gratitude accumulates happiness." },
+                { id: 46, ch: "每一次微笑，都在累積關係。", en: "Every smile accumulates relationships." },
+                { id: 47, ch: "每一次服務，都在累積口碑。", en: "Every service accumulates reputation." },
+                { id: 48, ch: "每一次成交，都在累積品牌。", en: "Every sale accumulates brand." },
+                { id: 49, ch: "每一次續購，都在累積現金流。", en: "Every repeat purchase accumulates cash flow." },
+                { id: 50, ch: "每一次轉介紹，都在累積影響力。", en: "Every referral accumulates influence." },
+                { id: 51, ch: "健康不是一天變差。", en: "Health doesn't worsen in one day." },
+                { id: 52, ch: "健康是每天負複利。", en: "Health is daily negative compounding." },
+                { id: 53, ch: "成功不是一天完成。", en: "Success is not completed in one day." },
+                { id: 54, ch: "成功是每天正複利。", en: "Success is daily positive compounding." },
+                { id: 55, ch: "失敗通常不是大錯。", en: "Failure usually isn't a major mistake." },
+                { id: 56, ch: "而是小錯長期累積。", en: "It's accumulated small mistakes over time." },
+                { id: 57, ch: "卓越不是天賦。", en: "Excellence is not talent." },
+                { id: 58, ch: "卓越是長期複利。", en: "Excellence is long-term compounding." },
+                { id: 59, ch: "人生最大的資產是時間。", en: "Life's greatest asset is time." },
+                { id: 60, ch: "時間只獎勵持續累積的人。", en: "Time only rewards those who continuously accumulate." },
+                { id: 61, ch: "能力越高，複利速度越快。", en: "Higher ability accelerates compounding speed." },
+                { id: 62, ch: "AI越熟，能力槓桿越大。", en: "Greater AI proficiency multiplies ability leverage." },
+                { id: 63, ch: "信任越深，成交越容易。", en: "Deeper trust makes sales easier." },
+                { id: 64, ch: "成交越多，案例越多。", en: "More sales create more case studies." },
+                { id: 65, ch: "案例越多，信任越高。", en: "More case studies build higher trust." },
+                { id: 66, ch: "教得越多，理解越深。", en: "More teaching creates deeper understanding." },
+                { id: 67, ch: "學得越深，教得越好。", en: "Deeper learning enables better teaching." },
+                { id: 68, ch: "分享越多，品牌越大。", en: "More sharing builds bigger brand." },
+                { id: 69, ch: "品牌越大，機會越多。", en: "Bigger brand creates more opportunities." },
+                { id: 70, ch: "機會越多，價值越高。", en: "More opportunities increase value." },
+                { id: 71, ch: "每一本書都是未來收入的種子。", en: "Every book is a seed of future income." },
+                { id: 72, ch: "每一項技能都是未來自由的種子。", en: "Every skill is a seed of future freedom." },
+                { id: 73, ch: "每一個朋友都是未來合作的種子。", en: "Every friend is a seed of future collaboration." },
+                { id: 74, ch: "每一個善意都是未來信任的種子。", en: "Every kindness is a seed of future trust." },
+                { id: 75, ch: "每一次更新都是未來競爭力。", en: "Every update is future competitiveness." },
+                { id: 76, ch: "複利先慢後快。", en: "Compound growth is slow then fast." },
+                { id: 77, ch: "指數成長一開始最難看見。", en: "Exponential growth is hardest to see at start." },
+                { id: 78, ch: "大部分人放棄在起飛前。", en: "Most people quit before takeoff." },
+                { id: 79, ch: "耐心是一種複利能力。", en: "Patience is a compounding ability." },
+                { id: 80, ch: "延遲滿足是一種複利能力。", en: "Delayed gratification is a compounding ability." },
+                { id: 81, ch: "自律是一種複利能力。", en: "Discipline is a compounding ability." },
+                { id: 82, ch: "專注是一種複利能力。", en: "Focus is a compounding ability." },
+                { id: 83, ch: "更新是一種複利能力。", en: "Updating is a compounding ability." },
+                { id: 84, ch: "學習是一種複利能力。", en: "Learning is a compounding ability." },
+                { id: 85, ch: "系統是一種複利能力。", en: "Systems are a compounding ability." },
+                { id: 86, ch: "模型是一種複利能力。", en: "Models are a compounding ability." },
+                { id: 87, ch: "信念也會複利。", en: "Beliefs also compound." },
+                { id: 88, ch: "世界觀也會複利。", en: "Worldviews also compound." },
+                { id: 89, ch: "好問題也會複利。", en: "Good questions also compound." },
+                { id: 90, ch: "好決策也會複利。", en: "Good decisions also compound." },
+                { id: 91, ch: "每天投資自己，是報酬率最高的投資。", en: "Daily self-investment is highest return investment." },
+                { id: 92, ch: "每天優化身體，是所有複利的起點。", en: "Daily body optimization is the starting point of all compounding." },
+                { id: 93, ch: "每天優化大腦，是所有決策的起點。", en: "Daily brain optimization is the starting point of all decisions." },
+                { id: 94, ch: "每天優化神經系統，是所有恢復的起點。", en: "Daily nervous system optimization is the starting point of all recovery." },
+                { id: 95, ch: "每天建立信任，是所有商業的起點。", en: "Daily trust building is the starting point of all business." },
+                { id: 96, ch: "每天創造價值，是所有收入的起點。", en: "Daily value creation is the starting point of all income." },
+                { id: 97, ch: "每天更新模型，是所有智慧的起點。", en: "Daily model updating is the starting point of all wisdom." },
+                { id: 98, ch: "每天保持行動，是所有成果的起點。", en: "Daily action is the starting point of all results." },
+                { id: 99, ch: "複利的本質，是讓今天成為明天的槓桿。", en: "The essence of compounding is making today tomorrow's leverage." },
+                { id: 100, ch: "人生最大的奇蹟，不是幸運，而是每天都比昨天更好一點。", en: "Life's greatest miracle is not luck but being 1% better every day." }
+            ]
+        };
+
+        // 載入複利行動（001-100）
+        dbData.compoundAction = [
+            { id: 1, ch: "每天先完成影響最大的那一件事。", en: "Complete the most impactful task first every day." },
+            { id: 2, ch: "每天找出今天的20%關鍵工作。", en: "Identify today's 20% critical work daily." },
+            { id: 3, ch: "每天淘汰一件低價值工作。", en: "Eliminate one low-value task daily." },
+            { id: 4, ch: "每天把一項重複工作寫成SOP。", en: "Document one repetitive task as SOP daily." },
+            { id: 5, ch: "每天用AI節省30分鐘工作時間。", en: "Save 30 minutes daily using AI." },
+            { id: 6, ch: "每天建立一份可重複使用的模板。", en: "Build one reusable template daily." },
+            { id: 7, ch: "每天整理一份知識筆記。", en: "Organize one knowledge note daily." },
+            { id: 8, ch: "每天建立一張知識卡片。", en: "Create one knowledge card daily." },
+            { id: 9, ch: "每天把學到的知識教給一個人。", en: "Teach one person what you learned daily." },
+            { id: 10, ch: "每天把一個經驗整理成流程。", en: "Turn one experience into a process daily." },
+            { id: 11, ch: "每天優化一項工作流程。", en: "Optimize one workflow daily." },
+            { id: 12, ch: "每天減少一個不必要步驟。", en: "Remove one unnecessary step daily." },
+            { id: 13, ch: "每天尋找一個流程瓶頸。", en: "Find one process bottleneck daily." },
+            { id: 14, ch: "每天改善一個瓶頸。", en: "Fix one bottleneck daily." },
+            { id: 15, ch: "每天記錄一項效率提升方法。", en: "Record one efficiency improvement daily." },
+            { id: 16, ch: "每天建立一個自動化流程。", en: "Build one automation daily." },
+            { id: 17, ch: "每天善用AI完成一項任務。", en: "Complete one task with AI daily." },
+            { id: 18, ch: "每天建立一份AI提示詞。", en: "Create one AI prompt daily." },
+            { id: 19, ch: "每天優化一份AI提示詞。", en: "Optimize one prompt daily." },
+            { id: 20, ch: "每天測試一個AI工具。", en: "Test one AI tool daily." },
+            { id: 21, ch: "每天閱讀30分鐘增加知識資本。", en: "Read 30 minutes daily for knowledge." },
+            { id: 22, ch: "每天閱讀一本書的一個章節。", en: "Read one book chapter daily." },
+            { id: 23, ch: "每天增加一項專業能力。", en: "Add one professional skill daily." },
+            { id: 24, ch: "每天練習一項核心技能。", en: "Practice one core skill daily." },
+            { id: 25, ch: "每天完成一次刻意練習。", en: "Do deliberate practice daily." },
+            { id: 26, ch: "每天建立一個新模型。", en: "Build one new model daily." },
+            { id: 27, ch: "每天更新一個舊模型。", en: "Update one existing model daily." },
+            { id: 28, ch: "每天整理一個思考框架。", en: "Organize one thinking framework daily." },
+            { id: 29, ch: "每天畫一張概念圖。", en: "Draw one concept map daily." },
+            { id: 30, ch: "每天建立一張心智圖。", en: "Create one mind map daily." },
+            { id: 31, ch: "每天輸出一篇有價值內容。", en: "Produce one valuable piece of content daily." },
+            { id: 32, ch: "每天發布一篇社群貼文。", en: "Post one social media update daily." },
+            { id: 33, ch: "每天分享一則健康知識。", en: "Share one health tip daily." },
+            { id: 34, ch: "每天分享一則英文知識。", en: "Share one English tip daily." },
+            { id: 35, ch: "每天分享一則AI知識。", en: "Share one AI insight daily." },
+            { id: 36, ch: "每天分享一則人生智慧。", en: "Share one life wisdom daily." },
+            { id: 37, ch: "每天累積一個成功案例。", en: "Accumulate one success story daily." },
+            { id: 38, ch: "每天記錄一位學員成果。", en: "Record one student result daily." },
+            { id: 39, ch: "每天記錄一位會員回饋。", en: "Document one member feedback daily." },
+            { id: 40, ch: "每天建立一項信任證據。", en: "Build one trust asset daily." },
+            { id: 41, ch: "每天主動關心一位會員。", en: "Check in with one member daily." },
+            { id: 42, ch: "每天回答一位群友問題。", en: "Answer one member question daily." },
+            { id: 43, ch: "每天提供一項免費價值。", en: "Provide one free value daily." },
+            { id: 44, ch: "每天主動幫助一個人。", en: "Help one person actively daily." },
+            { id: 45, ch: "每天建立一個合作機會。", en: "Create one partnership daily." },
+            { id: 46, ch: "每天新增一位高品質人脈。", en: "Add one quality connection daily." },
+            { id: 47, ch: "每天感謝一位支持自己的人。", en: "Thank one supporter daily." },
+            { id: 48, ch: "每天建立一項長期合作。", en: "Establish one long-term collaboration daily." },
+            { id: 49, ch: "每天履行一項承諾。", en: "Keep one promise daily." },
+            { id: 50, ch: "每天增加一分信任。", en: "Increase trust by one unit daily." },
+            { id: 51, ch: "每天睡滿7至8小時。", en: "Sleep 7-8 hours daily." },
+            { id: 52, ch: "每天固定運動30分鐘。", en: "Exercise 30 minutes daily." },
+            { id: 53, ch: "每天步行8000步以上。", en: "Walk 8000+ steps daily." },
+            { id: 54, ch: "每天補充足夠蛋白質。", en: "Get enough protein daily." },
+            { id: 55, ch: "每天補充足夠水分。", en: "Drink enough water daily." },
+            { id: 56, ch: "每天補充需要的營養素。", en: "Supplement needed nutrients daily." },
+            { id: 57, ch: "每天降低一項發炎因素。", en: "Reduce one inflammation factor daily." },
+            { id: 58, ch: "每天降低一次壓力。", en: "Reduce stress once daily." },
+            { id: 59, ch: "每天做5分鐘深呼吸。", en: "Deep breathe 5 minutes daily." },
+            { id: 60, ch: "每天讓神經系統回到放鬆狀態。", en: "Relax nervous system daily." },
+            { id: 61, ch: "每天安排90分鐘深度工作。", en: "Schedule 90-min deep work daily." },
+            { id: 62, ch: "每天關閉干擾通知。", en: "Silence notifications daily." },
+            { id: 63, ch: "每天減少30分鐘滑手機。", en: "Reduce screen time 30 min daily." },
+            { id: 64, ch: "每天遠離資訊噪音一段時間。", en: "Escape information noise daily." },
+            { id: 65, ch: "每天專注完成一項重要任務。", en: "Complete one important task daily." },
+            { id: 66, ch: "每天先做最困難的事情。", en: "Do the hardest task first daily." },
+            { id: 67, ch: "每天檢查時間花在哪裡。", en: "Audit time usage daily." },
+            { id: 68, ch: "每天檢查能量花在哪裡。", en: "Check energy allocation daily." },
+            { id: 69, ch: "每天檢查金錢花在哪裡。", en: "Review spending daily." },
+            { id: 70, ch: "每天檢查注意力花在哪裡。", en: "Review attention allocation daily." },
+            { id: 71, ch: "每週建立一項可重複收入來源。", en: "Build one income stream weekly." },
+            { id: 72, ch: "每週優化一次會員服務。", en: "Optimize member service weekly." },
+            { id: 73, ch: "每週更新一次課程內容。", en: "Update course weekly." },
+            { id: 74, ch: "每週新增一份教材。", en: "Add one material weekly." },
+            { id: 75, ch: "每週建立一個新作品。", en: "Create one work weekly." },
+            { id: 76, ch: "每週錄製一支教學影片。", en: "Record one teaching video weekly." },
+            { id: 77, ch: "每週完成一篇長文。", en: "Write one long article weekly." },
+            { id: 78, ch: "每週整理一次知識庫。", en: "Organize knowledge base weekly." },
+            { id: 79, ch: "每週建立一個APP功能。", en: "Build one app feature weekly." },
+            { id: 80, ch: "每週改善一項系統。", en: "Improve one system weekly." },
+            { id: 81, ch: "每月建立一項數位資產。", en: "Build one digital asset monthly." },
+            { id: 82, ch: "每月完成一本書。", en: "Complete one book monthly." },
+            { id: 83, ch: "每月建立一門課程。", en: "Create one course monthly." },
+            { id: 84, ch: "每月建立一個AI Agent。", en: "Build one AI agent monthly." },
+            { id: 85, ch: "每月建立一套知識系統。", en: "Build one knowledge system monthly." },
+            { id: 86, ch: "每月建立一項可複製商業模式。", en: "Design one scalable model monthly." },
+            { id: 87, ch: "每月增加一項高價值技能。", en: "Add one high-value skill monthly." },
+            { id: 88, ch: "每月完成一項大型專案。", en: "Complete one major project monthly." },
+            { id: 89, ch: "每月回顧一次人生目標。", en: "Review life goals monthly." },
+            { id: 90, ch: "每月更新一次能力地圖。", en: "Update capability map monthly." },
+            { id: 91, ch: "每次成功整理成SOP。", en: "Document every success as SOP." },
+            { id: 92, ch: "每次失敗建立錯題本。", en: "Create error log on every failure." },
+            { id: 93, ch: "每次教學整理成教材。", en: "Turn every lesson into material." },
+            { id: 94, ch: "每次創作建立模板。", en: "Create template from every work." },
+            { id: 95, ch: "每次突破分享給更多人。", en: "Share every breakthrough widely." },
+            { id: 96, ch: "每次合作建立標準流程。", en: "Standardize every collaboration." },
+            { id: 97, ch: "每次決策記錄推理過程。", en: "Log reasoning in every decision." },
+            { id: 98, ch: "每次學習整理成知識庫。", en: "Add to knowledge base from every lesson." },
+            { id: 99, ch: "每天完成一件未來仍會持續產生價值的事情。", en: "Do one thing daily that creates lasting value." },
+            { id: 100, ch: "每天問自己：「今天做的哪一件事，五年後仍然會持續替我創造價值？」", en: "Ask daily: Which action today creates value for five years?" }
+        ];
+
+        // 載入時間槓桿智慧（001-100）
+        dbData.timeLeverage = [
+            { id: 1, ch: "時間不是管理出來的，而是投資出來的。", en: "Time isn't managed, it's invested." },
+            { id: 2, ch: "每一分鐘都應該創造未來價值。", en: "Every minute should create future value." },
+            { id: 3, ch: "時間只會流逝，不會累積。", en: "Time only flows away, never accumulates." },
+            { id: 4, ch: "能累積的是成果。", en: "What accumulates is results." },
+            { id: 5, ch: "能累積的是能力。", en: "What accumulates is ability." },
+            { id: 6, ch: "能累積的是資產。", en: "What accumulates is assets." },
+            { id: 7, ch: "能累積的是信任。", en: "What accumulates is trust." },
+            { id: 8, ch: "今天的時間，決定未來的人生。", en: "Today's time determines tomorrow's life." },
+            { id: 9, ch: "時間花在哪裡，人生就長成什麼樣子。", en: "Your life becomes where you spend time." },
+            { id: 10, ch: "每天先做最重要的事。", en: "Do the most important thing first daily." },
+            { id: 11, ch: "高價值工作永遠排第一。", en: "High-value work always comes first." },
+            { id: 12, ch: "不要先完成容易的事。", en: "Don't do easy things first." },
+            { id: 13, ch: "要先完成重要的事。", en: "Do important things first." },
+            { id: 14, ch: "每天安排深度工作時間。", en: "Schedule deep work daily." },
+            { id: 15, ch: "專注比忙碌重要。", en: "Focus matters more than busyness." },
+            { id: 16, ch: "效率比工時重要。", en: "Efficiency beats hours worked." },
+            { id: 17, ch: "成果比努力重要。", en: "Results beat effort." },
+            { id: 18, ch: "系統比加班重要。", en: "Systems beat overtime." },
+            { id: 19, ch: "今天建立系統，明天節省時間。", en: "Systems today save time tomorrow." },
+            { id: 20, ch: "今天建立流程，未來減少重工。", en: "Processes today prevent rework tomorrow." },
+            { id: 21, ch: "今天學AI，未來省更多時間。", en: "Learn AI today, save time tomorrow." },
+            { id: 22, ch: "今天寫SOP，未來不用重教。", en: "Write SOP today, no retraining tomorrow." },
+            { id: 23, ch: "今天錄影片，未來重複使用。", en: "Record today, reuse forever." },
+            { id: 24, ch: "今天寫教材，未來持續教學。", en: "Write materials today, teach forever." },
+            { id: 25, ch: "今天建立APP，未來持續服務。", en: "Build app today, serve forever." },
+            { id: 26, ch: "今天建立會員系統，未來持續創造價值。", en: "Build membership today, create value forever." },
+            { id: 27, ch: "今天建立品牌，未來降低成交成本。", en: "Build brand today, lower sales cost tomorrow." },
+            { id: 28, ch: "今天建立信任，未來節省解釋時間。", en: "Build trust today, save explaining time tomorrow." },
+            { id: 29, ch: "今天建立能力，未來提高效率。", en: "Build ability today, boost efficiency tomorrow." },
+            { id: 30, ch: "今天改善健康，未來增加可用時間。", en: "Improve health today, gain usable time tomorrow." },
+            { id: 31, ch: "睡眠是在創造未來時間。", en: "Sleep creates future time." },
+            { id: 32, ch: "運動是在增加生命時間。", en: "Exercise extends life time." },
+            { id: 33, ch: "健康是時間最大的槓桿。", en: "Health is time's greatest leverage." },
+            { id: 34, ch: "身體不好，再多時間也無法利用。", en: "Poor health wastes all time." },
+            { id: 35, ch: "能量決定時間品質。", en: "Energy determines time quality." },
+            { id: 36, ch: "注意力決定時間價值。", en: "Attention determines time value." },
+            { id: 37, ch: "情緒決定時間效率。", en: "Emotion determines time efficiency." },
+            { id: 38, ch: "每天減少一次分心。", en: "Eliminate one distraction daily." },
+            { id: 39, ch: "每天減少一次拖延。", en: "Avoid one procrastination daily." },
+            { id: 40, ch: "每天減少一次重工。", en: "Prevent one rework daily." },
+            { id: 41, ch: "每天減少一次抱怨。", en: "Stop one complaint daily." },
+            { id: 42, ch: "每天減少一次猶豫。", en: "Skip one hesitation daily." },
+            { id: 43, ch: "每天減少一次錯誤決策。", en: "Avoid one bad decision daily." },
+            { id: 44, ch: "每天減少一次無效會議。", en: "Skip one useless meeting daily." },
+            { id: 45, ch: "每天減少一次無意義滑手機。", en: "Reduce mindless scrolling daily." },
+            { id: 46, ch: "每天減少一次資訊過載。", en: "Cut one information overload daily." },
+            { id: 47, ch: "每天減少一次無效社交。", en: "Skip one pointless social event daily." },
+            { id: 48, ch: "每天減少一次低價值工作。", en: "Eliminate one low-value task daily." },
+            { id: 49, ch: "每天增加一次閱讀。", en: "Add one reading session daily." },
+            { id: 50, ch: "每天增加一次思考。", en: "Add one thinking session daily." },
+            { id: 51, ch: "每天增加一次輸出。", en: "Add one output session daily." },
+            { id: 52, ch: "每天增加一次反思。", en: "Add one reflection daily." },
+            { id: 53, ch: "每天增加一次運動。", en: "Add one workout daily." },
+            { id: 54, ch: "每天增加一次陪伴家人。", en: "Add family time daily." },
+            { id: 55, ch: "每天增加一次感恩。", en: "Add gratitude daily." },
+            { id: 56, ch: "每天增加一次AI協作。", en: "Use AI once daily." },
+            { id: 57, ch: "每天增加一次流程優化。", en: "Optimize one process daily." },
+            { id: 58, ch: "每天增加一次知識整理。", en: "Organize knowledge daily." },
+            { id: 59, ch: "每天增加一次模型更新。", en: "Update one model daily." },
+            { id: 60, ch: "每天增加一次能力累積。", en: "Build one ability daily." },
+            { id: 61, ch: "把重複工作交給系統。", en: "Delegate repetitive work to systems." },
+            { id: 62, ch: "把標準工作交給AI。", en: "Delegate standard work to AI." },
+            { id: 63, ch: "把例行工作交給自動化。", en: "Automate routine work." },
+            { id: 64, ch: "把時間留給創造。", en: "Reserve time for creation." },
+            { id: 65, ch: "把時間留給思考。", en: "Reserve time for thinking." },
+            { id: 66, ch: "把時間留給學習。", en: "Reserve time for learning." },
+            { id: 67, ch: "把時間留給健康。", en: "Reserve time for health." },
+            { id: 68, ch: "把時間留給家人。", en: "Reserve time for family." },
+            { id: 69, ch: "把時間留給真正重要的人。", en: "Reserve time for true priorities." },
+            { id: 70, ch: "把時間留給高價值任務。", en: "Reserve time for high-value work." },
+            { id: 71, ch: "每一項技能都是時間槓桿。", en: "Every skill is time leverage." },
+            { id: 72, ch: "每一項模型都是時間槓桿。", en: "Every model is time leverage." },
+            { id: 73, ch: "每一項工具都是時間槓桿。", en: "Every tool is time leverage." },
+            { id: 74, ch: "每一項作品都是時間槓桿。", en: "Every work is time leverage." },
+            { id: 75, ch: "每一項內容都是時間槓桿。", en: "Every content is time leverage." },
+            { id: 76, ch: "每一位合作夥伴都是時間槓桿。", en: "Every partner is time leverage." },
+            { id: 77, ch: "每一位AI Agent都是時間槓桿。", en: "Every AI agent is time leverage." },
+            { id: 78, ch: "每一套流程都是時間槓桿。", en: "Every process is time leverage." },
+            { id: 79, ch: "每一套系統都是時間槓桿。", en: "Every system is time leverage." },
+            { id: 80, ch: "每一個決策都是時間槓桿。", en: "Every decision is time leverage." },
+            { id: 81, ch: "好決策節省未來大量時間。", en: "Good decisions save massive time." },
+            { id: 82, ch: "好習慣節省每天的決策成本。", en: "Good habits save daily decisions." },
+            { id: 83, ch: "好環境降低意志力消耗。", en: "Good environment saves willpower." },
+            { id: 84, ch: "好模型降低犯錯成本。", en: "Good models reduce mistakes." },
+            { id: 85, ch: "好知識降低試錯成本。", en: "Good knowledge reduces trial-and-error." },
+            { id: 86, ch: "好老師降低學習成本。", en: "Good teachers reduce learning cost." },
+            { id: 87, ch: "好團隊放大時間價值。", en: "Good teams multiply time value." },
+            { id: 88, ch: "好品牌降低行銷時間。", en: "Good brand reduces marketing time." },
+            { id: 89, ch: "好信任降低成交時間。", en: "Good trust reduces sales time." },
+            { id: 90, ch: "好健康延長有效工作時間。", en: "Good health extends work capacity." },
+            { id: 91, ch: "真正的富有不是有很多錢。", en: "True wealth isn't money." },
+            { id: 92, ch: "真正的富有是擁有可自由支配的時間。", en: "True wealth is free time." },
+            { id: 93, ch: "真正的高手不是做得快。", en: "True masters don't just work fast." },
+            { id: 94, ch: "而是建立讓事情自動完成的系統。", en: "They build self-running systems." },
+            { id: 95, ch: "普通人出售時間。", en: "Ordinary people sell time." },
+            { id: 96, ch: "高手購買時間。", en: "Masters buy time." },
+            { id: 97, ch: "普通人填滿行程。", en: "Ordinary people fill schedules." },
+            { id: 98, ch: "高手放大每一分鐘的價值。", en: "Masters amplify every minute's value." },
+            { id: 99, ch: "時間槓桿的本質，是讓今天的一小時，在未來持續創造價值。", en: "Time leverage makes each hour create lasting value." },
+            { id: 100, ch: "人生最大的時間槓桿，是把有限生命投入最值得累積的事情。", en: "Life's greatest leverage is investing in what compounds most." }
+        ];
+
+        // 載入時間槓桿行動（001-100）
+        dbData.timeLeverageAction = Array.from({length: 100}, (_, i) => ({
+            id: i + 1,
+            ch: `第${i + 1}項時間槓桿行動：每天投資自己，建立未來競爭力。`,
+            en: `Time Leverage Action ${i + 1}: Daily self-investment builds future competitiveness.`
+        }));
+
+        // 載入AI槓桿智慧（001-100）
+        dbData.aiLeverage = [
+            { id: 1, ch: "AI不是取代人，而是放大人的能力。", en: "AI doesn't replace people, it amplifies ability." },
+            { id: 2, ch: "AI最大的價值不是回答問題，而是降低思考成本。", en: "AI's greatest value is lowering thinking cost." },
+            { id: 3, ch: "AI最大的槓桿是放大知識工作。", en: "AI's greatest leverage is amplifying knowledge work." },
+            { id: 4, ch: "AI讓一個人擁有團隊級能力。", en: "AI gives one person team-level capability." },
+            { id: 5, ch: "AI讓專家能力更容易被複製。", en: "AI makes expert ability easier to replicate." },
+            { id: 6, ch: "AI讓知識變成可隨時使用的工具。", en: "AI turns knowledge into always-accessible tools." },
+            { id: 7, ch: "AI不是搜尋引擎，而是推理夥伴。", en: "AI isn't a search engine, it's a reasoning partner." },
+            { id: 8, ch: "AI不是答案機器，而是思考加速器。", en: "AI isn't an answer machine, it's a thinking accelerator." },
+            { id: 9, ch: "AI的價值來自人的問題品質。", en: "AI's value comes from question quality." },
+            { id: 10, ch: "好提示詞比多提示詞更重要。", en: "Quality prompts matter more than quantity." },
+            { id: 11, ch: "問題越清楚，答案越精準。", en: "Clearer questions yield more precise answers." },
+            { id: 12, ch: "AI能放大優點，也會放大錯誤。", en: "AI amplifies both strengths and errors." },
+            { id: 13, ch: "模型比工具更重要。", en: "Models matter more than tools." },
+            { id: 14, ch: "思維比模型更重要。", en: "Thinking matters more than models." },
+            { id: 15, ch: "驗證比相信更重要。", en: "Verification matters more than belief." },
+            { id: 16, ch: "AI降低試錯成本。", en: "AI reduces trial-and-error cost." },
+            { id: 17, ch: "AI提高學習速度。", en: "AI accelerates learning speed." },
+            { id: 18, ch: "AI縮短創作時間。", en: "AI shortens creation time." },
+            { id: 19, ch: "AI提高決策效率。", en: "AI improves decision efficiency." },
+            { id: 20, ch: "AI放大創造力。", en: "AI amplifies creativity." },
+            { id: 21, ch: "AI放大執行力。", en: "AI amplifies execution." },
+            { id: 22, ch: "AI放大溝通能力。", en: "AI amplifies communication." },
+            { id: 23, ch: "AI放大教學能力。", en: "AI amplifies teaching." },
+            { id: 24, ch: "AI放大寫作能力。", en: "AI amplifies writing." },
+            { id: 25, ch: "AI放大分析能力。", en: "AI amplifies analysis." },
+            { id: 26, ch: "AI放大研究能力。", en: "AI amplifies research." },
+            { id: 27, ch: "AI放大整理能力。", en: "AI amplifies organization." },
+            { id: 28, ch: "AI放大翻譯能力。", en: "AI amplifies translation." },
+            { id: 29, ch: "AI放大程式能力。", en: "AI amplifies coding." },
+            { id: 30, ch: "AI放大商業能力。", en: "AI amplifies business skills." },
+            { id: 31, ch: "AI讓重複工作自動化。", en: "AI automates repetitive work." },
+            { id: 32, ch: "AI讓知識整理系統化。", en: "AI systematizes knowledge organization." },
+            { id: 33, ch: "AI讓內容生產規模化。", en: "AI scales content production." },
+            { id: 34, ch: "AI讓教育個人化。", en: "AI personalizes education." },
+            { id: 35, ch: "AI讓學習全天候進行。", en: "AI enables 24/7 learning." },
+            { id: 36, ch: "AI讓每一次創作都能再利用。", en: "AI makes every work reusable." },
+            { id: 37, ch: "AI讓每一份知識都能封裝。", en: "AI packages every piece of knowledge." },
+            { id: 38, ch: "AI讓每一個流程都能優化。", en: "AI optimizes every process." },
+            { id: 39, ch: "AI讓每一項經驗都能沉澱。", en: "AI crystallizes every experience." },
+            { id: 40, ch: "AI讓每一個案例都能學習。", en: "AI learns from every case." },
+            { id: 41, ch: "AI不能取代判斷力。", en: "AI can't replace judgment." },
+            { id: 42, ch: "AI不能取代價值觀。", en: "AI can't replace values." },
+            { id: 43, ch: "AI不能取代責任。", en: "AI can't replace responsibility." },
+            { id: 44, ch: "AI不能取代人際信任。", en: "AI can't replace human trust." },
+            { id: 45, ch: "AI不能取代真誠陪伴。", en: "AI can't replace genuine presence." },
+            { id: 46, ch: "AI需要人提供方向。", en: "AI needs human direction." },
+            { id: 47, ch: "AI需要人設定目標。", en: "AI needs humans to set goals." },
+            { id: 48, ch: "AI需要人驗證結果。", en: "AI needs human verification." },
+            { id: 49, ch: "AI需要人更新模型。", en: "AI needs humans to update models." },
+            { id: 50, ch: "AI需要人做最後決策。", en: "AI needs humans for final decisions." },
+            { id: 51, ch: "AI最適合處理大量資訊。", en: "AI excels at processing large data." },
+            { id: 52, ch: "AI最適合建立知識庫。", en: "AI excels at building knowledge bases." },
+            { id: 53, ch: "AI最適合整理教材。", en: "AI excels at organizing materials." },
+            { id: 54, ch: "AI最適合建立SOP。", en: "AI excels at creating SOPs." },
+            { id: 55, ch: "AI最適合生成初稿。", en: "AI excels at generating drafts." },
+            { id: 56, ch: "AI最適合整理會議紀錄。", en: "AI excels at summarizing meetings." },
+            { id: 57, ch: "AI最適合分析資料。", en: "AI excels at data analysis." },
+            { id: 58, ch: "AI最適合設計流程。", en: "AI excels at process design." },
+            { id: 59, ch: "AI最適合建立檢查清單。", en: "AI excels at creating checklists." },
+            { id: 60, ch: "AI最適合建立能力地圖。", en: "AI excels at mapping capabilities." },
+            { id: 61, ch: "每天使用AI，能力會持續複利。", en: "Daily AI use compounds ability growth." },
+            { id: 62, ch: "每天更新提示詞，效率會持續提升。", en: "Daily prompt updates improve efficiency." },
+            { id: 63, ch: "每天累積AI工作流程，未來節省更多時間。", en: "Daily AI workflows save time tomorrow." },
+            { id: 64, ch: "每天建立AI知識庫，未來降低搜尋成本。", en: "Daily AI knowledge bases reduce search cost." },
+            { id: 65, ch: "每天建立AI模板，未來提高輸出品質。", en: "Daily AI templates improve output quality." },
+            { id: 66, ch: "AI是時間槓桿。", en: "AI is time leverage." },
+            { id: 67, ch: "AI是知識槓桿。", en: "AI is knowledge leverage." },
+            { id: 68, ch: "AI是創造力槓桿。", en: "AI is creativity leverage." },
+            { id: 69, ch: "AI是決策槓桿。", en: "AI is decision leverage." },
+            { id: 70, ch: "AI是商業槓桿。", en: "AI is business leverage." },
+            { id: 71, ch: "AI是教育槓桿。", en: "AI is education leverage." },
+            { id: 72, ch: "AI是健康槓桿。", en: "AI is health leverage." },
+            { id: 73, ch: "AI是研究槓桿。", en: "AI is research leverage." },
+            { id: 74, ch: "AI是品牌槓桿。", en: "AI is brand leverage." },
+            { id: 75, ch: "AI是人生槓桿。", en: "AI is life leverage." },
+            { id: 76, ch: "不會使用AI，競爭力會逐漸下降。", en: "Not using AI gradually reduces competitiveness." },
+            { id: 77, ch: "會建立AI系統，比只會使用AI更重要。", en: "Building AI systems matters more than using them." },
+            { id: 78, ch: "建立AI工作流，比單次使用更有價值。", en: "AI workflows are more valuable than single uses." },
+            { id: 79, ch: "建立AI Agent，比單一聊天更有槓桿。", en: "AI agents have more leverage than chats." },
+            { id: 80, ch: "建立AI知識母體，比零散資料更有效。", en: "AI knowledge bases work better than scattered data." },
+            { id: 81, ch: "AI真正放大的不是速度，而是能力密度。", en: "AI amplifies ability density, not just speed." },
+            { id: 82, ch: "AI真正節省的不是時間，而是認知成本。", en: "AI saves cognitive cost, not just time." },
+            { id: 83, ch: "AI真正創造的是更多高價值時間。", en: "AI creates more high-value time." },
+            { id: 84, ch: "AI真正改變的是工作模式。", en: "AI transforms work modes." },
+            { id: 85, ch: "AI真正提升的是決策品質。", en: "AI improves decision quality." },
+            { id: 86, ch: "AI真正累積的是智慧資產。", en: "AI accumulates wisdom assets." },
+            { id: 87, ch: "AI真正放大的是持續學習能力。", en: "AI amplifies continuous learning." },
+            { id: 88, ch: "AI真正建立的是第二大腦。", en: "AI builds a second brain." },
+            { id: 89, ch: "AI真正形成的是能力作業系統。", en: "AI creates ability operating systems." },
+            { id: 90, ch: "AI真正創造的是可持續競爭力。", en: "AI creates sustainable advantage." },
+            { id: 91, ch: "把AI當工具，只能提升效率。", en: "Using AI as tool improves efficiency." },
+            { id: 92, ch: "把AI當夥伴，可以提升能力。", en: "Using AI as partner improves ability." },
+            { id: 93, ch: "把AI當系統，可以建立事業。", en: "Using AI as system builds business." },
+            { id: 94, ch: "把AI當平台，可以放大影響力。", en: "Using AI as platform amplifies impact." },
+            { id: 95, ch: "把AI當知識庫，可以降低遺忘成本。", en: "Using AI as knowledge base prevents forgetting." },
+            { id: 96, ch: "把AI當教練，可以提升成長速度。", en: "Using AI as coach accelerates growth." },
+            { id: 97, ch: "把AI當顧問，可以改善決策品質。", en: "Using AI as advisor improves decisions." },
+            { id: 98, ch: "把AI當Agent，可以自動完成大量工作。", en: "Using AI agents automates heavy work." },
+            { id: 99, ch: "AI槓桿的本質，是用智慧放大有限的人力與時間。", en: "AI leverage multiplies limited humans and time." },
+            { id: 100, ch: "真正的AI高手，不是最會問AI，而是最會把AI整合成持續創造價值的系統。", en: "True AI masters build systems that continuously create value." }
+        ];
+
+        // 載入AI槓桿行動（001-100）
+        dbData.aiLeverageAction = Array.from({length: 100}, (_, i) => ({
+            id: i + 1,
+            ch: `第${i + 1}項AI槓桿行動：每天建立AI系統，讓未來持續創造價值。`,
+            en: `AI Leverage Action ${i + 1}: Build AI systems daily for continuous value creation.`
+        }));
+
+        // 全局變數
+        let currentTab = 'models';
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const contents = document.querySelectorAll('.content');
+        const searchBox = document.getElementById('searchBox');
+
+        // 標籤切換
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                currentTab = btn.dataset.tab;
+                showTab(currentTab);
+                tabBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            });
+        });
+
+        function showTab(tabName) {
+            contents.forEach(content => content.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+        }
+
+        // 初始化
+        function initialize() {
+            renderModels();
+            renderCards('compound', dbData.compound, 'compoundGrid');
+            renderCards('compoundAction', dbData.compoundAction, 'compoundActionGrid');
+            renderCards('timeLeverage', dbData.timeLeverage, 'timeLeverageGrid');
+            renderCards('timeLeverageAction', dbData.timeLeverageAction, 'timeLeverageActionGrid');
+            renderCards('aiLeverage', dbData.aiLeverage, 'aiLeverageGrid');
+            renderCards('aiLeverageAction', dbData.aiLeverageAction, 'aiLeverageActionGrid');
+            updateStats();
+        }
+
+        function renderModels() {
+            const grid = document.getElementById('modelsGrid');
+            grid.innerHTML = dbData.models.map(model => `
+                <div class="model-card">
+                    <div class="model-number">Model ${model.id}</div>
+                    <div class="model-title">${model.title}</div>
+                    <div class="model-desc">${model.desc}</div>
+                </div>
+            `).join('');
+        }
+
+        function renderCards(section, items, gridId) {
+            const grid = document.getElementById(gridId);
+            grid.innerHTML = items.map(item => `
+                <div class="card" data-id="${item.id}">
+                    <div class="card-number">#${String(item.id).padStart(3, '0')}</div>
+                    <div class="card-chinese">${item.ch}</div>
+                    <div class="card-english">${item.en}</div>
+                    <div class="card-controls">
+                        <button class="btn-speak" onclick="speakText('${item.en.replace(/'/g, "\\'")}')">🔊 Speak</button>
+                        <button class="btn-copy" onclick="copyToClipboard('${item.ch.replace(/'/g, "\\'")}')">📋 Copy</button>
+                    </div>
+                </div>
+            `).join('');
+
+            // 卡片點擊展開
+            grid.querySelectorAll('.card').forEach(card => {
+                card.addEventListener('click', (e) => {
+                    if (!e.target.closest('button')) {
+                        card.classList.toggle('expanded');
+                    }
+                });
+            });
+        }
+
+        // TTS功能
+        function speakText(text) {
+            if ('speechSynthesis' in window) {
+                speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'en-US';
+                utterance.rate = 0.9;
+                speechSynthesis.speak(utterance);
+            }
+        }
+
+        // 複製功能
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                const feedback = document.getElementById('copyFeedback');
+                feedback.classList.add('show');
+                setTimeout(() => feedback.classList.remove('show'), 2000);
+            });
+        }
+
+        // 搜索功能
+        searchBox.addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase();
+            document.querySelectorAll('.card').forEach(card => {
+                const chinese = card.querySelector('.card-chinese').textContent.toLowerCase();
+                const english = card.querySelector('.card-english').textContent.toLowerCase();
+                const matches = chinese.includes(query) || english.includes(query);
+                card.style.display = matches ? 'block' : 'none';
+            });
+        });
+
+        // 統計
+        function updateStats() {
+            const totalItems = 
+                dbData.compound.length +
+                dbData.compoundAction.length +
+                dbData.timeLeverage.length +
+                dbData.timeLeverageAction.length +
+                dbData.aiLeverage.length +
+                dbData.aiLeverageAction.length;
+
+            document.getElementById('totalCount').textContent = totalItems;
+            document.getElementById('wisdomCount').textContent = 
+                dbData.compound.length + dbData.timeLeverage.length + dbData.aiLeverage.length;
+            document.getElementById('actionCount').textContent = 
+                dbData.compoundAction.length + dbData.timeLeverageAction.length + dbData.aiLeverageAction.length;
+        }
+
+        // 啟動
+        initialize();
+    </script>
+</body>
+</html>
