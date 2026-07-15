@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>代謝控制儀表板｜健康管理系統</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Microsoft JhengHei", "Segoe UI", sans-serif;
+            background: white;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        :root {
+            --navy: #1A2B5F;
+            --gold: #C9960C;
+            --teal: #0A7A72;
+            --light: #F8F7F6;
+            --border: #E8E6E3;
+            --gray: #666;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--navy) 0%, #0F1C3F 100%);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        header p {
+            font-size: 1rem;
+            opacity: 0.95;
+            margin: 0.5rem 0;
+        }
+
+        .formula-section {
+            background: var(--light);
+            padding: 3rem 2rem;
+            border-bottom: 2px solid var(--gold);
+        }
+
+        .formula-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .formula-card {
+            background: white;
+            border: 2px solid var(--gold);
+            border-radius: 6px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .formula-card .label { 
+            font-size: 0.8rem;
+            color: var(--teal);
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.5rem;
+        }
+
+        .formula-card .value {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--navy);
+        }
+
+        .main-section {
+            max-width: 1400px;
+            margin: 4rem auto;
+            padding: 0 2rem;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--navy);
+            margin-bottom: 0.5rem;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            font-size: 0.95rem;
+            color: var(--gray);
+            margin-bottom: 3rem;
+        }
+
+        .indicators {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+        }
+
+        .card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+            border-color: var(--gold);
+            transform: translateY(-2px);
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, var(--navy) 0%, #0F1C3F 100%);
+            color: white;
+            padding: 1.5rem;
+            cursor: pointer;
+            user-select: none;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .card-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            opacity: 0.3;
+            min-width: 60px;
+        }
+
+        .card-title {
+            flex: 1;
+        }
+
+        .card-title h3 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 0.2rem;
+        }
+
+        .card-title p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .card-toggle {
+            font-size: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .card.active .card-toggle { transform: rotate(180deg); }
+
+        .card-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+            border-top: 2px solid var(--gold);
+        }
+
+        .card.active .card-body {
+            max-height: 2000px;
+        }
+
+        .card-content {
+            padding: 2rem 1.5rem;
+        }
+
+        .mechanism {
+            background: var(--light);
+            border-left: 3px solid var(--teal);
+            padding: 1.2rem;
+            border-radius: 4px;
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        .mechanism strong { color: var(--navy); }
+
+        .products-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--navy);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .badge {
+            background: var(--gold);
+            color: white;
+            border-radius: 20px;
+            padding: 0.2rem 0.6rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .products {
+            list-style: none;
+        }
+
+        .product {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 1rem;
+            margin-bottom: 0.8rem;
+            transition: all 0.2s ease;
+        }
+
+        .product:hover {
+            background: var(--light);
+            border-color: var(--teal);
+        }
+
+        .product-name {
+            font-weight: 600;
+            color: var(--navy);
+            font-size: 1rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .product-mechanism {
+            font-size: 0.9rem;
+            color: var(--gray);
+            margin-bottom: 0.5rem;
+            line-height: 1.5;
+        }
+
+        .product-price {
+            font-size: 1.1rem;
+            color: var(--gold);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .buy-btn {
+            display: inline-block;
+            background: var(--teal);
+            color: white;
+            padding: 0.6rem 1.2rem;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .buy-btn:hover {
+            background: #085c51;
+            transform: scale(1.05);
+        }
+
+        .cta {
+            background: linear-gradient(135deg, var(--navy) 0%, #0F1C3F 100%);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+            margin-top: 4rem;
+        }
+
+        .cta h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .cta p {
+            font-size: 1rem;
+            opacity: 0.95;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-btn {
+            display: inline-block;
+            background: var(--gold);
+            color: var(--navy);
+            padding: 1rem 2.5rem;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .cta-btn:hover {
+            transform: scale(1.08);
+            box-shadow: 0 8px 24px rgba(201, 150, 12, 0.3);
+        }
+
+        footer {
+            background: var(--light);
+            padding: 2rem;
+            text-align: center;
+            color: var(--gray);
+            font-size: 0.9rem;
+            border-top: 1px solid var(--border);
+        }
+
+        @media (max-width: 768px) {
+            header h1 { font-size: 2rem; }
+            .section-title { font-size: 1.5rem; }
+            .indicators { grid-template-columns: 1fr; }
+            .formula-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>代謝控制儀表板</h1>
+        <p>健康管理完整系統</p>
+        <p style="font-size: 0.9rem; margin-top: 1rem; opacity: 0.85;">監測 8 個關鍵指標 • 對應產品集合 • 精準補充營養</p>
+    </header>
+
+    <section class="formula-section">
+        <div style="max-width: 1200px; margin: 0 auto;">
+            <div style="text-align: center; font-size: 1.3rem; color: var(--navy); font-weight: 600; margin-bottom: 2rem;">真正的健康公式</div>
+            <div class="formula-grid">
+                <div class="formula-card">
+                    <div class="label">健康 =</div>
+                    <div class="value">粒線體功能 ✓</div>
+                </div>
+                <div class="formula-card">
+                    <div class="label">+</div>
+                    <div class="value">代謝彈性 ✓</div>
+                </div>
+                <div class="formula-card">
+                    <div class="label">+</div>
+                    <div class="value">免疫平衡 ✓</div>
+                </div>
+                <div class="formula-card">
+                    <div class="label">+</div>
+                    <div class="value">修復能力 ✓</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="main-section">
+        <h2 class="section-title">8 個代謝回饋指標</h2>
+        <p class="section-subtitle">監測身體代謝狀態，及早發現偏差，精準補充營養</p>
+
+        <div class="indicators" id="indicators"></div>
+    </section>
+
+    <section class="cta">
+        <h2>立即開始健康管理</h2>
+        <p>通過 7-ELEVEN myship 團購獲得所有推薦產品<br>專業配方，經濟實惠，專為健康設計</p>
+        <a href="https://myship.7-11.com.tw/general/detail/GM2407210007294" class="cta-btn" target="_blank">進入團購頁面 →</a>
+    </section>
+
+    <footer>
+        <p>代謝控制儀表板系統 v2.0</p>
+        <p style="margin-top: 0.5rem;">編制：王欣蓉 Anne Wang</p>
+    </footer>
+
+    <script>
+const data = [
+    {
+        num: 1,
+        title: "血糖控制",
+        subtitle: "葡萄糖利用效率與胰島素敏感性",
+        mechanism: "胰島素阻抗是代謝失衡的核心節點。當細胞無法有效利用葡萄糖時，胰臟負荷增加，最終導致代謝症候群。提前發現並修正血糖利用路徑，能阻斷慢性病發展的最早階段。",
+        products: [
+            { name: "甘速淨｜代謝之王", mech: "直接支持糖代謝，增強胰島素敏感性，是代謝調理的基石產品。", price: "NT$1,500", sku: "010" },
+            { name: "苦瓜皂甘複方", mech: "苦瓜皂苷可增加葡萄糖利用率，穩定血糖波動。", price: "NT$540", sku: "083" },
+            { name: "黃連素（小蘗鹼）", mech: "傳統中醫與現代研究均證實其對血糖控制的效果，激活 AMPK 通路。", price: "NT$560", sku: "084" },
+            { name: "鹼能活", mech: "檸檬酸鉀×肌酸×肉鹼組合，支持細胞能量代謝與酸鹼平衡。", price: "NT$520", sku: "043" },
+            { name: "脾胃健／水循環", mech: "中醫脾胃理論與現代代謝支持的結合，改善消化與吸收。", price: "NT$530", sku: "075" }
+        ]
+    },
+    {
+        num: 2,
+        title: "血脂代謝",
+        subtitle: "脂肪利用效率與膽固醇代謝",
+        mechanism: "血脂異常（高三酸甘油脂、低 HDL）是胰島素阻抗的表現。這表示身體無法有效利用脂肪作為能量。Omega-3 與亞麻仁素營養直接修復細胞膜流動性與脂肪代謝能力。",
+        products: [
+            { name: "EPA+DHA複方粉包", mech: "高濃度 Omega-3 直接修復細胞膜，降低三酸甘油脂，增加 HDL。", price: "NT$1,350", sku: "002" },
+            { name: "亞麻仁油 10 罐組", mech: "α-亞麻酸與木酚素，支持脂肪代謝與血管健康。", price: "NT$3,470", sku: "016" },
+            { name: "亞麻仁籽渣", mech: "亞麻仁纖維與益生菌食物，改善腸道環境與脂肪吸收。", price: "NT$198", sku: "033" },
+            { name: "蝦紅素 200mcg + 硒", mech: "脂溶性抗氧化劑，保護 LDL 免於氧化，降低血管風險。", price: "NT$530", sku: "072" },
+            { name: "血循環", mech: "綜合配方支持血流動力學與血管舒張功能。", price: "NT$1,350", sku: "052" }
+        ]
+    },
+    {
+        num: 3,
+        title: "發炎程度",
+        subtitle: "免疫是否長期被啟動",
+        mechanism: "慢性低度發炎（hs-CRP > 3）是多數慢性病的共同路徑。NF-κB 訊號持續活化時，細胞修復被中斷，疾病進展加速。抗發炎營養直接干預發炎訊號，是預防的核心。",
+        products: [
+            { name: "薑黃素 + 胡椒鹼", mech: "薑黃素是最強的 NF-κB 抑制劑，胡椒鹼增加吸收率 2000%。", price: "NT$620", sku: "041" },
+            { name: "迷迭香滾珠瓶", mech: "迷迭香酚是脂溶性抗氧化劑，穿透細胞膜發揮抗發炎作用。", price: "NT$150", sku: "040" },
+            { name: "清思油滴（迷迭香 + EPA）", mech: "迷迭香精油與 EPA 協同，針對神經與系統性發炎。", price: "NT$450", sku: "042" },
+            { name: "蜂膠提取物", mech: "蜂膠黃酮抑制 TNF-α 與 IL-6，調節先天免疫。", price: "NT$520", sku: "068" },
+            { name: "人參皂苷複方", mech: "人參皂苷調節 Th1/Th2 平衡，緩解過度免疫反應。", price: "NT$560", sku: "090" },
+            { name: "EGCG複方（茶多酚）", mech: "綠茶 EGCG 與積雪草協同，雙重抗發炎機制。", price: "NT$560", sku: "038" }
+        ]
+    },
+    {
+        num: 4,
+        title: "氧化壓力",
+        subtitle: "自由基與抗氧化能力的平衡",
+        mechanism: "ROS（活性氧）過量時，DNA、蛋白質與細胞膜遭受損傷。粒線體產生 ATP 時會產生 ROS，若抗氧化系統不足，就形成氧化風暴。補充 CoQ10、NMN、NAC 能直接強化細胞防禦。",
+        products: [
+            { name: "Q10（10:1 泛醌）", mech: "粒線體內膜的電子傳遞鏈必需成分，直接產生 ATP 並清除 ROS。", price: "NT$580", sku: "060" },
+            { name: "NMN複方", mech: "NAD+ 前體，激活 Sirtuins 與 PARP，增強 DNA 修復與能量代謝。", price: "NT$570", sku: "061" },
+            { name: "甜菜鹼（TMG）", mech: "甲基供體，支持細胞膜修復與抗氧化酶合成。", price: "NT$490", sku: "063" },
+            { name: "NAC複方", mech: "NAC 是 GSH 的前體，是細胞內最重要的抗氧化物。", price: "NT$530", sku: "085" },
+            { name: "裸藻", mech: "含豐富葉綠素與多醣體，增強細胞抗氧化能力與能量。", price: "NT$480", sku: "066" }
+        ]
+    },
+    {
+        num: 5,
+        title: "肝臟代謝",
+        subtitle: "代謝工廠是否正常運作",
+        mechanism: "肝臟是代謝的樞紐：糖異生、脂肪氧化、蛋白質合成、解毒都在此進行。當肝臟負荷過重（脂肪肝、高轉氨酶），整個代謝系統開始崩解。支持肝臟功能是修復代謝的關鍵。",
+        products: [
+            { name: "肝寶", mech: "中醫肝臟調理配方，支持肝臟解毒與脂肪代謝能力。", price: "NT$550", sku: "077" },
+            { name: "大補王", mech: "高級人參皂苷配方，強化肝臟再生與代償能力。", price: "NT$1,560", sku: "039" },
+            { name: "全酶", mech: "多種消化酶與輔酶，支持肝臟的代謝負荷。", price: "NT$880", sku: "035" },
+            { name: "甘氨酸鎂複方粉包", mech: "甘氨酸與鎂支持肝臟的 Phase II 解毒代謝。", price: "NT$1,350", sku: "091" }
+        ]
+    },
+    {
+        num: 6,
+        title: "腎功能",
+        subtitle: "排泄與體內穩態調控能力",
+        mechanism: "腎臟負責排泄代謝產物、調控水分與電解質。當腎功能下降，尿素與尿酸堆積，進一步加重慢性發炎。支持腎臟排泄能力是防止代謝廢物累積的關鍵。",
+        products: [
+            { name: "地龍蛋白複方", mech: "地龍蛋白的纖維蛋白溶解酶促進微循環，改善腎臟灌流。", price: "NT$550", sku: "055" },
+            { name: "刺五加", mech: "北方人參，增強腎上腺與腎臟的適應能力。", price: "NT$495", sku: "047" },
+            { name: "大蒜素", mech: "大蒜素促進血管舒張，改善腎臟血流與濾過。", price: "NT$450", sku: "048" }
+        ]
+    },
+    {
+        num: 7,
+        title: "粒線體功能",
+        subtitle: "能量產生、氧化還原、免疫信號的中樞",
+        mechanism: "粒線體是慢性病的根源。ATP 下降 → 細胞修復停止 → ROS 增加 → 發炎循環開始。強化粒線體功能是所有干預的基礎。B 群、CoQ10、丁酸鹽、胺基酸都是粒線體電子傳遞鏈的必需材料。",
+        products: [
+            { name: "粒線寶", mech: "專為粒線體設計的營養配方，直接支持 ATP 生成。", price: "NT$550", sku: "098" },
+            { name: "能量方", mech: "L-肉鹼、CoQ10、B 群的協同配方，強化能量代謝。", price: "NT$550", sku: "076" },
+            { name: "加強B群", mech: "B1 至 B12，粒線體三羧酸循環的所有必需輔酶。", price: "NT$520", sku: "049" },
+            { name: "神經營養素（B1+B3+B6）", mech: "B 群中最重要的三種，神經與能量代謝的核心。", price: "NT$540", sku: "053" },
+            { name: "B3（高潮紅反應）", mech: "NAD+ 前體，直接激活 Sirtuins 與線粒體生成。", price: "NT$540", sku: "064" },
+            { name: "胺基酸可可粉包", mech: "完全胺基酸檔案，粒線體蛋白質合成與能量生成的基礎。", price: "NT$780", sku: "034" },
+            { name: "丁酸鈉複合包", mech: "丁酸是腸道與粒線體的能量燃料，直接提升 ATP。", price: "NT$890", sku: "046" }
+        ]
+    },
+    {
+        num: 8,
+        title: "身體組成",
+        subtitle: "代謝容量與身體修復能力",
+        mechanism: "肌肉是代謝的容器，內臟脂肪會分泌促發炎因子。增加肌肉、減少內臟脂肪能直接提升代謝彈性。這需要蛋白質、胺基酸、腸道健康與神經調節的協同。",
+        products: [
+            { name: "一為", mech: "優質蛋白複方，支持肌肉蛋白質合成與身體組成改善。", price: "NT$680", sku: "086" },
+            { name: "超級B群", mech: "支持蛋白質代謝與肌肉能量利用。", price: "NT$520", sku: "087" },
+            { name: "憂遁草粉", mech: "傳統南方保健食材，支持整體代謝與修復。", price: "NT$750", sku: "079" },
+            { name: "5R腸胃營養素", mech: "腸道修復 × 營養吸收，改善身體組成的基礎。", price: "NT$750", sku: "081" },
+            { name: "腸寶", mech: "腸道健康 = 營養吸收 = 身體修復能力提升。", price: "NT$485", sku: "058" }
+        ]
+    }
+];
+
+const container = document.getElementById('indicators');
+
+data.forEach(ind => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    
+    let prodHTML = ind.products.map(p => `
+        <li class="product">
+            <div class="product-name">${p.name}</div>
+            <div class="product-mechanism">${p.mech}</div>
+            <div class="product-price">${p.price}</div>
+            <a href="https://myship.7-11.com.tw/general/detail/GM2407210007294" class="buy-btn" target="_blank">查看購買 →</a>
+        </li>
+    `).join('');
+
+    card.innerHTML = `
+        <div class="card-header" onclick="this.parentElement.classList.toggle('active')">
+            <div class="card-number">${ind.num}</div>
+            <div class="card-title">
+                <h3>${ind.title}</h3>
+                <p>${ind.subtitle}</p>
+            </div>
+            <div class="card-toggle">⌄</div>
+        </div>
+        <div class="card-body">
+            <div class="card-content">
+                <div class="mechanism"><strong>機制原理：</strong>${ind.mechanism}</div>
+                <div class="products-title">推薦產品 <span class="badge">${ind.products.length}</span></div>
+                <ul class="products">${prodHTML}</ul>
+            </div>
+        </div>
+    `;
+
+    container.appendChild(card);
+});
+    </script>
+
+</body>
+</html>
