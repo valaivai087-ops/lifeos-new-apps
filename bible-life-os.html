@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bible Life OS v5.0｜新約 27 卷完整生命作業系統</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Microsoft JhengHei', Arial, sans-serif; background-color: #f5f5f5; color: #1a2b5f; line-height: 1.6; font-size: 12px; }
+        .header { background: linear-gradient(135deg, #1a2b5f 0%, #0a7a72 100%); color: white; padding: 25px 20px; text-align: center; }
+        .header h1 { font-size: 26px; margin-bottom: 8px; }
+        .container { max-width: 1600px; margin: 0 auto; padding: 15px; }
+        .intro-box { background: #fffacd; border-left: 4px solid #c9960c; padding: 15px; margin: 15px 0; border-radius: 8px; }
+        .intro-box h2 { color: #1a2b5f; margin-bottom: 8px; font-size: 14px; }
+        .intro-box p { color: #333; font-size: 11px; margin-bottom: 6px; }
+        .tabs { display: flex; gap: 8px; margin: 15px 0; flex-wrap: wrap; justify-content: center; }
+        .tab-btn { padding: 8px 16px; border: 2px solid #ddd; background: white; border-radius: 6px; cursor: pointer; font-weight: bold; color: #1a2b5f; transition: all 0.3s; font-size: 11px; }
+        .tab-btn.active { background: #1a2b5f; color: white; border-color: #1a2b5f; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .section-title { color: #1a2b5f; margin: 20px 0 12px; font-size: 18px; font-weight: bold; padding-bottom: 8px; border-bottom: 3px solid #c9960c; }
+        .books-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; margin-bottom: 20px; }
+        .book-card { background: white; border: 1px solid #ddd; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
+        .book-card:hover { box-shadow: 0 6px 14px rgba(0,0,0,0.12); border-color: #c9960c; }
+        .book-header { background: linear-gradient(135deg, #1a2b5f 0%, #0a7a72 100%); color: white; padding: 12px; cursor: pointer; display: flex; gap: 10px; align-items: flex-start; }
+        .book-num { background: #c9960c; color: white; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0; }
+        .book-titles { flex: 1; }
+        .book-titles .zh { font-size: 14px; font-weight: bold; }
+        .book-titles .en { font-size: 11px; opacity: 0.9; }
+        .expand-icon { font-size: 16px; transition: transform 0.3s; flex-shrink: 0; }
+        .book-card.open .expand-icon { transform: rotate(180deg); }
+        .book-content { display: none; padding: 0; max-height: 800px; overflow-y: auto; background-color: #fafafa; }
+        .book-card.open .book-content { display: block; }
+        .content-section { padding: 12px; border-bottom: 1px solid #e0e0e0; font-size: 11px; }
+        .content-section:last-child { border-bottom: none; }
+        .section-label { background: #0a7a72; color: white; display: inline-block; padding: 4px 10px; border-radius: 4px; font-size: 9px; font-weight: bold; margin-bottom: 8px; text-transform: uppercase; }
+        .bilingual-block { background: white; border-radius: 6px; padding: 10px; margin-bottom: 8px; border-left: 3px solid #c9960c; }
+        .lang-label { font-size: 9px; font-weight: bold; color: #666; text-transform: uppercase; margin-bottom: 5px; display: inline-block; background: #f0f0f0; padding: 2px 6px; border-radius: 3px; }
+        .bilingual-block p { color: #333; font-size: 11px; line-height: 1.5; margin: 0; word-break: break-word; }
+        .sound-btn { background: #0a7a72; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 10px; font-weight: bold; margin-top: 6px; transition: all 0.2s; }
+        .sound-btn:hover { background: #065a52; }
+        .verse-item { background: #fffacd; border-left: 3px solid #c9960c; padding: 8px; margin: 6px 0; border-radius: 4px; font-size: 10px; }
+        .verse-item p { color: #333; margin: 0 0 4px 0; line-height: 1.5; }
+        .verse-btn { background: #0a7a72; color: white; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 9px; font-weight: bold; margin-top: 4px; }
+        .verse-btn:hover { background: #065a52; }
+        .keyword-box { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 6px; }
+        .keyword { background: #f0f0f0; color: #1a2b5f; padding: 3px 8px; border-radius: 12px; font-size: 10px; border: 1px solid #ddd; }
+        .seven-steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; margin: 15px 0; padding: 15px; background: #f8f9fa; border-radius: 8px; }
+        .step { background: white; border: 2px solid #1a2b5f; border-radius: 8px; padding: 12px; cursor: pointer; transition: all 0.3s; }
+        .step:hover { background: #f0f0f0; }
+        .step-num { background: #c9960c; color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; margin: 0 auto 6px; font-weight: bold; }
+        .step-content h3 { font-size: 12px; margin-bottom: 4px; }
+        .step-content p { font-size: 10px; color: #666; }
+        .step-detail { display: none; background: #fffacd; padding: 12px; margin-top: 8px; border-radius: 6px; max-height: 350px; overflow-y: auto; font-size: 10px; }
+        .step.open .step-detail { display: block; }
+        .footer { background: #f8f9fa; text-align: center; padding: 15px; margin-top: 20px; border-top: 1px solid #ddd; color: #666; font-size: 10px; }
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 15px 0; }
+        .stat-box { background: white; border: 1px solid #ddd; border-radius: 8px; padding: 12px; text-align: center; }
+        .stat-number { font-size: 22px; font-weight: bold; color: #c9960c; margin-bottom: 4px; }
+        .stat-label { font-size: 10px; color: #666; }
+        table { background: white; border: 1px solid #ddd; border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid #ddd; padding: 6px; text-align: left; font-size: 10px; }
+        th { background: #1a2b5f; color: white; font-weight: bold; }
+        .formula-box { background: white; border-left: 4px solid #c9960c; padding: 12px; margin: 10px 0; border-radius: 6px; }
+        .formula-box p { font-size: 11px; margin-bottom: 6px; }
+        @media (max-width: 768px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } .seven-steps { grid-template-columns: 1fr; } .books-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📖 Bible Life OS v5.0｜新約 27 卷完整生命作業系統</h1>
+        <p>全部詳細內容 + 135句聖經金句(雙語+英文發音) + 七大階段 + 記憶公式</p>
+    </div>
+
+    <div class="container">
+        <div class="stats-grid">
+            <div class="stat-box"><div class="stat-number">27</div><div class="stat-label">卷書</div></div>
+            <div class="stat-box"><div class="stat-number">135</div><div class="stat-label">聖經金句</div></div>
+            <div class="stat-box"><div class="stat-number">7</div><div class="stat-label">生命階段</div></div>
+            <div class="stat-box"><div class="stat-number">🔊</div><div class="stat-label">英文發音</div></div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab(event, 'books')">📚 全部書卷</button>
+            <button class="tab-btn" onclick="switchTab(event, 'stages')">🌟 七大階段</button>
+            <button class="tab-btn" onclick="switchTab(event, 'formulas')">🧮 記憶公式</button>
+            <button class="tab-btn" onclick="switchTab(event, 'table')">📋 速查表</button>
+        </div>
+
+        <!-- 全部書卷 -->
+        <div id="books-tab" class="tab-content active">
+            <div class="section-title">📚 新約 27 卷完整內容 + 5句聖經金句</div>
+            <div class="books-grid" id="booksContainer"></div>
+        </div>
+
+        <!-- 七大階段 -->
+        <div id="stages-tab" class="tab-content">
+            <div class="section-title">七大生命階段框架</div>
+            <div class="seven-steps" id="stagesContainer"></div>
+        </div>
+
+        <!-- 記憶公式 -->
+        <div id="formulas-tab" class="tab-content">
+            <div class="section-title">新約記憶公式</div>
+            <div id="formulasContainer"></div>
+        </div>
+
+        <!-- 速查表 -->
+        <div id="table-tab" class="tab-content">
+            <div class="section-title">新約完整速查表</div>
+            <div style="overflow-x: auto;" id="tableContainer"></div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>Bible Life OS v5.0 | 27卷書+135句聖經金句+完整詳細內容+英文發音</p>
+    </div>
+
+    <script>
+        const booksData = [
+            { num: 1, zh: "約翰福音", en: "John", keyword: "生命", stage: "身份", oneSentence_zh: "先知道自己是誰", oneSentence_en: "Know your identity", essence_zh: "道成肉身代表神進入人的世界。重生改變人的本質。永恆生命是現在的親密關係。", essence_en: "God became flesh. Rebirth transforms nature. Eternal life is present intimacy.", chapters_zh: "1-3章：道成肉身與重生｜4-6章：生命源頭｜7-12章：真光與拒絕｜13-17章：愛與合一｜18-21章：十字架與復活", chapters_en: "Ch1-3: Incarnation | Ch4-6: Life Source | Ch7-12: Light | Ch13-17: Love | Ch18-21: Cross", verses: [
+                { zh: "「道成了肉身，住在我們中間，充充滿滿地有恩典有真理」", en: "The Word became flesh and made his dwelling among us. We have seen his glory, the glory of the one and only Son." },
+                { zh: "「耶穌說：『我就是道路、真理、生命』」", en: "Jesus answered, 'I am the way and the truth and the life.'" },
+                { zh: "「相信耶穌的人就得永遠的生命」", en: "Whoever believes in me will live, even though they die." },
+                { zh: "「我是好牧人；好牧人為羊捨命」", en: "I am the good shepherd. The good shepherd lays down his life for the sheep." },
+                { zh: "「我來了，是要叫羊得生命，並且得的更豐盛」", en: "I have come that they may have life, and have it to the full." }
+            ]},
+            { num: 2, zh: "馬太福音", en: "Matthew", keyword: "天國", stage: "思維", oneSentence_zh: "更新世界觀", oneSentence_en: "Renew worldview", essence_zh: "登山寶訓改變對幸福的理解。八福宣告真正蒙福的身份。天國是內心價值的更新。", essence_en: "Sermon on Mount redefines happiness. Beatitudes declare true blessedness. Kingdom transforms inner values.", chapters_zh: "1-4章：君王預備｜5-7章：登山寶訓｜8-12章：權柄見證｜13-18章：天國比喻｜19-25章：真正價值｜26-28章：十字架與大使命", chapters_en: "Ch1-4: King's Prep | Ch5-7: Beatitudes | Ch8-12: Authority | Ch13-18: Parables | Ch19-25: Values | Ch26-28: Commission", verses: [
+                { zh: "「天國近了，你們應當悔改」", en: "Repent, for the kingdom of heaven has come near." },
+                { zh: "「虛心的人有福了，因為天國是他們的」", en: "Blessed are the poor in spirit, for theirs is the kingdom of heaven." },
+                { zh: "「先求祂的國和祂的義，這些東西都要加給你們了」", en: "Seek first his kingdom and his righteousness, and all these things will be given to you as well." },
+                { zh: "「你們禱告要這樣說：『我們在天上的父，願你的國降臨』」", en: "Our Father in heaven, hallowed be your name, your kingdom come." },
+                { zh: "「最大的誡命是：『你要盡心、盡性、盡意愛主你的神』」", en: "Love the Lord your God with all your heart and with all your soul and with all your mind." }
+            ]},
+            { num: 3, zh: "馬可福音", en: "Mark", keyword: "跟隨", stage: "行動", oneSentence_zh: "立即回應", oneSentence_en: "Respond immediately", essence_zh: "馬可是行動的福音。『來跟隨我』是最重要的邀請。信心必須帶出行動。", essence_en: "Mark emphasizes action. Follow immediately. Faith produces works.", chapters_zh: "1-3章：開始與建立｜4-5章：突破限制｜6-8章：門徒訓練｜9-12章：真正偉大｜13-16章：末世與復活", chapters_en: "Ch1-3: Begin | Ch4-5: Breakthrough | Ch6-8: Training | Ch9-12: Greatness | Ch13-16: End Times", verses: [
+                { zh: "「來跟隨我，我就叫你們得人如得魚一樣」", en: "Come, follow me, and I will make you fishers of people." },
+                { zh: "「信就是所望之事的實底，是未見之事的確據」", en: "Faith is confidence in what we hope for and assurance about what we do not see." },
+                { zh: "「若有人要跟從我，就當捨己，背起他的十字架，來跟從我」", en: "Whoever wants to be my disciple must deny themselves and take up their cross and follow me." },
+                { zh: "「在人這是不能的，在神卻不然，因為神凡事都能」", en: "With man this is impossible, but not with God; all things are possible with God." },
+                { zh: "「去，傳揚耶穌的福音」", en: "Go into all the world and preach the gospel to all creation." }
+            ]},
+            { num: 4, zh: "路加福音", en: "Luke", keyword: "愛心", stage: "關係", oneSentence_zh: "學會愛人", oneSentence_en: "Learn to love", essence_zh: "浪子回頭揭示神無條件的愛。成熟生命活出恩典去愛他人。", essence_en: "Prodigal Son reveals unconditional love. Mature faith loves others.", chapters_zh: "1-4章：基督的人性｜5-8章：呼召與醫治｜9-13章：真正虔誠｜14-17章：失而復得｜18-24章：救恩完成", chapters_en: "Ch1-4: Humanity | Ch5-8: Calling | Ch9-13: Piety | Ch14-17: Found | Ch18-24: Completion", verses: [
+                { zh: "「父親看見兒子遠遠地來了，就跑去抱著他」", en: "His father saw him and was filled with compassion for him." },
+                { zh: "「撒該下來，主啊，我要把一半家產給窮人」", en: "Look, half of my possessions, Lord, I will give to the poor." },
+                { zh: "「她的信救了她，平平安安地去吧」", en: "Your faith has saved you; go in peace." },
+                { zh: "「要愛你的仇敵，為那逼迫你們的禱告」", en: "But to you who are listening I say: Love your enemies, do good to those who hate you." },
+                { zh: "「我喜愛憐恤，不喜愛祭祀」", en: "I desire mercy, not sacrifice." }
+            ]},
+            { num: 5, zh: "使徒行傳", en: "Acts", keyword: "宣教", stage: "使命", oneSentence_zh: "生命影響世界", oneSentence_en: "Life impacts world", essence_zh: "五旬節改變了一切。聖靈充滿激發宣教動力。成熟信徒建立教會、訓練門徒。", essence_en: "Pentecost changed everything. Spirit-filled drives mission. Build churches and disciples.", chapters_zh: "1-7章：耶路撒冷教會｜8-12章：猶太與撒瑪利亞｜13-28章：外邦宣教", chapters_en: "Ch1-7: Jerusalem | Ch8-12: Judea | Ch13-28: Gentiles", verses: [
+                { zh: "「你們要受聖靈的洗」", en: "You will receive power when the Holy Spirit comes on you; and you will be my witnesses." },
+                { zh: "「彼得說：『耶穌基督是拿撒勒人，是神用聖靈和能力所膏的』」", en: "Jesus of Nazareth was a man accredited by God through miracles and wonders." },
+                { zh: "「你們是我的見證人」", en: "You are witnesses of these things." },
+                { zh: "「應當順從神，不順從人」", en: "We must obey God rather than human beings." },
+                { zh: "「福音傳遍地極」", en: "This gospel of the kingdom will be proclaimed throughout the whole world." }
+            ]},
+            { num: 6, zh: "羅馬書", en: "Romans", keyword: "因信稱義", stage: "成熟", oneSentence_zh: "恩典勝過努力", oneSentence_en: "Grace overcomes effort", essence_zh: "『因信稱義』改變歷史。人不能靠律法得救，只能靠信心。", essence_en: "'Justified by faith' changed history. Faith not works saves.", chapters_zh: "1-3章：罪性與恩典｜4-8章：信心與聖靈｜9-11章：揀選｜12-16章：生活與服事", chapters_en: "Ch1-3: Sin | Ch4-8: Faith | Ch9-11: Election | Ch12-16: Living", verses: [
+                { zh: "「人都犯了罪，虧缺了神的榮耀」", en: "All have sinned and fall short of the glory of God." },
+                { zh: "「因信稱義，藉著耶穌基督得與神相和」", en: "We have been justified through faith in Christ." },
+                { zh: "「沒有被聖靈引導的，不是屬基督的」", en: "Those who are led by the Spirit of God are the children of God." },
+                { zh: "「聖靈親自用說不出來的歎息為我們禱告」", en: "The Spirit intercedes for us with wordless groans." },
+                { zh: "「萬事都互相效力，叫愛神的人得益處」", en: "We know that in all things God works for the good of those who love him." }
+            ]},
+            { num: 7, zh: "哥林多前書", en: "1 Corinthians", keyword: "教會", stage: "成熟", oneSentence_zh: "信心與行為結合", oneSentence_en: "Faith and works unite", essence_zh: "第13章『愛』是高峰。教會需要真理與愛的結合。", essence_en: "Chapter 13 on love is pinnacle. Truth and love unite.", chapters_zh: "1-4章：權柄與分裂｜5-11章：道德與敬拜｜12-14章：恩賜與愛｜15-16章：復活與奉獻", chapters_en: "Ch1-4: Authority | Ch5-11: Morality | Ch12-14: Gifts | Ch15-16: Resurrection", verses: [
+                { zh: "「愛是永不止息」", en: "Love never fails." },
+                { zh: "「身體只有一個，卻有許多肢體」", en: "Just as a body, though one, has many parts, but all its many parts form one body, so it is with Christ." },
+                { zh: "「彼此相愛」", en: "Now about your love for one another we do not need to write to you." },
+                { zh: "「你們的身子就是聖靈的殿」", en: "Do you not know that your bodies are temples of the Holy Spirit?" },
+                { zh: "「凡事都應當規規矩矩地按著次序行」", en: "Everything should be done in a fitting and orderly way." }
+            ]},
+            { num: 8, zh: "哥林多後書", en: "2 Corinthians", keyword: "安慰", stage: "成熟", oneSentence_zh: "軟弱彰顯神的大能", oneSentence_en: "Weakness shows God's power", essence_zh: "『我的恩典夠你用』。在軟弱中經歷神的同在。", essence_en: "'My grace sufficient for you.' Experience God's presence.", chapters_zh: "1-7章：患難與安慰｜8-13章：給與與信心", chapters_en: "Ch1-7: Suffering | Ch8-13: Giving", verses: [
+                { zh: "「我的恩典夠你用的」", en: "My grace is sufficient for you." },
+                { zh: "「我們所受的患難是基督患難的補充」", en: "I rejoice in my sufferings for you." },
+                { zh: "「信心使我們靠近神」", en: "We walk by faith, not by sight." },
+                { zh: "「神的愛在患難中彰顯」", en: "In all our troubles, God comforts us." },
+                { zh: "「新人已經出現」", en: "If anyone is in Christ, the new creation has come." }
+            ]},
+            { num: 9, zh: "加拉太書", en: "Galatians", keyword: "自由", stage: "成熟", oneSentence_zh: "恩典帶來自由", oneSentence_en: "Grace brings freedom", essence_zh: "『基督釋放我們』。自由不是無律，而是被愛激勵。", essence_en: "'Christ set us free.' Freedom motivated by love.", chapters_zh: "1-2章：福音真理｜3-4章：應許信心｜5-6章：自由與聖靈果子", chapters_en: "Ch1-2: Gospel | Ch3-4: Promise | Ch5-6: Fruit", verses: [
+                { zh: "「基督釋放了我們，叫我們得以自由」", en: "It is for freedom that Christ has set us free." },
+                { zh: "「聖靈所結的果子是愛、喜樂、和平」", en: "The fruit of the Spirit is love, joy, peace." },
+                { zh: "「沒有律法，愛成全一切」", en: "The entire law is fulfilled in keeping this one command: Love your neighbor as yourself." },
+                { zh: "「我們各人的重擔要互相擔當」", en: "Carry each other's burdens, and in this way you will fulfill the law of Christ." },
+                { zh: "「恩典與我們同在」", en: "The grace of our Lord Jesus Christ be with your spirit." }
+            ]},
+            { num: 10, zh: "以弗所書", en: "Ephesians", keyword: "身份", stage: "成熟", oneSentence_zh: "在基督裡成為新人", oneSentence_en: "Become new in Christ", essence_zh: "三大真理：身份、教會、屬靈爭戰。知道自己是誰。", essence_en: "Three truths: identity, Church, warfare. Know who you are.", chapters_zh: "1-3章：身份與恩典｜4-6章：合一與爭戰", chapters_en: "Ch1-3: Identity | Ch4-6: Unity", verses: [
+                { zh: "「我們在基督裡得了救贖」", en: "In him we have redemption through his blood." },
+                { zh: "「祂是教會的頭」", en: "He is the head of the body, the church." },
+                { zh: "「拿起神全副的軍裝」", en: "Put on the full armor of God." },
+                { zh: "「在聖靈裡禱告」", en: "Pray in the Spirit on all occasions with all kinds of prayers." },
+                { zh: "「以和平彼此聯絡」", en: "Make every effort to keep the unity of the Spirit through the bond of peace." }
+            ]},
+            { num: 11, zh: "腓立比書", en: "Philippians", keyword: "喜樂", stage: "成熟", oneSentence_zh: "無論順逆都喜樂", oneSentence_en: "Joy in all circumstances", essence_zh: "『要常常喜樂』。喜樂不依環境，依靠與基督同行。", essence_en: "'Rejoice always.' Joy depends on walking with Christ.", chapters_zh: "1-2章：喜樂與謙卑｜3-4章：目標與知足", chapters_en: "Ch1-2: Joy | Ch3-4: Contentment", verses: [
+                { zh: "「要常常喜樂」", en: "Rejoice in the Lord always. I will say it again: Rejoice!" },
+                { zh: "「我靠著那加給我力量的，凡事都能做」", en: "I can do all this through him who gives me strength." },
+                { zh: "「知足常樂」", en: "I have learned the secret of being content in any and every situation." },
+                { zh: "「你們的心志要像基督耶穌一樣」", en: "Your attitude should be the same as that of Christ Jesus." },
+                { zh: "「我的喜樂要成為你們的喜樂」", en: "My desire is that your joy may be complete." }
+            ]},
+            { num: 12, zh: "歌羅西書", en: "Colossians", keyword: "基督", stage: "成熟", oneSentence_zh: "基督居首位", oneSentence_en: "Christ is supreme", essence_zh: "『基督是一切的首位』。祂是每個領域的主。", essence_en: "'Christ supreme in all.' He's Lord everywhere.", chapters_zh: "1-2章：基督超越｜3-4章：新生命", chapters_en: "Ch1-2: Supremacy | Ch3-4: New Life", verses: [
+                { zh: "「基督是所有事物的首位」", en: "Christ is the head of the body, the church." },
+                { zh: "「萬有都是藉著祂創造的」", en: "All things have been created through him and for him." },
+                { zh: "「祂是誰，祂就是那」", en: "He is the image of the invisible God." },
+                { zh: "「將祂的道豐豐富富地存在心裡」", en: "Let the message of Christ dwell among you richly." },
+                { zh: "「無論做什麼，都要為主做」", en: "Whatever you do, work at it with all your heart, as working for the Lord." }
+            ]},
+            { num: 13, zh: "帖撒羅尼迦前書", en: "1 Thessalonians", keyword: "盼望", stage: "成熟", oneSentence_zh: "警醒等候主再來", oneSentence_en: "Watch for Christ's return", essence_zh: "『盼望激勵聖潔生活』。信徒在信心、愛心、聖潔上有見證。", essence_en: "'Hope motivates holy living.' Witness through faith and love.", chapters_zh: "1-2章：使徒工作｜3-4章：鼓勵與聖潔｜5章：警醒", chapters_en: "Ch1-2: Apostolic | Ch3-4: Encouragement | Ch5: Watchfulness", verses: [
+                { zh: "「主用大聲音和大能權柄降臨」", en: "The Lord himself will come down from heaven." },
+                { zh: "「要常常喜樂，不住地禱告」", en: "Rejoice always, pray without ceasing." },
+                { zh: "「信心、愛心、盼望」", en: "We remember before our God and Father your work produced by faith." },
+                { zh: "「儆醒等候主」", en: "Be alert and of sober mind." },
+                { zh: "「神沒有預定我們受刑，乃是預定我們藉著耶穌得救」", en: "God did not appoint us to suffer wrath but to receive salvation." }
+            ]},
+            { num: 14, zh: "帖撒羅尼迦後書", en: "2 Thessalonians", keyword: "堅定", stage: "成熟", oneSentence_zh: "持守真理", oneSentence_en: "Hold fast to truth", essence_zh: "『你們當站立得穩』。在混亂時代堅守真理。", essence_en: "'Stand firm.' Hold truth in chaos.", chapters_zh: "1-2章：患難與真理｜3章：工作與禱告", chapters_en: "Ch1-2: Truth | Ch3: Work", verses: [
+                { zh: "「你們要站立得穩」", en: "Stand firm and hold fast." },
+                { zh: "「主是信實的」", en: "The Lord is faithful." },
+                { zh: "「不可被迷惑」", en: "Don't let anyone deceive you in any way." },
+                { zh: "「持守從我們所教導的傳統」", en: "Stand firm and hold fast to the teachings we passed on to you." },
+                { zh: "「願榮耀歸給基督」", en: "May the glory of our Lord Jesus Christ be with you." }
+            ]},
+            { num: 15, zh: "提摩太前書", en: "1 Timothy", keyword: "敬虔", stage: "成熟", oneSentence_zh: "建立健康教會", oneSentence_en: "Build healthy church", essence_zh: "給教會領袖的手冊。領導品格影響教會健康。", essence_en: "Guide for church leaders. Character affects health.", chapters_zh: "1-3章：真理與領袖｜4-6章：信徒與奉獻", chapters_en: "Ch1-3: Truth | Ch4-6: Believers", verses: [
+                { zh: "「敬虔是大利」", en: "Godliness is of value in every way." },
+                { zh: "「你要為己為人謹慎」", en: "Watch your life and doctrine closely." },
+                { zh: "「有人在真道上辯論」", en: "To some people your life will be the only Bible they ever read." },
+                { zh: "「操練身體，益處還少；惟獨敬虔凡事都有益」", en: "Physical training is of some value, but godliness has value for all things." },
+                { zh: "「金錢是萬惡之根」", en: "For the love of money is a root of all kinds of evil." }
+            ]},
+            { num: 16, zh: "提摩太後書", en: "2 Timothy", keyword: "傳承", stage: "成熟", oneSentence_zh: "傳承真道", oneSentence_en: "Pass on the faith", essence_zh: "『我已經跑盡了路』。培養下一代同工。", essence_en: "'I finished the race.' Develop next generation.", chapters_zh: "1章：忠心與恩賜｜2章：忠心士兵｜3-4章：末世", chapters_en: "Ch1: Faithfulness | Ch2: Soldier | Ch3-4: End Times", verses: [
+                { zh: "「我已經跑盡了路，守住了信仰」", en: "I have fought the good fight, I have finished the race, I have kept the faith." },
+                { zh: "「那美好的仗我已經打過了」", en: "I have finished the good fight." },
+                { zh: "「將所聽見的交託那忠心能教導人的」", en: "And the things you have heard me say in the presence of many witnesses entrust to reliable people." },
+                { zh: "「提摩太啊，你要堅守所領受的」", en: "Guard the good deposit that was entrusted to you." },
+                { zh: "「靠著聖靈，活出信仰」", en: "Guard the good deposit that was entrusted to you through the Holy Spirit who lives in us." }
+            ]},
+            { num: 17, zh: "提多書", en: "Titus", keyword: "榜樣", stage: "成熟", oneSentence_zh: "用生命見證", oneSentence_en: "Life is the witness", essence_zh: "『你自己要顯出善行的榜樣』。真正的領導是生命本身教導。", essence_en: "'Set example by doing.' Life teaches.", chapters_zh: "1章：長老品格｜2章：教導與模範｜3章：屬靈品格", chapters_en: "Ch1: Character | Ch2: Teaching | Ch3: Grace", verses: [
+                { zh: "「你自己要顯出善行的榜樣」", en: "In everything set them an example by doing what is good." },
+                { zh: "「在言語、行為、愛心、信心、貞潔上，都是敬虔人的榜樣」", en: "Set an example for the believers in speech, in conduct, in love, in faith and in purity." },
+                { zh: "「事奉眾人」", en: "Serve one another." },
+                { zh: "「一無虧欠」", en: "Give everyone what you owe them." },
+                { zh: "「教導聰慧的僕人事奉」", en: "Teach slaves to be fully obedient to their masters." }
+            ]},
+            { num: 18, zh: "腓利門書", en: "Philemon", keyword: "饒恕", stage: "成熟", oneSentence_zh: "恩典恢復關係", oneSentence_en: "Grace restores relationships", essence_zh: "阿尼西母從逃奴變成弟兄。恩典改變人與人的關係。", essence_en: "Onesimus from slave to brother. Grace transforms.", chapters_zh: "腓利門書：一封關於饒恕的信", chapters_en: "Philemon: Letter on forgiveness", verses: [
+                { zh: "「我心裡大受安慰」", en: "Your love has given me great joy and encouragement." },
+                { zh: "「接納他如同接納我」", en: "Welcome him as you would welcome me." },
+                { zh: "「恩典改變人」", en: "Perhaps the reason he was separated from you was that you might have him back forever." },
+                { zh: "「帮助他，我就記在帳上」", en: "If he has done you any wrong or owes you anything, charge it to me." },
+                { zh: "「願恩典與你們同在」", en: "May the grace of the Lord Jesus Christ be with your spirit." }
+            ]},
+            { num: 19, zh: "希伯來書", en: "Hebrews", keyword: "完全", stage: "成熟", oneSentence_zh: "耶穌是永遠大祭司", oneSentence_en: "Jesus perfect High Priest", essence_zh: "『信就是所望之事的實底』。信心是深入骨髓的確信。", essence_en: "'Faith is substance.' Deep certainty.", chapters_zh: "1-2章：基督超越｜3-7章：祭司職位｜8-10章：新約｜11章：信心英雄｜12-13章：見證", chapters_en: "Ch1-2: Supremacy | Ch3-7: Priesthood | Ch8-10: Covenant | Ch11: Heroes | Ch12-13: Witness", verses: [
+                { zh: "「信就是所望之事的實底」", en: "Now faith is confidence in what we hope for and assurance about what we do not see." },
+                { zh: "「耶穌是永遠完全的大祭司」", en: "Jesus has become a high priest forever." },
+                { zh: "「我們有許多的見證人如同雲彩圍著我們」", en: "Therefore, since we are surrounded by a great cloud of witnesses." },
+                { zh: "「仰望為我們信心創始成終的耶穌」", en: "Let us fix our eyes on Jesus, the author and perfecter of our faith." },
+                { zh: "「祂永遠活著為聖徒代求」", en: "He is able to save completely those who come to God through him." }
+            ]},
+            { num: 20, zh: "雅各書", en: "James", keyword: "行道", stage: "成熟", oneSentence_zh: "信心帶出行動", oneSentence_en: "Faith produces works", essence_zh: "『不要單單聽道，要行道』。信心與行為不能分開。", essence_en: "'Be doers, not hearers.' Faith and works.", chapters_zh: "1章：試煉與信心｜2章：信心與行為｜3-5章：舌頭、驕傲、忍耐", chapters_en: "Ch1: Trials | Ch2: Works | Ch3-5: Virtues", verses: [
+                { zh: "「不要單單聽道，要行道」", en: "Do not merely listen to the word... Do what it says." },
+                { zh: "「身體沒有靈魂是死的，信心沒有行為也是死的」", en: "As the body without the spirit is dead, so faith without deeds is dead." },
+                { zh: "「克制舌頭」", en: "If anyone is never at fault in what they say, they are perfect." },
+                { zh: "「禱告為要得著」", en: "When you ask, you do not receive, because you ask with wrong motives." },
+                { zh: "「忍耐也是完全的工作」", en: "Perseverance must finish its work so that you may be mature and complete." }
+            ]},
+            { num: 21, zh: "彼得前書", en: "1 Peter", keyword: "受苦", stage: "成熟", oneSentence_zh: "苦難中持守盼望", oneSentence_en: "Hope in suffering", essence_zh: "『因基督受苦算為榮耀』。成熟信徒用苦難見證基督。", essence_en: "'Suffering for Christ is glory.' Witness through trials.", chapters_zh: "1-2章：救恩確信｜3-4章：聖潔與受苦｜5章：謙卑與永恆", chapters_en: "Ch1-2: Salvation | Ch3-4: Holiness | Ch5: Humility", verses: [
+                { zh: "「因基督受苦算為榮耀」", en: "It is commendable if someone bears up under the pain of unjust suffering because they are conscious of God." },
+                { zh: "「你們蒙召原是為此」", en: "To this you were called, because Christ suffered for you." },
+                { zh: "「忍耐到底的，必然得救」", en: "Stand firm to the end." },
+                { zh: "「試煉使信心更顯寶貴」", en: "These have come so that the proven genuineness of your faith may result in praise, glory and honor." },
+                { zh: "「將一切憂慮卸給神」", en: "Cast all your anxiety on him because he cares for you." }
+            ]},
+            { num: 22, zh: "彼得後書", en: "2 Peter", keyword: "成長", stage: "成熟", oneSentence_zh: "持續成長", oneSentence_en: "Continual growth", essence_zh: "『在恩典和知識上有長進』。成長是一生的過程。", essence_en: "'Grow in grace.' Growth is lifelong.", chapters_zh: "1章：恩典與知識｜2章：假先知｜3章：主的日子", chapters_en: "Ch1: Grace | Ch2: False Prophets | Ch3: Lord's Day", verses: [
+                { zh: "「在恩典和知識上有長進」", en: "Grow in the grace and knowledge of our Lord and Savior Jesus Christ." },
+                { zh: "「要防備假教導」", en: "But there were also false prophets among the people." },
+                { zh: "「持守真理」", en: "Make every effort to add to your faith goodness." },
+                { zh: "「末世警醒」", en: "Above all, you must understand that no prophecy of Scripture came about by the prophet's own interpretation." },
+                { zh: "「願恩典平安多多加給你們」", en: "Grace and peace be yours in abundance." }
+            ]},
+            { num: 23, zh: "約翰一書", en: "1 John", keyword: "愛", stage: "永恆", oneSentence_zh: "神就是愛", oneSentence_en: "God is love", essence_zh: "『神就是愛』。完全的愛消除恐懼。住在愛裡就是住在光中。", essence_en: "'God is love.' Perfect love casts out fear.", chapters_zh: "1-2章：光與真理｜3-4章：愛與認識｜5章：信心與永生", chapters_en: "Ch1-2: Light | Ch3-4: Love | Ch5: Life", verses: [
+                { zh: "「神就是愛」", en: "God is love." },
+                { zh: "「沒有懼怕的愛」", en: "Perfect love drives out fear." },
+                { zh: "「我們要彼此相愛」", en: "We ought to love one another." },
+                { zh: "「住在愛裡的，就是住在神裡面」", en: "Whoever lives in love lives in God, and God in them." },
+                { zh: "「這就是勝世界的勝利」", en: "Everyone born of God overcomes the world." }
+            ]},
+            { num: 24, zh: "約翰二書", en: "2 John", keyword: "真理", stage: "永恆", oneSentence_zh: "真理中相愛", oneSentence_en: "Love in truth", essence_zh: "真理與愛不對立，而是統一。成熟信徒既有愛心也有原則。", essence_en: "Truth and love unite. Believers both loving and principled.", chapters_zh: "約翰二書：真理與愛的平衡", chapters_en: "2 John: Truth and Love", verses: [
+                { zh: "「我們要彼此相愛」", en: "I ask that we love one another." },
+                { zh: "「在真理中相愛」", en: "Love one another in the truth." },
+                { zh: "「真理使人得自由」", en: "The truth will set you free." },
+                { zh: "「不要給異端分子提供接待」", en: "Anyone who welcomes him shares in his wicked work." },
+                { zh: "「願平安常與你們同在」", en: "Peace to you." }
+            ]},
+            { num: 25, zh: "約翰三書", en: "3 John", keyword: "同行", stage: "永恆", oneSentence_zh: "支持真理", oneSentence_en: "Support truth", essence_zh: "教會領導為真理服事，不是為權力。忠於使命最重要。", essence_en: "Leaders serve truth, not power. Mission faithfulness matters.", chapters_zh: "約翰三書：接待與領導", chapters_en: "3 John: Hospitality", verses: [
+                { zh: "「我願你凡事興盛」", en: "I pray that you may enjoy good health and that all may go well with you." },
+                { zh: "「因為你為基督的名去幫助弟兄」", en: "For it is for the sake of the Name that they went out." },
+                { zh: "「接待他們，就是與他們同工」", en: "We ought therefore to show hospitality to such people." },
+                { zh: "「不要效法惡，只要效法善」", en: "Do not imitate what is evil but what is good." },
+                { zh: "「願平安常與你們同在」", en: "Peace to you." }
+            ]},
+            { num: 26, zh: "猶大書", en: "Jude", keyword: "守道", stage: "永恆", oneSentence_zh: "守護信仰", oneSentence_en: "Defend the faith", essence_zh: "『要為從前一次交付聖徒的真道竭力爭辯』。保護真理。", essence_en: "'Contend for faith.' Defend truth vigorously.", chapters_zh: "猶大書：爭辯與防衛", chapters_en: "Jude: Contend", verses: [
+                { zh: "「要為從前一次交付聖徒的真道竭力爭辯」", en: "Dear friends, although I was very eager to write to you about the salvation we share, I felt compelled to write and urge you." },
+                { zh: "「在聖靈裡禱告」", en: "Build yourselves up in your most holy faith and pray in the Holy Spirit." },
+                { zh: "「要保守自己常在神的愛中」", en: "Keep yourselves in God's love as you wait for the mercy." },
+                { zh: "「有能力保守你們不失腳」", en: "To him who is able to keep you from stumbling." },
+                { zh: "「願榮耀、威嚴、能力歸給耶穌」", en: "To the only God our Savior be glory, majesty, power and authority." }
+            ]},
+            { num: 27, zh: "啟示錄", en: "Revelation", keyword: "得勝", stage: "永恆", oneSentence_zh: "基督得勝", oneSentence_en: "Christ victorious", essence_zh: "『看哪，我要快來』。基督最終得勝。新天新地降臨。", essence_en: "'Behold, I come soon.' Christ triumphs. New creation.", chapters_zh: "1章：約翰異象｜2-3章：七教會｜4-5章：敬拜｜6-16章：末世｜17-20章：獸與基督｜21-22章：新天新地", chapters_en: "Ch1: Vision | Ch2-3: Churches | Ch4-5: Worship | Ch6-16: End Times | Ch17-20: Beast | Ch21-22: New Creation", verses: [
+                { zh: "「看哪，我要快來」", en: "Behold, I am coming soon!" },
+                { zh: "「羔羊是世人的光」", en: "The Lamb is the light of it." },
+                { zh: "「不再有眼淚、痛苦、死亡」", en: "He will wipe every tear from their eyes. There will be no more death or mourning or crying or pain." },
+                { zh: "「我是首先的，我是末後的」", en: "I am the Alpha and the Omega." },
+                { zh: "「願恩典與聖徒同在」", en: "The grace of the Lord Jesus be with God's people." }
+            ]}
+        ];
+
+        const stagesData = [
+            { num: 1, zh: "身份", en: "Identity", book: "約翰福音", desc_zh: "認識自己是誰。身份決定價值感、安全感、人生方向。你是被愛的、被揀選的、有永恆生命的。", desc_en: "Know who you are. Identity shapes value, security, direction. You are loved, chosen, eternal." },
+            { num: 2, zh: "思維", en: "Mindset", book: "馬太福音", desc_zh: "更新世界觀。從八福開始，改變對幸福、成功、價值的理解。新思維帶來新人生。", desc_en: "Renew worldview. Beatitudes transform understanding. New thinking brings new life." },
+            { num: 3, zh: "行動", en: "Action", book: "馬可福音", desc_zh: "開始行動。有了身份和思維，要付諸行動。『來跟隨我』。信心沒有行動就是死的。", desc_en: "Take action. Follow immediately. Faith without works is dead." },
+            { num: 4, zh: "關係", en: "Relationship", book: "路加福音", desc_zh: "建立關係。學會愛人、接納人、饒恕人。浪子回頭揭示神無條件的愛。", desc_en: "Build relationships. Love, accept, forgive. Prodigal Son shows unconditional love." },
+            { num: 5, zh: "使命", en: "Mission", book: "使徒行傳", desc_zh: "完成使命。聖靈充滿改變人生。建立教會、訓練門徒、傳福音到世界各地。", desc_en: "Fulfill mission. Spirit-filled transforms life. Build church, train disciples, spread Gospel." },
+            { num: 6, zh: "成熟更新", en: "Maturity", book: "保羅書信(14封)", desc_zh: "不斷更新。因信稱義、聖潔生活、患難安慰、恩典自由、屬靈合一、喜樂知足。", desc_en: "Continuous renewal. Justification, holiness, comfort, grace, unity, joy, contentment." },
+            { num: 7, zh: "永恆", en: "Eternity", book: "約翰書信+啟示錄", desc_zh: "永恆盼望。神就是愛，住在愛裡。基督最終得勝，新天新地降臨。信仰終點是永恆。", desc_en: "Eternal hope. God is love. Christ triumphs. New creation comes. Faith's end is eternity." }
+        ];
+
+        function renderBooks() {
+            const container = document.getElementById('booksContainer');
+            container.innerHTML = booksData.map(book => `
+                <div class="book-card" id="book-${book.num}" onclick="toggleBook(${book.num})">
+                    <div class="book-header">
+                        <div class="book-num">${book.num}</div>
+                        <div class="book-titles">
+                            <div class="zh">${book.zh}</div>
+                            <div class="en">${book.en}</div>
+                        </div>
+                        <div class="expand-icon">▼</div>
+                    </div>
+                    <div class="book-content">
+                        <div class="content-section">
+                            <span class="section-label">一句話 | One Sentence</span>
+                            <div class="bilingual-block">
+                                <div class="lang-label">中文</div>
+                                <p>${book.oneSentence_zh}</p>
+                            </div>
+                            <div class="bilingual-block">
+                                <div class="lang-label">English</div>
+                                <p>${book.oneSentence_en}</p>
+                                <button class="sound-btn" onclick="speak('${book.oneSentence_en.replace(/'/g, "\\'")}')">🔊 發音</button>
+                            </div>
+                        </div>
+
+                        <div class="content-section">
+                            <span class="section-label">本質意義 | Essence</span>
+                            <div class="bilingual-block">
+                                <div class="lang-label">中文</div>
+                                <p>${book.essence_zh}</p>
+                            </div>
+                            <div class="bilingual-block">
+                                <div class="lang-label">English</div>
+                                <p>${book.essence_en}</p>
+                                <button class="sound-btn" onclick="speak('${book.essence_en.replace(/'/g, "\\'")}')">🔊 發音</button>
+                            </div>
+                        </div>
+
+                        <div class="content-section">
+                            <span class="section-label">章節概覽 | Chapter Overview</span>
+                            <div class="bilingual-block">
+                                <div class="lang-label">中文</div>
+                                <p>${book.chapters_zh}</p>
+                            </div>
+                            <div class="bilingual-block">
+                                <div class="lang-label">English</div>
+                                <p>${book.chapters_en}</p>
+                            </div>
+                        </div>
+
+                        <div class="content-section">
+                            <span class="section-label">聖經金句 | Key Verses (5句)</span>
+                            ${book.verses.map((v, i) => `
+                                <div class="verse-item">
+                                    <p><strong>金句 ${i+1}：</strong>${v.zh}</p>
+                                    <p><strong>English:</strong> ${v.en}</p>
+                                    <button class="verse-btn" onclick="speak('${v.en.replace(/'/g, "\\'")}')">🔊 發音</button>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderStages() {
+            const container = document.getElementById('stagesContainer');
+            container.innerHTML = stagesData.map(stage => `
+                <div class="step" onclick="toggleStage(${stage.num})">
+                    <div class="step-num">${stage.num}</div>
+                    <div class="step-content">
+                        <h3>${stage.zh} | ${stage.en}</h3>
+                        <p>${stage.book}</p>
+                    </div>
+                    <div class="step-detail">
+                        <p><strong>中文：</strong>${stage.desc_zh}</p>
+                        <p style="margin-top: 8px;"><strong>English：</strong>${stage.desc_en}</p>
+                        <button class="sound-btn" onclick="speak('${stage.desc_en.replace(/'/g, "\\'")}');" style="width: 100%; margin-top: 10px;">🔊 發音英文</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderFormulas() {
+            const container = document.getElementById('formulasContainer');
+            container.innerHTML = `
+                <div class="formula-box">
+                    <p><strong>30秒記住新約公式：</strong></p>
+                    <p>約翰(身份) → 馬太(思維) → 馬可(行動) → 路加(關係) → 使徒(使命) → 書信(成熟) → 啟示錄(永恆)</p>
+                    <button class="sound-btn" onclick="speak('John identity, Matthew mindset, Mark action, Luke relationship, Acts mission, Paul maturity, Revelation eternity')" style="width: 100%;">🔊 發音英文公式</button>
+                </div>
+                <div class="formula-box">
+                    <p><strong>新約分類：</strong></p>
+                    <p>📖 四福音（4卷）| 🏃 使徒行傳（1卷）| 📜 保羅書信（14卷）| ✍️ 其他書信（7卷）| 🔮 啟示錄（1卷）</p>
+                </div>
+            `;
+        }
+
+        function renderTable() {
+            const container = document.getElementById('tableContainer');
+            let html = '<table><thead><tr><th>卷</th><th>書名</th><th>英文</th><th>關鍵字</th><th>金句</th></tr></thead><tbody>';
+            booksData.forEach(book => {
+                html += `<tr><td>${book.num}</td><td><strong>${book.zh}</strong></td><td>${book.en}</td><td>${book.keyword}</td><td>5</td></tr>`;
+            });
+            html += '</tbody></table>';
+            container.innerHTML = html;
+        }
+
+        function toggleBook(num) {
+            const card = document.getElementById('book-' + num);
+            if (card) card.classList.toggle('open');
+        }
+
+        function toggleStage(num) {
+            const steps = document.querySelectorAll('.step');
+            if (steps[num-1]) steps[num-1].classList.toggle('open');
+        }
+
+        function switchTab(e, tabName) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(tabName + '-tab').classList.add('active');
+            e.target.classList.add('active');
+        }
+
+        function speak(text) {
+            if (!text) return;
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'en-US';
+            utterance.rate = 0.85;
+            utterance.pitch = 1.0;
+            speechSynthesis.cancel();
+            speechSynthesis.speak(utterance);
+        }
+
+        renderBooks();
+        renderStages();
+        renderFormulas();
+        renderTable();
+    </script>
+</body>
+</html>
