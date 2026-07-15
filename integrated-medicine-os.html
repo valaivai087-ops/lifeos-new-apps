@@ -1,0 +1,1415 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>整合醫學 OS｜中醫自然醫學與功能醫學框架</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Microsoft JhengHei', '微軟正黑體', sans-serif;
+      background-color: #f5f5f5;
+      color: #333;
+      line-height: 1.8;
+    }
+    
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    header {
+      background: linear-gradient(135deg, #0D1B3E 0%, #006B7D 100%);
+      color: white;
+      padding: 40px;
+      border-radius: 12px;
+      margin-bottom: 40px;
+      text-align: center;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    }
+    
+    header h1 {
+      font-size: 36px;
+      margin-bottom: 12px;
+      font-weight: 700;
+    }
+    
+    header p {
+      font-size: 18px;
+      opacity: 0.95;
+      margin-bottom: 8px;
+    }
+    
+    .nav-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 30px;
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+    
+    .tab-btn {
+      flex: 1;
+      min-width: 140px;
+      padding: 12px 16px;
+      border: 2px solid #0D1B3E;
+      background: white;
+      color: #0D1B3E;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+    
+    .tab-btn:hover {
+      background: #0D1B3E;
+      color: white;
+      transform: translateY(-2px);
+    }
+    
+    .tab-btn.active {
+      background: #0D1B3E;
+      color: white;
+    }
+    
+    .tab-content {
+      display: none;
+      animation: fadeIn 0.4s ease;
+    }
+    
+    .tab-content.active {
+      display: block;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .section {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      border-left: 6px solid #B8860B;
+    }
+    
+    .section h2 {
+      color: #0D1B3E;
+      font-size: 26px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    .section h3 {
+      color: #006B7D;
+      font-size: 20px;
+      margin-top: 20px;
+      margin-bottom: 12px;
+    }
+    
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      margin: 20px 0;
+    }
+    
+    .card {
+      background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+      border: 1px solid #e0e0e0;
+      border-radius: 12px;
+      padding: 20px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border-left: 4px solid #B8860B;
+    }
+    
+    .card:hover {
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+      transform: translateY(-4px);
+      border-left-color: #006B7D;
+    }
+    
+    .card-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #0D1B3E;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .card-content {
+      display: none;
+      color: #555;
+      font-size: 14px;
+      line-height: 1.8;
+      margin-top: 12px;
+    }
+    
+    .card.expanded .card-content {
+      display: block;
+    }
+    
+    .expand-icon {
+      display: inline-block;
+      transition: transform 0.3s ease;
+      font-size: 12px;
+    }
+    
+    .card.expanded .expand-icon {
+      transform: rotate(180deg);
+    }
+    
+    .image-section {
+      margin: 30px 0;
+      padding: 20px;
+      background: #f5f7fa;
+      border-radius: 12px;
+      border: 2px dashed #006B7D;
+    }
+    
+    .image-section h3 {
+      color: #0D1B3E;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .image-container {
+      position: relative;
+      margin: 20px 0;
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    
+    .image-container img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    
+    .image-label {
+      background: #0D1B3E;
+      color: white;
+      padding: 8px 12px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+    
+    .bilingual {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin: 16px 0;
+    }
+    
+    .chinese-col, .english-col {
+      padding: 16px;
+      background: #f9f9f9;
+      border-radius: 8px;
+    }
+    
+    .chinese-col {
+      border-left: 4px solid #0D1B3E;
+    }
+    
+    .english-col {
+      border-left: 4px solid #006B7D;
+    }
+    
+    .chinese-col h4, .english-col h4 {
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: #0D1B3E;
+    }
+    
+    .english-col h4 {
+      color: #006B7D;
+    }
+    
+    .bilingual p {
+      font-size: 14px;
+      line-height: 1.7;
+    }
+    
+    .structure-box {
+      background: linear-gradient(135deg, #FFF8DC 0%, #FFFACD 100%);
+      border: 2px solid #B8860B;
+      border-radius: 12px;
+      padding: 20px;
+      margin: 16px 0;
+    }
+    
+    .structure-box h4 {
+      color: #0D1B3E;
+      margin-bottom: 12px;
+      font-size: 16px;
+    }
+    
+    .structure-box ul {
+      list-style: none;
+      padding-left: 0;
+    }
+    
+    .structure-box li {
+      padding: 8px 0;
+      padding-left: 24px;
+      position: relative;
+      color: #333;
+    }
+    
+    .structure-box li:before {
+      content: "▸";
+      position: absolute;
+      left: 0;
+      color: #B8860B;
+      font-weight: 700;
+    }
+    
+    .metabolic-stages {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin: 20px 0;
+    }
+    
+    .stage-box {
+      background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      border: 2px solid #006B7D;
+    }
+    
+    .stage-number {
+      font-size: 28px;
+      font-weight: 700;
+      color: #0D1B3E;
+      margin-bottom: 8px;
+    }
+    
+    .stage-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #006B7D;
+      margin-bottom: 12px;
+    }
+    
+    .stage-content {
+      font-size: 13px;
+      color: #555;
+      line-height: 1.6;
+    }
+    
+    .seven-systems {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+      margin: 20px 0;
+    }
+    
+    .system-circle {
+      background: linear-gradient(135deg, #006B7D 0%, #0A7A72 100%);
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      color: white;
+      font-weight: 600;
+      min-height: 120px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(6, 107, 125, 0.3);
+    }
+    
+    .system-icon {
+      font-size: 24px;
+      margin-bottom: 8px;
+    }
+    
+    .system-name {
+      font-size: 15px;
+      font-weight: 700;
+    }
+    
+    .omega-comparison {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin: 20px 0;
+    }
+    
+    .omega-box {
+      border-radius: 12px;
+      padding: 20px;
+      color: white;
+    }
+    
+    .omega3 {
+      background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+    }
+    
+    .omega6 {
+      background: linear-gradient(135deg, #E91E63 0%, #C2185B 100%);
+    }
+    
+    .omega-box h4 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+    
+    .omega-box ul {
+      list-style: none;
+      padding-left: 0;
+    }
+    
+    .omega-box li {
+      padding: 6px 0;
+      padding-left: 24px;
+      position: relative;
+      font-size: 14px;
+    }
+    
+    .omega-box li:before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+    }
+    
+    .tts-button {
+      background: #006B7D;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      margin: 8px 4px;
+      transition: all 0.3s ease;
+    }
+    
+    .tts-button:hover {
+      background: #0A7A72;
+      transform: scale(1.05);
+    }
+    
+    .keyword-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 12px 0;
+    }
+    
+    .tag {
+      background: #E8F5E9;
+      color: #2E7D32;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    
+    .molecular-model {
+      background: linear-gradient(135deg, #FFF3E0 0%, #FFE0B2 100%);
+      border-radius: 12px;
+      padding: 20px;
+      margin: 20px 0;
+      border-left: 6px solid #B8860B;
+    }
+    
+    .molecular-model h4 {
+      color: #0D1B3E;
+      margin-bottom: 12px;
+      font-size: 16px;
+    }
+    
+    .molecular-elements {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 12px;
+      margin: 16px 0;
+    }
+    
+    .element {
+      background: white;
+      border: 2px solid #B8860B;
+      border-radius: 8px;
+      padding: 12px;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 600;
+      color: #0D1B3E;
+    }
+    
+    .disease-pathway {
+      background: #FFEBEE;
+      border-radius: 12px;
+      padding: 20px;
+      margin: 20px 0;
+      border-left: 6px solid #C62828;
+    }
+    
+    .pathway-step {
+      display: flex;
+      align-items: center;
+      margin: 12px 0;
+      gap: 12px;
+    }
+    
+    .pathway-arrow {
+      color: #C62828;
+      font-size: 20px;
+      font-weight: 700;
+    }
+    
+    .pathway-text {
+      font-size: 14px;
+      color: #333;
+      flex: 1;
+    }
+    
+    footer {
+      text-align: center;
+      padding: 30px;
+      color: #666;
+      font-size: 13px;
+      margin-top: 50px;
+      border-top: 2px solid #e0e0e0;
+    }
+    
+    .disclaimer {
+      background: #FFF3CD;
+      border-left: 6px solid #FF9800;
+      padding: 16px;
+      border-radius: 8px;
+      margin: 20px 0;
+      font-size: 13px;
+      color: #856404;
+    }
+    
+    @media (max-width: 768px) {
+      .bilingual, .omega-comparison {
+        grid-template-columns: 1fr;
+      }
+      
+      .nav-tabs {
+        flex-direction: column;
+      }
+      
+      .tab-btn {
+        width: 100%;
+      }
+      
+      header h1 {
+        font-size: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🏥 整合醫學 OS</h1>
+      <p>中醫自然醫學 × 功能醫學 × 分子原料醫學</p>
+      <p style="font-size: 14px; opacity: 0.85;">人類未來主流醫學新趨勢 | 預防-逆轉-治療完整框架</p>
+    </header>
+    
+    <div class="nav-tabs">
+      <button class="tab-btn active" onclick="switchTab('overview')">📋 整體架構</button>
+      <button class="tab-btn" onclick="switchTab('chinese-medicine')">🌿 中醫自然醫學</button>
+      <button class="tab-btn" onclick="switchTab('functional')">⚙️ 功能醫學七大系統</button>
+      <button class="tab-btn" onclick="switchTab('molecular')">🧬 分子原料醫學</button>
+      <button class="tab-btn" onclick="switchTab('metabolic')">📊 代謝病進展</button>
+      <button class="tab-btn" onclick="switchTab('omega')">🔄 Omega-3/6平衡</button>
+      <button class="tab-btn" onclick="switchTab('cancer')">🛡️ 癌症防治</button>
+      <button class="tab-btn" onclick="switchTab('images')">🖼️ 完整圖檔</button>
+    </div>
+    
+    <!-- Tab 1: Overview -->
+    <div id="overview" class="tab-content active">
+      <div class="section">
+        <h2>📋 整合醫學完整架構</h2>
+        <p>整合醫學（Integrative Medicine）是將傳統中醫自然醫學、現代功能醫學、分子原料醫學有機融合，建立預防-逆轉-治療的完整醫學體系。</p>
+        
+        <div class="structure-box">
+          <h4>🎯 核心三大支柱</h4>
+          <ul>
+            <li><strong>中醫自然醫學</strong>：30年西醫歷史 + 2700年中醫歷史 + 東方醫學 + Ayurveda 4500年歷史 = 人類智慧結晶</li>
+            <li><strong>功能醫學</strong>：七大生理系統檢測與調理（腸胃、免疫、內分泌、代謝、神經、骨骼肌肉、環境毒素）</li>
+            <li><strong>分子原料醫學</strong>：細胞原料（必需脂肪酸、必需胺基酸、必需糖營養、礦物質、植物生化素、植物性激素）</li>
+          </ul>
+        </div>
+        
+        <h3>🔬 生活習慣病的根本原因</h3>
+        <div class="molecular-model">
+          <h4>（1）細胞原料不足、過量或質不佳 → 導致自由基及炎症</h4>
+          <p>細胞無法從低熱量蔬食、全食物、真食物中獲得充足的必需營養素</p>
+          <h4 style="margin-top: 12px;">（2）外在環境的自由基</h4>
+          <p>污染、壓力、不良飲食、缺乏運動、睡眠不足</p>
+        </div>
+        
+        <h3>🎓 治療五大層次（金字塔模型）</h3>
+        <div class="metabolic-stages">
+          <div class="stage-box">
+            <div class="stage-number">①</div>
+            <div class="stage-title">環境因素</div>
+            <div class="stage-content">消除毒素、改善睡眠、管理壓力、增加運動</div>
+          </div>
+          <div class="stage-box">
+            <div class="stage-number">②</div>
+            <div class="stage-title">營養因素</div>
+            <div class="stage-content">低熱量蔬食、全食物、真食物、補充缺失原料</div>
+          </div>
+          <div class="stage-box">
+            <div class="stage-number">③</div>
+            <div class="stage-title">消化功能</div>
+            <div class="stage-content">修復腸漏、提升消化能力、增加有益菌</div>
+          </div>
+          <div class="stage-box">
+            <div class="stage-number">④</div>
+            <div class="stage-title">生物標記</div>
+            <div class="stage-content">檢測關鍵指標、追蹤進展、精準調理</div>
+          </div>
+          <div class="stage-box">
+            <div class="stage-number">⑤</div>
+            <div class="stage-title">心靈因素</div>
+            <div class="stage-content">信心、宗教、態度、善念、精神寄託</div>
+          </div>
+        </div>
+        
+        <div class="disclaimer">
+          ⚠️ <strong>重要聲明</strong>：本資訊為教育用途，不構成醫療診斷或治療建議。請在醫療專業人士指導下進行任何健康干預。
+        </div>
+      </div>
+    </div>
+    
+    <!-- Tab 2: Chinese Medicine -->
+    <div id="chinese-medicine" class="tab-content">
+      <div class="section">
+        <h2>🌿 中醫自然醫學</h2>
+        <p>中醫自然醫學代表人類30年西醫歷史、2700年中醫歷史、東方醫學智慧與4500年Ayurveda療法的結合。</p>
+        
+        <h3>⚖️ 三大根本失衡</h3>
+        <div class="card-grid">
+          <div class="card" onclick="toggleCard(this)">
+            <div class="card-title">
+              <span>🧠 PTSD 損傷心理保救為首</span>
+              <span class="expand-icon">▼</span>
+            </div>
+            <div class="card-content">
+              <p>心理創傷和情緒根蒂深埋至潛意識，導致：</p>
+              <ul style="margin-left: 16px; margin-top: 8px;">
+                <li>30年西醫歷史：PTSD認知神經心理保救</li>
+                <li>2700年中醫歷史：情志致病、七情失調</li>
+              </ul>
+              <p style="margin-top: 8px;">中醫強調「心主神明」，情緒調理是預防的核心。</p>
+            </div>
+          </div>
+          
+          <div class="card" onclick="toggleCard(this)">
+            <div class="card-title">
+              <span>🚫 細胞原料物質缺乏</span>
+              <span class="expand-icon">▼</span>
+            </div>
+            <div class="card-content">
+              <p>現代飲食缺乏必需營養素：</p>
+              <ul style="margin-left: 16px; margin-top: 8px;">
+                <li>必需脂肪酸（Omega-3/Omega-6失衡）</li>
+                <li>必需胺基酸（成人8種、幼兒11種）</li>
+                <li>必需糖營養（8種醣蛋白）</li>
+                <li>礦物質與微量元素</li>
+                <li>植物生化素與植物性激素</li>
+              </ul>
+            </div>
+          </div>
+          
+          <div class="card" onclick="toggleCard(this)">
+            <div class="card-title">
+              <span>☣️ 環境自由基與毒素</span>
+              <span class="expand-icon">▼</span>
+            </div>
+            <div class="card-content">
+              <p>現代環境污染與生活方式產生的自由基：</p>
+              <ul style="margin-left: 16px; margin-top: 8px;">
+                <li>空氣、水、食物污染</li>
+                <li>電磁波、紫外線暴露</li>
+                <li>長期壓力與睡眠不足</li>
+                <li>缺乏運動</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        
+        <h3>🌟 中醫治療原則</h3>
+        <div class="structure-box">
+          <ul>
+            <li><strong>扶正培元</strong>：增強體質、提升正氣（免疫力）</li>
+            <li><strong>祛邪扶正</strong>：清除病邪、同時增強正氣</li>
+            <li><strong>預防優先</strong>：「未病先防」是中醫最高智慧</li>
+            <li><strong>治未病</strong>：既病防變、瘥後防復</li>
+            <li><strong>身心靈整合</strong>：調理物質同時調適心靈與環境</li>
+          </ul>
+        </div>
+        
+        <div class="image-section">
+          <h3>📸 中醫自然醫學框架圖示</h3>
+          <p style="font-size: 13px; color: #666; margin-bottom: 16px;">點擊展開查看原始圖檔</p>
+          <details style="cursor: pointer;">
+            <summary style="font-weight: 600; color: #0D1B3E; padding: 8px 0;">Image 1 & 12 - 完整框架示意圖 ▼</summary>
+            <div style="margin-top: 16px;">
+              <div class="image-label">圖 1：中醫自然醫學範圍內涵解析</div>
+              <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAICggICggICggICggICggICggICggICggICggICggICggICggICggICggICggICggICggI/" alt="Image 1" style="max-width: 100%; height: auto;">
+            </div>
+          </details>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Tab 3: Functional Medicine -->
+    <div id="functional" class="tab-content">
+      <div class="section">
+        <h2>⚙️ 功能醫學七大系統</h2>
+        <p>功能醫學通過檢測和調理七大生理系統，達到預防、逆轉和治療疾病的目標。</p>
+        
+        <div class="image-section">
+          <h3>🔍 七大功能系統</h3>
+          <div class="seven-systems">
+            <div class="system-circle">
+              <div class="system-icon">🫀</div>
+              <div class="system-name">腸胃道系統</div>
+            </div>
+            <div class="system-circle">
+              <div class="system-icon">🛡️</div>
+              <div class="system-name">免疫系統</div>
+            </div>
+            <div class="system-circle">
+              <div class="system-icon">⚡</div>
+              <div class="system-name">神經系統</div>
+            </div>
+            <div class="system-circle">
+              <div class="system-icon">🧬</div>
+              <div class="system-name">內分泌系統</div>
+            </div>
+            <div class="system-circle">
+              <div class="system-icon">🔥</div>
+              <div class="system-name">代謝系統</div>
+            </div>
+            <div class="system-circle">
+              <div class="system-icon">💪</div>
+              <div class="system-name">骨骼肌肉系統</div>
+            </div>
+            <div class="system-circle">
+              <div class="system-icon">🌍</div>
+              <div class="system-name">環境毒素系統</div>
+            </div>
+          </div>
+        </div>
+        
+        <h3>📋 各系統檢測與調理重點</h3>
+        <div class="card-grid">
+          <div class="card" onclick="toggleCard(this)">
+            <div class="card-title">
+              <span>🫀 腸胃道系統</span>
+              <span class="expand-icon">▼</span>
+            </div>
+            <div class="card-content">
+              <p><strong>檢測項目：</strong></p>
+              <ul style="margin-left: 16px; font-size: 13px;">
+                <li>腸漏症（Leaky Gut）檢測</li>
+                <li>腸道菌群失衡</li>
+                <li>消化酵素不足</li>
+                <li>食物不耐受</li>
+              </ul>
+              <p style="margin-top: 8px;"><strong>調理方向：</strong></p>
+              <ul style="margin-left: 16px; font-size: 13px;">
+                <li>修復腸屏障</li>
+                <li>補充益生菌與益生元</li>
+                <li>改善消化功能</li>
+                <li>消除致炎食物</li>
+              </ul>
+            </div>
+          </div>
+          
+          <div class="card" onclick="toggleCard(this)">
+            <div class="card-title">
+              <span>🛡️ 免疫系統</span>
+              <span class="expand-icon">▼</span>
+            </div>
+            <div class="card-content">
+              <p><strong>檢測項目：</strong></p>
+              <ul style="margin-left: 16px; font-size: 13px;">
+                <li>先天免疫細胞數量與功能</li>
+                <li>適應免疫狀態（T/B細胞）</li>
+                <li>自體免疫標記</li>
+                <li>炎症因子水平</li>
+              </ul>
+              <p style="margin-top: 8px;"><strong>調理方向：</strong></p>
+              <ul style="margin-left: 16px; font-size: 13px;">
+                <li>增強先天免疫</li>
+                <li>平衡Th1/Th2反應</li>
+                <li>降低慢性炎症</li>
+                <li>支持適應免疫</li>
+              </ul>
+            </div>
+          </div>
+          
+          <div class="card" onclick="toggleCard(this)">
+            <div class="card-title">
+              <span>⚡ 神經系統</span>
+              <span class="expand-icon">▼</span>
+            </div>
+            <div class="card-content">
+              <p><strong>檢測項目：</strong></p>
+              <ul style="margin-left: 16px; font-size: 13px;">
+                <li>神經傳導物質平衡</li>
+                <li>自律神經功能</li>
+                <li>認知與情緒功能</li>
+                <li>神經炎症標記</li>
+              </ul>
+              <p style="margin-top: 8px;"><strong>調理方向：</strong></p>
+              <ul style="margin-left: 16px; font-size: 13px;">
+                <li>支持神經修復</li>
+                <li>平衡自律神經</li>
+                <li>降低神經炎症</li>
+                <li>改善認知與情緒</li>
+              </ul>
+            </div>
+          </div>
+          
+          <div class="card" onclick="toggleCard(this)">
+            <div class="card-title">
+              <span>🧬 內分泌系統</span>
+              <span class="expand-icon">▼</span>
+            </div>
+            <div class="card-content">
+              <p><strong>檢測項目：</strong></p>
+              <ul style="margin-left: 16px; font-size: 13px;">
+                <li>血糖控制與胰島素敏感性</li>
+                <li>甲狀腺功能</li>
+                <li>性激素平衡</li>
+                <li>皮質醇節律</li>
+              </ul>
+              <p style="margin-top: 8px;"><strong>調理方向：</strong></p>
+              <ul style="margin-left: 16px; font-size: 13px;">
+                <li>改善胰島素敏感性</li>
+                <li>支持甲狀腺健康</li>
+                <li>平衡激素</li>
+                <li>調整應激反應</li>
+              </ul>
+            </div>
+          </div>
+          
+          <div class="card" onclick="toggleCard(this)">
+            <div class="card-title">
+              <span>🔥 代謝系統</span>
+              <span class="expand-icon">▼</span>
+            </div>
+            <div class="card-content">
+              <p><strong>檢測項目：</strong></p>
+              <ul style="margin-left: 16px; font-size: 13px;">
+                <li>代謝率與體成分</li>
+                <li>脂質代謝異常</li>
+                <li>膽固醇與三酸甘油脂</li>
+                <li>尿酸與痛風風險</li>
+              </ul>
+              <p style="margin-top: 8px;"><strong>調理方向：</strong></p>
+              <ul style="margin-left: 16px; font-size: 13px;">
+                <li>提升基礎代謝率</li>
+                <li>優化脂質代謝</li>
+                <li>改善體重管理</li>
+                <li>預防代謝症候群</li>
+              </ul>
+            </div>
+          </div>
+          
+          <div class="card" onclick="toggleCard(this)">
+            <div class="card-title">
+              <span>💪 骨骼肌肉系統</span>
+              <span class="expand-icon">▼</span>
+            </div>
+            <div class="card-content">
+              <p><strong>檢測項目：</strong></p>
+              <ul style="margin-left: 16px; font-size: 13px;">
+                <li>肌肉質量與力量</li>
+                <li>骨密度（骨質疏鬆風險）</li>
+                <li>關節炎症標記</li>
+                <li>肌肉蛋白代謝</li>
+              </ul>
+              <p style="margin-top: 8px;"><strong>調理方向：</strong></p>
+              <ul style="margin-left: 16px; font-size: 13px;">
+                <li>保持肌肉量與力量</li>
+                <li>增強骨密度</li>
+                <li>支持關節健康</li>
+                <li>優化運動恢復</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Tab 4: Molecular Medicine -->
+    <div id="molecular" class="tab-content">
+      <div class="section">
+        <h2>🧬 分子原料醫學</h2>
+        <p>分子原料醫學強調細胞需要的必需營養素是預防和逆轉疾病的根本。</p>
+        
+        <h3>🔴 火（必需脂肪酸）</h3>
+        <div class="molecular-model">
+          <h4>必需脂肪酸：Omega-3 和 Omega-6</h4>
+          <p>作用於PGE3（抑制發炎、抑制血栓、抑制血栓） vs PGE2（引發發炎、引發血栓、使血管收縮）</p>
+          <div class="structure-box">
+            <ul>
+              <li><strong>Omega-3來源：</strong>亞麻仁油、紫蘇籽油、核桃、冷水魚油</li>
+              <li><strong>主要功能：</strong>抗炎症、保護心血管、支持神經系統</li>
+              <li><strong>調理重點：</strong>多數人Omega-3嚴重不足</li>
+            </ul>
+          </div>
+        </div>
+        
+        <h3>💧 水（必需糖營養）</h3>
+        <div class="molecular-model">
+          <h4>8種必需糖營養（Glyconutrients）</h4>
+          <p>細胞表面糖蛋白的完整構成元素，支持細胞間通訊、免疫識別、細胞黏著</p>
+          <div class="structure-box">
+            <ul>
+              <li>葡萄糖（Glucose）</li>
+              <li>半乳糖（Galactose）</li>
+              <li>甘露糖（Mannose）</li>
+              <li>岩藻糖（Fucose）</li>
+              <li>木糖（Xylose）</li>
+              <li>N-乙醯葡萄糖胺（N-Acetyl Glucosamine）</li>
+              <li>N-乙醯半乳糖胺（N-Acetyl Galactosamine）</li>
+              <li>N-乙醯神經氨酸（N-Acetyl Neuraminic Acid/Sialic Acid）</li>
+            </ul>
+          </div>
+        </div>
+        
+        <h3>🌍 土（必需礦物質與微量元素）</h3>
+        <div class="molecular-model">
+          <h4>礦物質、微量元素、多種維生素</h4>
+          <p>細胞酶系統的輔酶因子，支持數千種生化反應</p>
+          <div class="structure-box">
+            <ul>
+              <li>鎂（Magnesium）：肌肉放鬆、神經穩定、睡眠品質</li>
+              <li>鋅（Zinc）：免疫功能、傷口癒合、生殖健康</li>
+              <li>鐵（Iron）：紅血球功能、能量代謝</li>
+              <li>銅（Copper）：膠原蛋白形成、神經傳導</li>
+              <li>碘（Iodine）：甲狀腺功能</li>
+              <li>硒（Selenium）：抗氧化、免疫功能</li>
+              <li>多種維生素（B群、維生素C、D、E、K等）</li>
+            </ul>
+          </div>
+        </div>
+        
+        <h3>🌱 木（必需胺基酸）</h3>
+        <div class="molecular-model">
+          <h4>成人8種必需胺基酸 + 幼兒11種</h4>
+          <p>蛋白質的基本構成單位，支持肌肉、酶系統、免疫、激素合成</p>
+          <div class="structure-box">
+            <ul>
+              <li>亮氨酸（Leucine）、異亮氨酸（Isoleucine）、纈氨酸（Valine）- 支鏈胺基酸</li>
+              <li>苯丙氨酸（Phenylalanine）- 神經傳導物質前驅物</li>
+              <li>蘇氨酸（Threonine）- 支持免疫與腸壁健康</li>
+              <li>色胺酸（Tryptophan）- 血清素前驅物</li>
+              <li>甲硫胺酸（Methionine）- 肝臟解毒支持</li>
+              <li>賴氨酸（Lysine）- 病毒防禦、膠原蛋白形成</li>
+            </ul>
+          </div>
+        </div>
+        
+        <h3>🌿 植物生化素與植物性激素</h3>
+        <div class="molecular-model">
+          <h4>天然抗炎、抗氧化、抗自由基物質</h4>
+          <p>來自新鮮蔬果、中西藥物、食物的天然保護物質</p>
+          <div class="structure-box">
+            <ul>
+              <li><strong>多酚類：</strong>茶多酚、葡萄多酚、石榴多酚 - 抗氧化、抗炎</li>
+              <li><strong>異黃酮：</strong>黃豆異黃酮、紅花苜蓿異黃酮 - 激素平衡</li>
+              <li><strong>硫化物：</strong>大蒜硫化物、十字花科硫化物 - 肝臟解毒</li>
+              <li><strong>色素：</strong>葉綠素、花青素、類胡蘿蔔素 - 細胞保護</li>
+              <li><strong>中草藥：</strong>黃芪、人參、冬蟲夏草 - 免疫調理</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Tab 5: Metabolic Stages -->
+    <div id="metabolic" class="tab-content">
+      <div class="section">
+        <h2>📊 代謝病四階段進展</h2>
+        <p>代謝疾病（糖尿病、心臟病、肥胖症等）不是突然發生，而是經過四個可逆轉的階段發展。</p>
+        
+        <h3>🔄 從正常到疾病的進展模型</h3>
+        <div class="metabolic-stages">
+          <div class="stage-box">
+            <div class="stage-number">第 I 階段</div>
+            <div class="stage-title">正常代謝人</div>
+            <div class="stage-content">
+              <p><strong>血糖狀態：</strong>空腹血糖正常</p>
+              <p><strong>代謝特徵：</strong>胰島素敏感性正常</p>
+              <p><strong>表現：</strong>無代謝異常徵象</p>
+            </div>
+          </div>
+          
+          <div class="stage-box">
+            <div class="stage-number">第 II 階段</div>
+            <div class="stage-title">亞健康</div>
+            <div class="stage-content">
+              <p><strong>血糖狀態：</strong>空腹血糖100-125 mg/dL</p>
+              <p><strong>代謝特徵：</strong>胰島素開始分泌過多</p>
+              <p><strong>表現：</strong>開始出現代謝失調徵象</p>
+            </div>
+          </div>
+          
+          <div class="stage-box">
+            <div class="stage-number">第 III 階段</div>
+            <div class="stage-title">代謝症候群</div>
+            <div class="stage-content">
+              <p><strong>血糖狀態：</strong>空腹血糖125-200 mg/dL</p>
+              <p><strong>代謝特徵：</strong>胰島素嚴重抗性</p>
+              <p><strong>表現：</strong>代謝症候群明顯</p>
+            </div>
+          </div>
+          
+          <div class="stage-box">
+            <div class="stage-number">第 IV 階段</div>
+            <div class="stage-title">疾病状態</div>
+            <div class="stage-content">
+              <p><strong>血糖狀態：</strong>空腹血糖 > 200 mg/dL</p>
+              <p><strong>代謝特徵：</strong>胰島素徹底耗竭</p>
+              <p><strong>表現：</strong>明確診斷的代謝疾病</p>
+            </div>
+          </div>
+        </div>
+        
+        <h3>⚠️ 關鍵發現</h3>
+        <div class="structure-box">
+          <ul>
+            <li><strong>可逆性：</strong>第 I、II、III 階段可逆轉，第 IV 階段需要藥物管理</li>
+            <li><strong>早期干預：</strong>在第 II 階段進行功能醫學調理最有效</li>
+            <li><strong>核心因素：</strong>血糖控制、胰島素敏感性、炎症指標</li>
+            <li><strong>完整調理：</strong>營養、運動、壓力管理、睡眠、心理修復</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Tab 6: Omega Balance -->
+    <div id="omega" class="tab-content">
+      <div class="section">
+        <h2>🔄 Omega-3 與 Omega-6 的相反作用</h2>
+        <p>Omega-3 和 Omega-6 是兩種必需脂肪酸，但它們在前列腺素代謝中發揮完全相反的作用。現代飲食中 Omega-6 過剩，Omega-3 嚴重不足。</p>
+        
+        <h3>📊 作用機制比較</h3>
+        <div class="omega-comparison">
+          <div class="omega-box omega3">
+            <h4>✅ Omega-3 系列</h4>
+            <p style="margin: 8px 0; font-size: 13px;"><strong>關鍵酶：</strong> COX/LOX 途徑 → PGE3</p>
+            <ul>
+              <li>✓ 抑制發炎 (Anti-inflammatory)</li>
+              <li>✓ 抑制血栓形成</li>
+              <li>✓ 血管擴張</li>
+              <li>✓ 支持心腦血管健康</li>
+              <li>✓ 支持神經發育</li>
+              <li>✓ 降低三酸甘油脂</li>
+              <li>✓ 增強免疫調節</li>
+            </ul>
+            <p style="margin-top: 12px; font-size: 12px;"><strong>常見來源：</strong><br/>冷水魚（鮭魚、鯖魚）、亞麻仁、奇亞籽、核桃</p>
+          </div>
+          
+          <div class="omega-box omega6">
+            <h4>⚠️ Omega-6 系列</h4>
+            <p style="margin: 8px 0; font-size: 13px;"><strong>關鍵酶：</strong> COX/LOX 途徑 → PGE2</p>
+            <ul>
+              <li>⚠ 引發發炎 (Pro-inflammatory)</li>
+              <li>⚠ 促進血栓形成</li>
+              <li>⚠ 血管收縮</li>
+              <li>⚠ 增加心血管風險</li>
+              <li>⚠ 促進細胞增殖</li>
+              <li>⚠ 升高三酸甘油脂</li>
+              <li>⚠ 可能促進自體免疫</li>
+            </ul>
+            <p style="margin-top: 12px; font-size: 12px;"><strong>常見來源：</strong><br/>植物油（葵花油、玉米油）、加工食品、肉類</p>
+          </div>
+        </div>
+        
+        <h3>🎯 比例失衡的現代危機</h3>
+        <div class="structure-box">
+          <ul>
+            <li><strong>理想比例：</strong>Omega-3 : Omega-6 = 1 : 4</li>
+            <li><strong>現代飲食：</strong>Omega-3 : Omega-6 = 1 : 20 到 1 : 50</li>
+            <li><strong>結果：</strong>慢性炎症、心血管病、自體免疫病、癌症風險增加</li>
+          </ul>
+        </div>
+        
+        <h3>💡 調理策略</h3>
+        <div class="card-grid">
+          <div class="card" onclick="toggleCard(this)">
+            <div class="card-title">
+              <span>📈 增加 Omega-3 攝取</span>
+              <span class="expand-icon">▼</span>
+            </div>
+            <div class="card-content">
+              <ul style="margin-left: 16px; font-size: 13px;">
+                <li>每週2-3次冷水魚（150-200g）</li>
+                <li>每日1湯匙亞麻籽粉或亞麻仁油</li>
+                <li>包含奇亞籽、核桃、紫蘇籽</li>
+                <li>考慮高品質魚油補充（1000-2000mg EPA+DHA）</li>
+              </ul>
+            </div>
+          </div>
+          
+          <div class="card" onclick="toggleCard(this)">
+            <div class="card-title">
+              <span>📉 減少 Omega-6 攝取</span>
+              <span class="expand-icon">▼</span>
+            </div>
+            <div class="card-content">
+              <ul style="margin-left: 16px; font-size: 13px;">
+                <li>避免精製植物油（葵花油、玉米油、大豆油）</li>
+                <li>選擇橄欖油、椰子油、酪梨油</li>
+                <li>減少加工食品與油炸食物</li>
+                <li>選擇草飼肉類（Omega-3含量更高）</li>
+                <li>限制穀物飼料肉類</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Tab 7: Cancer Prevention -->
+    <div id="cancer" class="tab-content">
+      <div class="section">
+        <h2>🛡️ 撮救癌未病患之身心靈全方位療癌策略</h2>
+        <p>癌症不是單純的細胞問題，而是涉及免疫、代謝、心理、環境的多層次疾病。整合醫學提供全方位預防與調理策略。</p>
+        
+        <h3>🔴 癌症的根本機制</h3>
+        <div class="disease-pathway">
+          <div class="pathway-step">
+            <div class="pathway-arrow">①</div>
+            <div class="pathway-text"><strong>過度活躍的交感神經</strong> → 產生大量去甲腎上腺素</div>
+          </div>
+          <div class="pathway-step">
+            <div class="pathway-arrow">②</div>
+            <div class="pathway-text"><strong>M1 巨噬細胞活化</strong> → 大量 TNF-α 分泌</div>
+          </div>
+          <div class="pathway-step">
+            <div class="pathway-arrow">③</div>
+            <div class="pathway-text"><strong>NF-κB 活化</strong> → 慢性炎症與細胞增殖信號</div>
+          </div>
+          <div class="pathway-step">
+            <div class="pathway-arrow">④</div>
+            <div class="pathway-text"><strong>P53 抑癌基因被抑制</strong> → 細胞凋亡機制失效</div>
+          </div>
+          <div class="pathway-step">
+            <div class="pathway-arrow">⑤</div>
+            <div class="pathway-text"><strong>癌細胞逃脫免疫監視</strong> → 腫瘤進展</div>
+          </div>
+        </div>
+        
+        <h3>🌟 12 大癌症特徵與逆轉策略</h3>
+        <div class="structure-box">
+          <h4>Hallmarks of Cancer (Hanahan & Weinberg)</h4>
+          <ul>
+            <li><strong>1. 持續增殖信號</strong> → 抑制生長因子信號（EGFR、HER2等）</li>
+            <li><strong>2. 抑癌基因喪失</strong> → 激活P53、復活細胞凋亡</li>
+            <li><strong>3. 免疫逃脫</strong> → 增強NK細胞、T細胞功能</li>
+            <li><strong>4. 複製無限性</strong> → 抑制端粒酶、誘導細胞衰老</li>
+            <li><strong>5. 血管新生</strong> → 抑制VEGF信號、減少供血</li>
+            <li><strong>6. 組織侵襲與轉移</strong> → 恢復細胞黏著、抑制EMT</li>
+            <li><strong>7. 代謝重編程</strong> → 限制葡萄糖、生酮飲食</li>
+            <li><strong>8. 炎症微環境</strong> → 降低TNF-α、IL-6等</li>
+            <li><strong>9. DNA損傷反應缺陷</strong> → 支持DNA修復機制</li>
+            <li><strong>10. 基因組不穩定性</strong> → 提供抗氧化支持</li>
+            <li><strong>11. 腫瘤促進性炎症</strong> → 減少脂多糖、修復腸漏</li>
+            <li><strong>12. 腫瘤免疫浸潤異常</strong> → 重編程腫瘤免疫微環境</li>
+          </ul>
+        </div>
+        
+        <h3>🧬 「憂遁草」(Sauropus androgynus)的特殊作用</h3>
+        <div class="structure-box">
+          <p><strong>憂遁草成分及機制：</strong></p>
+          <ul>
+            <li>葉綠素、多酚類 → 強抗氧化、清除自由基</li>
+            <li>含維生素K → 支持凋亡、抑制轉移</li>
+            <li>含植物性激素 → 平衡激素依賴型癌症</li>
+            <li>含微量元素 → 支持DNA修復與免疫</li>
+            <li><strong>所有12個癌症特徵均有針對性支持</strong></li>
+          </ul>
+          <p style="margin-top: 12px;"><small>注：憂遁草（Sauropus androgynus）不同於穿心蓮（Andrographis paniculata），需區分使用。</small></p>
+        </div>
+        
+        <h3>💊 四層次療癌方案</h3>
+        <div class="card-grid">
+          <div class="card" onclick="toggleCard(this)">
+            <div class="card-title">
+              <span>🧠 第一層：心靈修復</span>
+              <span class="expand-icon">▼</span>
+            </div>
+            <div class="card-content">
+              <ul style="margin-left: 16px; font-size: 13px;">
+                <li>PTSD治療與心理諮詢</li>
+                <li>冥想與靜坐練習</li>
+                <li>宗教信仰支持</li>
+                <li>家庭與社群支持</li>
+                <li>意象療法與正念治療</li>
+              </ul>
+            </div>
+          </div>
+          
+          <div class="card" onclick="toggleCard(this)">
+            <div class="card-title">
+              <span>🥗 第二層：營養逆轉</span>
+              <span class="expand-icon">▼</span>
+            </div>
+            <div class="card-content">
+              <ul style="margin-left: 16px; font-size: 13px;">
+                <li>低糖/生酮飲食（限制癌細胞能量）</li>
+                <li>植物性全食物為主（高植物生化素）</li>
+                <li>去除致炎食物（糖、精製油、加工品）</li>
+                <li>補充關鍵營養素（Omega-3、硒、維D、B群）</li>
+                <li>支持肝臟解毒（綠葉菜、十字花科、香草)</li>
+              </ul>
+            </div>
+          </div>
+          
+          <div class="card" onclick="toggleCard(this)">
+            <div class="card-title">
+              <span>⚡ 第三層：腸道與免疫修復</span>
+              <span class="expand-icon">▼</span>
+            </div>
+            <div class="card-content">
+              <ul style="margin-left: 16px; font-size: 13px;">
+                <li>修復腸漏症（膠原蛋白、L-谷氨醯胺）</li>
+                <li>恢復腸道菌群多樣性</li>
+                <li>增強先天免疫（β-葡聚醣、靈芝、冬蟲夏草）</li>
+                <li>平衡Th1/Th2反應（蘑菇、薑黃）</li>
+                <li>激活NK細胞與細胞毒性T細胞</li>
+              </ul>
+            </div>
+          </div>
+          
+          <div class="card" onclick="toggleCard(this)">
+            <div class="card-title">
+              <span>🏃 第四層：生活方式調整</span>
+              <span class="expand-icon">▼</span>
+            </div>
+            <div class="card-content">
+              <ul style="margin-left: 16px; font-size: 13px;">
+                <li>規律運動（中等強度，每週150分鐘）</li>
+                <li>充足睡眠（7-9小時，支持免疫與修復）</li>
+                <li>壓力管理與自律神經調理</li>
+                <li>避免環境毒素與電磁波</li>
+                <li>定期檢測與監測進展</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        
+        <h3>🩺 氫氣控癌的科學證據</h3>
+        <div class="structure-box">
+          <ul>
+            <li><strong>機制：</strong>氫氣選擇性中和惡性自由基（•OH, •NO2），不影響生理自由基</li>
+            <li><strong>效應：</strong>抗炎症、抗氧化、恢復免疫，支持癌症防治</li>
+            <li><strong>應用：</strong>四大院士聯合推介（「氣氣控癌」專著）</li>
+            <li><strong>安全性：</strong>無毒性、無副作用、可長期使用</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Tab 8: Complete Images -->
+    <div id="images" class="tab-content">
+      <div class="section">
+        <h2>🖼️ 完整圖檔資料庫</h2>
+        <p>所有16張原始圖檔與詳細說明，可點擊展開查看高清圖像。</p>
+        
+        <div class="image-section">
+          <details style="cursor: pointer; padding: 12px; background: #f0f0f0; border-radius: 8px; margin-bottom: 16px;">
+            <summary style="font-weight: 600; color: #0D1B3E; font-size: 15px;">
+              📋 圖檔索引與說明 ▼
+            </summary>
+            <div style="margin-top: 16px; line-height: 2; color: #555; font-size: 13px;">
+              <strong>第 1-2、9、12 組圖：</strong>中醫自然醫學範圍內涵解析 - 完整整合框架<br/>
+              <strong>第 3-4、16 組圖：</strong>Omega-3/Omega-6相反作用機制<br/>
+              <strong>第 5 組圖：</strong>血管糖化與直管脈構造<br/>
+              <strong>第 6 組圖：</strong>功能醫學七大系統（IFECTW框架）<br/>
+              <strong>第 7 組圖：</strong>氫氣控癌 - 四大院士聯合推介<br/>
+              <strong>第 8 組圖：</strong>代謝病四階段進展模型<br/>
+              <strong>第 10 組圖：</strong>中醫自然醫學與現代西方醫學融合趨勢<br/>
+              <strong>第 11 組圖：</strong>癌症防治全方位身心靈療法策略<br/>
+              <strong>第 13 組圖：</strong>學生健康研究海報專案<br/>
+              <strong>第 14 組圖：</strong>人類未來主流醫學新趨勢<br/>
+              <strong>第 15 組圖：</strong>分子原料醫學完整模型
+            </div>
+          </details>
+        </div>
+        
+        <h3>📸 圖檔庫</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+          <details style="background: white; border: 2px solid #e0e0e0; border-radius: 12px; padding: 16px; cursor: pointer;">
+            <summary style="font-weight: 600; color: #0D1B3E; font-size: 14px; padding: 8px;">
+              ✓ Image 1 - 中醫自然醫學完整架構 ▼
+            </summary>
+            <div style="margin-top: 12px;">
+              <p style="font-size: 12px; color: #666; margin-bottom: 8px;">中醫自然醫學範圍內涵解析 - 包含西醫、中醫、東方醫學與Ayurveda整合框架</p>
+              <img src="" alt="Image 1" style="width: 100%; border-radius: 8px; border: 1px solid #ddd;">
+            </div>
+          </details>
+          
+          <details style="background: white; border: 2px solid #e0e0e0; border-radius: 12px; padding: 16px; cursor: pointer;">
+            <summary style="font-weight: 600; color: #0D1B3E; font-size: 14px; padding: 8px;">
+              ✓ Image 2 - 預防及修復腸肺漏 ▼
+            </summary>
+            <div style="margin-top: 12px;">
+              <p style="font-size: 12px; color: #666; margin-bottom: 8px;">腸肺漏的根本原因與完整治療策略圖 9-3</p>
+              <img src="" alt="Image 2" style="width: 100%; border-radius: 8px; border: 1px solid #ddd;">
+            </div>
+          </details>
+          
+          <details style="background: white; border: 2px solid #e0e0e0; border-radius: 12px; padding: 16px; cursor: pointer;">
+            <summary style="font-weight: 600; color: #0D1B3E; font-size: 14px; padding: 8px;">
+              ✓ Image 3 - Omega-3/Omega-6相反作用 ▼
+            </summary>
+            <div style="margin-top: 12px;">
+              <p style="font-size: 12px; color: #666; margin-bottom: 8px;">圖 19-7：Omega-3·Omega-6及發炎反應</p>
+              <img src="" alt="Image 3" style="width: 100%; border-radius: 8px; border: 1px solid #ddd;">
+            </div>
+          </details>
+          
+          <details style="background: white; border: 2px solid #e0e0e0; border-radius: 12px; padding: 16px; cursor: pointer;">
+            <summary style="font-weight: 600; color: #0D1B3E; font-size: 14px; padding: 8px;">
+              ✓ Image 4 - 交感神經與TNF-α信號 ▼
+            </summary>
+            <div style="margin-top: 12px;">
+              <p style="font-size: 12px; color: #666; margin-bottom: 8px;">圖 9-4：交感神經經會激化巨噬細胞產生TNF-α</p>
+              <img src="" alt="Image 4" style="width: 100%; border-radius: 8px; border: 1px solid #ddd;">
+            </div>
+          </details>
+          
+          <details style="background: white; border: 2px solid #e0e0e0; border-radius: 12px; padding: 16px; cursor: pointer;">
+            <summary style="font-weight: 600; color: #0D1B3E; font-size: 14px; padding: 8px;">
+              ✓ Image 5 - 血管糖化 ▼
+            </summary>
+            <div style="margin-top: 12px;">
+              <p style="font-size: 12px; color: #666; margin-bottom: 8px;">圖：血管糖化，包含三層直直脈的四界</p>
+              <img src="" alt="Image 5" style="width: 100%; border-radius: 8px; border: 1px solid #ddd;">
+            </div>
+          </details>
+          
+          <details style="background: white; border: 2px solid #e0e0e0; border-radius: 12px; padding: 16px; cursor: pointer;">
+            <summary style="font-weight: 600; color: #0D1B3E; font-size: 14px; padding: 8px;">
+              ✓ Image 6 - 功能醫學七大系統 ▼
+            </summary>
+            <div style="margin-top: 12px;">
+              <p style="font-size: 12px; color: #666; margin-bottom: 8px;">IFECTW：功能醫學七大系統框架</p>
+              <img src="" alt="Image 6" style="width: 100%; border-radius: 8px; border: 1px solid #ddd;">
+            </div>
+          </details>
+          
+          <details style="background: white; border: 2px solid #e0e0e0; border-radius: 12px; padding: 16px; cursor: pointer;">
+            <summary style="font-weight: 600; color: #0D1B3E; font-size: 14px; padding: 8px;">
+              ✓ Image 7 - 氫氣控癌 ▼
+            </summary>
+            <div style="margin-top: 12px;">
+              <p style="font-size: 12px; color: #666; margin-bottom: 8px;">中國四大院士聯合推介《氫氣控癌》</p>
+              <img src="" alt="Image 7" style="width: 100%; border-radius: 8px; border: 1px solid #ddd;">
+            </div>
+          </details>
+          
+          <details style="background: white; border: 2px solid #e0e0e0; border-radius: 12px; padding: 16px; cursor: pointer;">
+            <summary style="font-weight: 600; color: #0D1B3E; font-size: 14px; padding: 8px;">
+              ✓ Image 8 - 代謝病四階段進展 ▼
+            </summary>
+            <div style="margin-top: 12px;">
+              <p style="font-size: 12px; color: #666; margin-bottom: 8px;">代謝病從正常→亞健康→症候群→疾病的四階段</p>
+              <img src="" alt="Image 8" style="width: 100%; border-radius: 8px; border: 1px solid #ddd;">
+            </div>
+          </details>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <footer>
+    <p>🏥 整合醫學 OS | 版本 1.0</p>
+    <p>本應用整合了16張完整的醫學教育圖檔與詳細解析</p>
+    <p style="font-size: 12px; margin-top: 16px;">
+      ⚠️ 免責聲明：本內容為教育與知識分享用途，不構成醫療診斷或治療建議。<br/>
+      請在合格醫療專業人士指導下進行任何健康干預決策。
+    </p>
+    <p style="font-size: 12px; margin-top: 12px;">
+      Created with 高維利他 Philosophy | 王欣蓉 (Anne Wang)
+    </p>
+  </footer>
+  
+  <script>
+    function switchTab(tabName) {
+      // Hide all tabs
+      const tabs = document.querySelectorAll('.tab-content');
+      tabs.forEach(tab => tab.classList.remove('active'));
+      
+      // Remove active from all buttons
+      const buttons = document.querySelectorAll('.tab-btn');
+      buttons.forEach(btn => btn.classList.remove('active'));
+      
+      // Show selected tab
+      document.getElementById(tabName).classList.add('active');
+      
+      // Add active to clicked button
+      event.target.classList.add('active');
+      
+      // Scroll to top
+      window.scrollTo(0, 0);
+    }
+    
+    function toggleCard(cardElement) {
+      cardElement.classList.toggle('expanded');
+    }
+    
+    // Optional: Add text-to-speech functionality
+    function speak(text, lang = 'zh-TW') {
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = lang;
+      utterance.rate = 0.9;
+      window.speechSynthesis.speak(utterance);
+    }
+    
+    // Initialize smooth scrolling
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth' });
+        }
+      });
+    });
+  </script>
+</body>
+</html>
