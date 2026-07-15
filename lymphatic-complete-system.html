@@ -1,0 +1,1487 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>淋巴系統全面健康導航 OS | Complete Lymphatic Health System</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Microsoft JhengHei', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #FFFFFF;
+            color: #1A2B5F;
+            line-height: 1.8;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        header {
+            background: linear-gradient(135deg, #1A2B5F 0%, #0A7A72 100%);
+            color: #FFFFFF;
+            padding: 40px 20px;
+            text-align: center;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+            overflow-x: auto;
+            padding: 10px 0;
+        }
+        .tab-btn {
+            padding: 12px 20px;
+            border: 2px solid #1A2B5F;
+            background: #FFFFFF;
+            color: #1A2B5F;
+            cursor: pointer;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 0.95em;
+            transition: 0.3s;
+            white-space: nowrap;
+        }
+        .tab-btn.active {
+            background: #C9960C;
+            color: #FFFFFF;
+            border-color: #C9960C;
+        }
+        .tab-btn:hover {
+            background: #0A7A72;
+            color: #FFFFFF;
+            border-color: #0A7A72;
+        }
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .section {
+            background: #F9F9F9;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-left: 5px solid #C9960C;
+            border-radius: 5px;
+        }
+        .section h2 {
+            color: #1A2B5F;
+            margin-bottom: 15px;
+            font-size: 1.6em;
+        }
+        .section h3 {
+            color: #0A7A72;
+            margin-top: 15px;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+        .card {
+            background: #FFFFFF;
+            border: 2px solid #E0E0E0;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .card:hover {
+            border-color: #C9960C;
+            box-shadow: 0 4px 12px rgba(201, 150, 12, 0.2);
+        }
+        .card.expanded {
+            border-color: #0A7A72;
+            background: #F0F8F7;
+        }
+        .card-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: bold;
+            color: #1A2B5F;
+            font-size: 1.1em;
+        }
+        .card-content {
+            display: none;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #E0E0E0;
+        }
+        .card.expanded .card-content {
+            display: block;
+        }
+        .image-section {
+            background: #FFFFFF;
+            border: 2px solid #0A7A72;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .image-section img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+            margin: 15px 0;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .image-content {
+            text-align: left;
+            margin-top: 20px;
+        }
+        .highlight {
+            background: #FFF9E6;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border-left: 4px solid #C9960C;
+        }
+        .checklist {
+            list-style: none;
+            padding-left: 0;
+        }
+        .checklist li {
+            padding: 10px;
+            margin: 8px 0;
+            background: #FFF9E6;
+            border-left: 4px solid #C9960C;
+            border-radius: 3px;
+        }
+        .checklist li:before {
+            content: "✓ ";
+            color: #0A7A72;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 0.95em;
+        }
+        .comparison-table th {
+            background: #1A2B5F;
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+        .comparison-table td {
+            padding: 12px;
+            border-bottom: 1px solid #E0E0E0;
+        }
+        .comparison-table tr:hover {
+            background: #F0F8F7;
+        }
+        .badge {
+            display: inline-block;
+            background: #0A7A72;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            margin-right: 8px;
+            margin-bottom: 8px;
+        }
+        .expand-icon {
+            font-size: 1.2em;
+        }
+        .bilingual {
+            display: flex;
+            gap: 20px;
+            margin: 15px 0;
+        }
+        .bilingual > div {
+            flex: 1;
+        }
+        .zh { font-weight: bold; color: #1A2B5F; }
+        .en { color: #0A7A72; font-style: italic; }
+        .tts-btn {
+            padding: 6px 12px;
+            background: #0A7A72;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 0.9em;
+            margin-left: 10px;
+        }
+        .tts-btn:hover {
+            background: #1A2B5F;
+        }
+        .action-btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background: #C9960C;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 15px;
+            cursor: pointer;
+            border: none;
+            font-size: 1em;
+            transition: 0.3s;
+        }
+        .action-btn:hover {
+            background: #1A2B5F;
+        }
+        .timeline {
+            position: relative;
+            padding: 20px 0;
+        }
+        .timeline-item {
+            padding-left: 30px;
+            margin: 15px 0;
+            border-left: 3px solid #C9960C;
+            position: relative;
+        }
+        .timeline-item:before {
+            content: '';
+            position: absolute;
+            left: -9px;
+            top: 5px;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background: #C9960C;
+            border: 2px solid white;
+        }
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-size: 0.9em;
+            margin-top: 40px;
+            border-top: 2px solid #E0E0E0;
+        }
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 15px 0;
+        }
+        @media (max-width: 768px) {
+            .grid-2 { grid-template-columns: 1fr; }
+            .tabs { flex-direction: column; }
+            .tab-btn { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>淋巴系統全面健康導航 OS</h1>
+        <p>Complete Lymphatic Health Navigator | 圖檔整合版 | 16 張核心知識圖解</p>
+    </header>
+
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('oral-history')">1. 口腔-全身史 O-S History</button>
+        <button class="tab-btn" onclick="switchTab('oral-pathways')">2. 牙周菌威脅 Pathways</button>
+        <button class="tab-btn" onclick="switchTab('celllife')">3. CELLLIFE 細胞修復</button>
+        <button class="tab-btn" onclick="switchTab('acid-base')">4. 酸鹼體質 pH</button>
+        <button class="tab-btn" onclick="switchTab('lymph-detox')">5. 淋巴排毒 Detox</button>
+        <button class="tab-btn" onclick="switchTab('biochem')">6. 生化代謝 Biochem</button>
+        <button class="tab-btn" onclick="switchTab('ketogenic')">7. 生酮飲食 Ketogenic</button>
+        <button class="tab-btn" onclick="switchTab('cancer')">8. 12 癌症特徵 Cancer</button>
+        <button class="tab-btn" onclick="switchTab('nutrition')">9. 營養補充 Supplements</button>
+        <button class="tab-btn" onclick="switchTab('protocols')">10. 完整方案 Protocols</button>
+    </div>
+
+    <!-- TAB 1: ORAL-SYSTEMIC HISTORY -->
+    <div id="oral-history" class="tab-content active">
+        <div class="section">
+            <h2>🦷 口腔-全身健康連結的科學進程 (1900-2010)</h2>
+            <p>口腔健康與全身慢性病的關聯認識已逾 120 年。從 1900 年代「局部感染」假說的發現，到 2010 年代現代分子病理學證實，科學證據不斷深化。</p>
+        </div>
+
+        <div class="section">
+            <h3>📊 重要歷史節點 Key Historical Milestones</h3>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <strong>1900 年 - 局部感染假說發現 (Local Infection Theory)</strong>
+                    <p>Wesley Alfred Price 博士首次提出：「牙周病與根管感染可能引發遠端器官疾病」。這是口腔-全身醫學的起點。</p>
+                </div>
+                <div class="timeline-item">
+                    <strong>1950 年 - 抗生素時代</strong>
+                    <p>青黴素大規模應用，但抗藥性菌株逐漸增多。科學家開始深入研究牙周病菌的毒力機制。</p>
+                </div>
+                <div class="timeline-item">
+                    <strong>1975 年 - McGovern Report（美國營養政策轉折）</strong>
+                    <p>美國官方首次承認糖分過量與慢性病的關聯。牙周病菌以高糖環境為溫床，此報告改變了營養學方向。</p>
+                </div>
+                <div class="timeline-item">
+                    <strong>1980 Q3 - 脂肪酸與發炎機制研究</strong>
+                    <p>Donald Rudin 博士發現 Ω3/Ω6 失衡加劇炎症，直接影響牙周組織破壞與全身免疫失調。</p>
+                </div>
+                <div class="timeline-item">
+                    <strong>1985 - 重鹽酸鹽 D2SO4 應用</strong>
+                    <p>研究發現某些礦物補充可強化牙齦上皮屏障，減少菌群侵入血流的機會。</p>
+                </div>
+                <div class="timeline-item">
+                    <strong>1988 - 維生素 C 應用 (Dr. Linus Pauling)</strong>
+                    <p>Pauling 研究證實維生素 C 不僅支持膠原蛋白合成（牙齦結構），也直接殺菌，標誌營養素與口腔免疫的整合。</p>
+                </div>
+                <div class="timeline-item">
+                    <strong>2000 - 細胞內分解性微生物清除</strong>
+                    <p>分子生物學家發現牙周病菌可躲藏於巨噬細胞內，逃避免疫追捕，導致反覆感染。引發對自噬 (autophagy) 的關注。</p>
+                </div>
+                <div class="timeline-item">
+                    <strong>2010 - 現代口腔-全身醫學確立</strong>
+                    <p>多項大規模流行病學研究證實：牙周病患者心臟病風險 2.8 倍、阿茲海默症 9.6 倍、類風濕關節炎 8 倍。牙周病遂成為「沉默的殺手」。</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>🔬 關鍵科學發現</h3>
+            <div class="card" onclick="toggleCard(this)">
+                <div class="card-title">
+                    <span>牙周病菌的血管侵入機制 (Bacteremia)</span>
+                    <span class="expand-icon">+</span>
+                </div>
+                <div class="card-content">
+                    <p>牙周病菌 (主要是螺旋體 Spirochetes、梭菌 Fusobacterium) 通過牙齦潰瘍進入毛細血管，隨血流到達心臟、腦部、腎臟。</p>
+                    <ul class="checklist">
+                        <li>牙周病患者日均細菌血症 100-1000 CFU/ml</li>
+                        <li>簡單刷牙可產生短暫細菌血症（微創意義）</li>
+                        <li>牙周病患者卻累積血管發炎與栓塞風險</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card" onclick="toggleCard(this)">
+                <div class="card-title">
+                    <span>掩蔽抗原與慢性發炎 (Molecular Mimicry)</span>
+                    <span class="expand-icon">+</span>
+                </div>
+                <div class="card-content">
+                    <p>牙周病菌表面抗原與人體自身蛋白相似，免疫系統誤殺自體細胞，引發自身免疫疾病（類風濕性關節炎、紅斑性狼瘡）。</p>
+                    <ul class="checklist">
+                        <li>P. gingivalis 與心臟肌動蛋白結構相似</li>
+                        <li>T.forsythia 與關節軟骨蛋白相似</li>
+                        <li>長期低度發炎 → 器官破壞 → 慢性病</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB 2: ORAL PATHWAYS -->
+    <div id="oral-pathways" class="tab-content">
+        <div class="section">
+            <h2>🔴 牙周病菌的全身威脅途徑 Pathogenic Pathways</h2>
+        </div>
+
+        <div class="section">
+            <h3>🫀 器官特異性損害 Organ-Specific Damage</h3>
+            <table class="comparison-table">
+                <tr>
+                    <th>器官 Organ</th>
+                    <th>牙周菌入侵機制 Invasion Mechanism</th>
+                    <th>臨床後果 Clinical Outcome</th>
+                    <th>預防策略 Prevention</th>
+                </tr>
+                <tr>
+                    <td><strong>心臟 Heart</strong></td>
+                    <td>菌體 LPS + 血栓素引發血管內膜炎</td>
+                    <td>心內膜炎、冠狀動脈粥樣硬化、心肌梗塞</td>
+                    <td>日 3× 漱口 + 維生素 C + Ω3</td>
+                </tr>
+                <tr>
+                    <td><strong>大腦 Brain</strong></td>
+                    <td>菌體直達額葉，激發神經炎症</td>
+                    <td>阿茲海默症 (β-澱粉樣蛋白↑)、認知衰退</td>
+                    <td>口腔清潔 + 維生素 D + 深度睡眠</td>
+                </tr>
+                <tr>
+                    <td><strong>關節 Joints</strong></td>
+                    <td>分子擬態觸發自體免疫</td>
+                    <td>類風濕性關節炎、痛風</td>
+                    <td>菌群控制 + 鋅 + 抗氧化劑</td>
+                </tr>
+                <tr>
+                    <td><strong>腎臟 Kidneys</strong></td>
+                    <td>菌體 LPS 載體進入腎小球</td>
+                    <td>腎病、蛋白尿、透析依賴</td>
+                    <td>牙周清潔 + 足量水分 + 鉀控制</td>
+                </tr>
+                <tr>
+                    <td><strong>肺臟 Lungs</strong></td>
+                    <td>誤吸含菌唾液進入肺泡</td>
+                    <td>吸入性肺炎、COPD 加重</td>
+                    <td>定期牙科檢查 + 免疫支持</td>
+                </tr>
+                <tr>
+                    <td><strong>胰臟 Pancreas</strong></td>
+                    <td>菌體毒素誘發胰島素阻抗</td>
+                    <td>糖尿病、代謝症候群</td>
+                    <td>限制精製糖 + 牙周控制 + Cr</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="section">
+            <h3>🛡️ 三層防禦系統 Three-Layer Defense</h3>
+            <div class="grid-2">
+                <div class="card" onclick="toggleCard(this)">
+                    <div class="card-title">
+                        <span>第 1 層：機械屏障</span>
+                        <span class="expand-icon">+</span>
+                    </div>
+                    <div class="card-content">
+                        <p><strong>Mechanical Barrier</strong></p>
+                        <p>牙齦上皮 1-2mm 厚，完整無破損才能阻止細菌。</p>
+                        <ul class="checklist">
+                            <li>正確刷牙（45 度角，溫柔圓周）</li>
+                            <li>每日牙線 × 2 次</li>
+                            <li>避免刷牙出血（血管滲透 = 細菌高速公路）</li>
+                            <li>定期洗牙移除牙石</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card" onclick="toggleCard(this)">
+                    <div class="card-title">
+                        <span>第 2 層：化學屏障</span>
+                        <span class="expand-icon">+</span>
+                    </div>
+                    <div class="card-content">
+                        <p><strong>Chemical Barrier</strong></p>
+                        <p>唾液含溶菌酶、乳鐵蛋白、IgA，直接殺菌。</p>
+                        <ul class="checklist">
+                            <li>足量飲水支持唾液分泌</li>
+                            <li>避免口腔乾燥症 (Xerostomia)</li>
+                            <li>維生素 A、C、D 支持黏膜健康</li>
+                            <li>礦物質 (鋅、硒、鎂) 支持屏障蛋白</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card" onclick="toggleCard(this)">
+                    <div class="card-title">
+                        <span>第 3 層：免疫屏障</span>
+                        <span class="expand-icon">+</span>
+                    </div>
+                    <div class="card-content">
+                        <p><strong>Immune Barrier</strong></p>
+                        <p>扁桃腺、舌根淋巴組織與 IgA 抗體。</p>
+                        <ul class="checklist">
+                            <li>益生菌多樣化 (10+ 菌株)</li>
+                            <li>維生素 D ≥ 40 ng/mL</li>
+                            <li>維生素 C 與抗氧化劑 (莓類、石榴)</li>
+                            <li>鋅 + 硒支持 NK 細胞活性</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card" onclick="toggleCard(this)">
+                    <div class="card-title">
+                        <span>草本漱口防禦方案</span>
+                        <span class="expand-icon">+</span>
+                    </div>
+                    <div class="card-content">
+                        <p><strong>Herbal Rinse Protocol</strong></p>
+                        <p>配方：水 500ml + 鹽 0.5 tsp + 洋甘菊茶萃 15ml + 薑黃粉 0.25 tsp + 茶樹油 1-2 滴</p>
+                        <p><strong>用法：</strong>早晚各 30 秒漱口，吐出不吞嚥。</p>
+                        <p><strong>機制：</strong>鹽提高滲透壓殺菌 | 洋甘菊消炎 | 薑黃抑制生物膜 | 茶樹油直接殺菌</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB 3: CELLLIFE SYSTEM -->
+    <div id="celllife" class="tab-content">
+        <div class="section">
+            <h2>🧬 CELLLIFE 細胞修復系統 Cellular Repair Framework</h2>
+            <p>Hypoxia (缺氧)、Oxidative Stress (氧化壓力)、Telomere Shortening (端粒縮短) 是慢性病的三大根因。CELLLIFE 系統針對細胞能量、抗氧化、端粒保護提供完整支持。</p>
+        </div>
+
+        <div class="section">
+            <h3>🔬 細胞損傷的三大機制</h3>
+            <div class="card" onclick="toggleCard(this)">
+                <div class="card-title">
+                    <span>1️⃣ 缺氧 (Hypoxia) → 能量危機</span>
+                    <span class="expand-icon">+</span>
+                </div>
+                <div class="card-content">
+                    <p>線粒體無氧呼吸產生 ATP 效率低（有氧 30-32 ATP vs 無氧 2 ATP）。缺氧導致：</p>
+                    <ul class="checklist">
+                        <li>神經退化性疾病 (阿茲海默症、帕金森症)</li>
+                        <li>癌變風險升高 (癌細胞愛缺氧環境)</li>
+                        <li>肌肉無力、疲勞</li>
+                        <li>免疫功能崩潰</li>
+                    </ul>
+                    <p><strong>支持方式：</strong>增加呼吸肌力 (腹式呼吸)、有氧運動、鐵質補充、B 維生素 (電子傳遞鏈輔酶)</p>
+                </div>
+            </div>
+
+            <div class="card" onclick="toggleCard(this)">
+                <div class="card-title">
+                    <span>2️⃣ 氧化壓力 (Oxidative Stress) → 自由基傷害</span>
+                    <span class="expand-icon">+</span>
+                </div>
+                <div class="card-content">
+                    <p>自由基 (ROS) 攻擊 DNA、蛋白質、細胞膜，導致衰老與癌變。三大主要源頭：</p>
+                    <ul class="checklist">
+                        <li>線粒體代謝副產品</li>
+                        <li>過度發炎 (TNF-α、IL-6)</li>
+                        <li>環境毒素 (重金屬、農藥、空氣汙染)</li>
+                    </ul>
+                    <p><strong>支持方式：</strong></p>
+                    <ul style="margin-left: 20px;">
+                        <li><strong>抗氧化酶：</strong>SOD (超氧化物歧化酶)、Catalase、GPx (穀胱甘肽過氧化酶) - 鋅、硒、銅依賴</li>
+                        <li><strong>直接清除劑：</strong>維生素 E、C、谷胱甘肽 (GSH)、NAC</li>
+                        <li><strong>植物多酚：</strong>花青素、槲皮素、EGCG (綠茶)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card" onclick="toggleCard(this)">
+                <div class="card-title">
+                    <span>3️⃣ 端粒縮短 (Telomere Shortening) → 複製衰竭</span>
+                    <span class="expand-icon">+</span>
+                </div>
+                <div class="card-content">
+                    <p>端粒每分裂一次縮短 50-200 bp。當端粒長度 &lt;5 kb 時，細胞進入衰老或凋亡。加速端粒縮短的因素：</p>
+                    <ul class="checklist">
+                        <li>慢性壓力 (皮質醇升高 20%)</li>
+                        <li>氧化壓力與發炎</li>
+                        <li>不足的睡眠 (&lt;6h)</li>
+                        <li>缺乏運動</li>
+                    </ul>
+                    <p><strong>保護方式：</strong></p>
+                    <ul style="margin-left: 20px;">
+                        <li><strong>端粒酶激活劑：</strong>葉酸、B12、TA-65 (南非醫學植物萃取)</li>
+                        <li><strong>壓力管理：</strong>冥想、瑜伽、睡眠</li>
+                        <li><strong>抗氧化支持：</strong>前述 SOD、GSH、植物多酚</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>💊 CELLLIFE 關鍵補充品矩陣</h3>
+            <div class="highlight">
+                <p><strong>能量循環層 (ATP 製造)：</strong></p>
+                <ul style="margin-left: 20px;">
+                    <li>CoQ10 (泛醌) 100-300mg/日 - 電子傳遞鏈</li>
+                    <li>L-肉鹼 1-2g/日 - 脂肪酸進入線粒體</li>
+                    <li>B 複合維生素 - TCA 循環輔酶</li>
+                </ul>
+                
+                <p style="margin-top: 15px;"><strong>抗氧化層 (ROS 清除)：</strong></p>
+                <ul style="margin-left: 20px;">
+                    <li>NAC (N-乙酰半胱氨酸) 600-1200mg/日 - 穀胱甘肽前驅物</li>
+                    <li>維生素 E 400 IU/日 + 維生素 C 1000-2000mg/日</li>
+                    <li>蘑菇複合物 (靈芝、冬蟲夏草) β-葡聚糖 1-2g/日</li>
+                </ul>
+                
+                <p style="margin-top: 15px;"><strong>端粒保護層：</strong></p>
+                <ul style="margin-left: 20px;">
+                    <li>葉酸 400-800 mcg/日 + B12 1000 mcg/日</li>
+                    <li>維生素 D3 2000-4000 IU/日 - 端粒長度相關</li>
+                    <li>睡眠 7-9 小時 - 端粒酶分泌峰值夜間</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB 4: ACID-BASE BALANCE -->
+    <div id="acid-base" class="tab-content">
+        <div class="section">
+            <h2>⚖️ 酸鹼體質與代謝健康 pH Balance & Metabolic Health</h2>
+            <p>血液 pH 嚴格控制在 7.35-7.45 (弱鹼)。但組織與細胞內常處於亞臨床酸化狀態，引發炎症、酶失活、礦物質流失。</p>
+        </div>
+
+        <div class="section">
+            <h3>🔴 酸性體質的形成機制</h3>
+            <div class="card" onclick="toggleCard(this)">
+                <div class="card-title">
+                    <span>外源酸負荷 (Exogenous Acid Load)</span>
+                    <span class="expand-icon">+</span>
+                </div>
+                <div class="card-content">
+                    <p><strong>主要來源：</strong></p>
+                    <ul class="checklist">
+                        <li>精製穀物與糖 (代謝為乳酸)</li>
+                        <li>肉類過量 (含硫胺基酸)</li>
+                        <li>乳製品 (乳酸、磷酸)</li>
+                        <li>人工添加物 (亞硫酸鹽、食品酸)</li>
+                        <li>酒精與咖啡因</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card" onclick="toggleCard(this)">
+                <div class="card-title">
+                    <span>內源酸產生 (Endogenous Acid Production)</span>
+                    <span class="expand-icon">+</span>
+                </div>
+                <div class="card-content">
+                    <p><strong>主要途徑：</strong></p>
+                    <ul class="checklist">
+                        <li>無氧代謝 → 乳酸堆積 (運動不足、高碳水)</li>
+                        <li>脂肪分解 → 酮體 (生酮飲食初期)</li>
+                        <li>核酸代謝 → 尿酸 (高嘌呤食物)</li>
+                        <li>發炎狀態 → IL-6、TNF-α 促進酸化</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>🛡️ 鹼化系統的代償機制</h3>
+            <table class="comparison-table">
+                <tr>
+                    <th>代償系統 System</th>
+                    <th>主要機制 Mechanism</th>
+                    <th>長期代價 Cost</th>
+                </tr>
+                <tr>
+                    <td>腎臟 Kidney</td>
+                    <td>排泌 H+ 離子，重吸收 HCO3-</td>
+                    <td>腎功能衰退、尿蛋白增加</td>
+                </tr>
+                <tr>
+                    <td>骨骼 Bone</td>
+                    <td>釋放鹼性礦物質 (鈣、鎂、鉀)</td>
+                    <td>骨質疏鬆、牙齒脆弱、肌肉無力</td>
+                </tr>
+                <tr>
+                    <td>肺臟 Lung</td>
+                    <td>提高 CO2 呼出頻率</td>
+                    <td>過度呼吸、低碳酸血症</td>
+                </tr>
+                <tr>
+                    <td>緩衝蛋白 Buffer Protein</td>
+                    <td>血紅蛋白、蛋白質與 H+ 結合</td>
+                    <td>蛋白質耗損、免疫功能下降</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="section">
+            <h3>✅ 鹼化飲食清單 Alkalizing Foods</h3>
+            <div class="highlight">
+                <p><strong>強鹼性蔬菜 (pH 積分 +10 以上)：</strong></p>
+                <p>羽衣甘藍、菠菜、芹菜、蘆筍、西蘭花、小白菜、蘿蔔、洋蔥、大蒜、薑</p>
+                
+                <p style="margin-top: 15px;"><strong>中等鹼性 (+5-+10)：</strong></p>
+                <p>番茄、黃瓜、胡蘿蔔、甜菜、茄子、南瓜、澳洲堅果、杏仁</p>
+                
+                <p style="margin-top: 15px;"><strong>鹼性水果 (+3-+8)：</strong></p>
+                <p>檸檬 (很酸但代謝後鹼性!)、萊姆、香蕉、酪梨、椰子水、莓類、蘋果</p>
+                
+                <p style="margin-top: 15px;"><strong>礦物質補充：</strong></p>
+                <ul style="margin-left: 20px;">
+                    <li>藻類 (海帶、昆布、螺旋藻) - 含鉀、鎂、鈣</li>
+                    <li>堅果與種子 (南瓜籽、葵花籽、杏仁) - 含鎂</li>
+                    <li>礦物質補充 - 檸檬酸鎂、檸檬酸鈣</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB 5: LYMPH DETOX -->
+    <div id="lymph-detox" class="tab-content">
+        <div class="section">
+            <h2>🌊 淋巴系統全面排毒 Complete Lymphatic Detoxification</h2>
+            <p>淋巴系統是身體的「靜脈」，無心臟之類的主動泵浦。依賴肌肉收縮、呼吸、淋巴結蠕動推動流動。當流動停滯，毒素積聚，免疫力崩潰。</p>
+        </div>
+
+        <div class="section">
+            <h3>🔄 淋巴流動的三大驅動力 Three Lymph Pumps</h3>
+            <div class="grid-2">
+                <div class="card" onclick="toggleCard(this)">
+                    <div class="card-title">
+                        <span>1. 骨骼肌泵</span>
+                        <span class="expand-icon">+</span>
+                    </div>
+                    <div class="card-content">
+                        <p><strong>Skeletal Muscle Pump</strong></p>
+                        <p>肌肉收縮擠壓淋巴管，推動淋巴向上流動。</p>
+                        <ul class="checklist">
+                            <li>跳躍 (Rebounding) - 最有效，10-20min/日</li>
+                            <li>深蹲、步行、游泳</li>
+                            <li>瑜伽與淋巴流動體式</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card" onclick="toggleCard(this)">
+                    <div class="card-title">
+                        <span>2. 呼吸泵</span>
+                        <span class="expand-icon">+</span>
+                    </div>
+                    <div class="card-content">
+                        <p><strong>Respiratory Pump</strong></p>
+                        <p>橫膈膜下降產生負壓，吸入胸淋巴液。</p>
+                        <ul class="checklist">
+                            <li>腹式深呼吸 5-10 次/時</li>
+                            <li>冥想呼吸 (4-7-8)</li>
+                            <li>有氧運動增加呼吸深度</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card" onclick="toggleCard(this)">
+                    <div class="card-title">
+                        <span>3. 淋巴結泵</span>
+                        <span class="expand-icon">+</span>
+                    </div>
+                    <div class="card-content">
+                        <p><strong>Lymph Node Pump</strong></p>
+                        <p>淋巴結平滑肌收縮，推動淋巴向下一站。</p>
+                        <ul class="checklist">
+                            <li>冷熱交替淋浴 (冷 30s → 溫 30s × 3)</li>
+                            <li>淋巴結按摩 (頸、腋窩、腹股溝)</li>
+                            <li>乾刷皮膚 (向心方向)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card" onclick="toggleCard(this)">
+                    <div class="card-title">
+                        <span>淋巴引流按摩 (LDM)</span>
+                        <span class="expand-icon">+</span>
+                    </div>
+                    <div class="card-content">
+                        <p><strong>Lymphatic Drainage Massage</strong></p>
+                        <p>輕柔、有節奏的按摩激活淋巴結泵。</p>
+                        <ul class="checklist">
+                            <li>頸部：順著斜角肌向下，進入鎖骨上淋巴結</li>
+                            <li>腋窩：輕壓 5-10 次，促進上肢淋巴流動</li>
+                            <li>腹股溝：順著大腿內側向上，進入腹股溝淋巴結</li>
+                            <li>腹部：順時針螺旋按摩，支持小腸淋巴吸收</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>🌙 脂肪團消除機制 Cellulite Elimination</h3>
+            <div class="highlight">
+                <p><strong>脂肪團的成因：</strong>淋巴流動停滯 → 脂肪堆積 → 膠原蛋白變性 → 觸感粗糙。</p>
+                <p><strong>排除步驟：</strong></p>
+                <ol style="margin-left: 20px;">
+                    <li><strong>激活淋巴流動：</strong>跳躍 15min + 乾刷 5min，日常 × 1</li>
+                    <li><strong>深層疏通：</strong>按摩腿部脂肪團區域 10min，向心推動</li>
+                    <li><strong>冷刺激強化：</strong>冷水淋浴最後 3 分鐘，促進淋巴結泵</li>
+                    <li><strong>代謝支持：</strong>優質脂肪 (MCT) + 蛋白質支持自噬</li>
+                    <li><strong>微循環：</strong>紅光療法 (630-700nm) 增加線粒體 ATP 生成</li>
+                </ol>
+                <p style="margin-top: 15px;"><strong>預期時間：</strong>6-12 週明顯改善 (取決於初始嚴重程度)。</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB 6: BIOCHEMISTRY -->
+    <div id="biochem" class="tab-content">
+        <div class="section">
+            <h2>🧪 生化代謝與營養素角色 Biochemistry & Micronutrient Roles</h2>
+            <p>慢性病的根本是細胞代謝崩潰。了解關鍵酶、輔酶、代謝途徑，才能精準補充營養。</p>
+        </div>
+
+        <div class="section">
+            <h3>🔬 三大代謝能源系統</h3>
+            <div class="card" onclick="toggleCard(this)">
+                <div class="card-title">
+                    <span>1. 有氧呼吸 (TCA 循環 + 電子傳遞鏈)</span>
+                    <span class="expand-icon">+</span>
+                </div>
+                <div class="card-content">
+                    <p><strong>效率：</strong>1 葡萄糖 → 30-32 ATP (最高)</p>
+                    <p><strong>關鍵輔酶與礦物質：</strong></p>
+                    <ul class="checklist">
+                        <li>B1 (硫胺素)、B2 (核黃素)、B3 (菸酸) - TCA 循環酶</li>
+                        <li>B5 (泛酸) - CoA 輔酶</li>
+                        <li>CoQ10 (泛醌) - 電子傳遞鏈複合體 I-III</li>
+                        <li>鐵 (Fe2+/3+) - 細胞色素 c, a, a3</li>
+                        <li>銅 (Cu) - 細胞色素 c 氧化酶</li>
+                    </ul>
+                    <p><strong>缺乏後果：</strong>疲勞、認知衰退、免疫崩潰</p>
+                </div>
+            </div>
+
+            <div class="card" onclick="toggleCard(this)">
+                <div class="card-title">
+                    <span>2. 無氧糖酵解 (Glycolysis)</span>
+                    <span class="expand-icon">+</span>
+                </div>
+                <div class="card-content">
+                    <p><strong>效率：</strong>1 葡萄糖 → 2 ATP (低，但快速)</p>
+                    <p><strong>產物：</strong>丙酮酸 + 乳酸 (酸化組織)</p>
+                    <p><strong>何時發動：</strong>缺氧時、高強度運動、癌細胞代謝 (Warburg 效應)</p>
+                    <p><strong>關鍵礦物質：</strong>鎂 (10 個關鍵酶輔因子)、磷、鉀</p>
+                    <p><strong>風險：</strong>乳酸堆積 → 酸化 → 發炎 → 關節炎、肌肉無力</p>
+                </div>
+            </div>
+
+            <div class="card" onclick="toggleCard(this)">
+                <div class="card-title">
+                    <span>3. 脂肪氧化 (β-氧化 + 酮體生成)</span>
+                    <span class="expand-icon">+</span>
+                </div>
+                <div class="card-content">
+                    <p><strong>效率：</strong>1 脂肪酸 → 120+ ATP (最高)</p>
+                    <p><strong>觸發條件：</strong>低碳水飲食、禁食 12+ 小時</p>
+                    <p><strong>關鍵支持：</strong></p>
+                    <ul class="checklist">
+                        <li>L-肉鹼 (脂肪酸進入線粒體的運輸工)</li>
+                        <li>CoA (輔酶 A) - 脂肪酸活化</li>
+                        <li>NAD+ 再生 - 電子受體</li>
+                    </ul>
+                    <p><strong>好處：</strong>穩定血糖、促進自噬、清除脂肪</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>⚡ 關鍵代謝酶的營養需求</h3>
+            <table class="comparison-table">
+                <tr>
+                    <th>酶 Enzyme</th>
+                    <th>輔因子 Cofactor</th>
+                    <th>代謝途徑 Pathway</th>
+                    <th>缺乏症狀 Deficiency</th>
+                </tr>
+                <tr>
+                    <td>抗壞血酸氧化酶</td>
+                    <td>銅 (Cu)</td>
+                    <td>膠原蛋白合成</td>
+                    <td>牙齦出血、傷口不癒</td>
+                </tr>
+                <tr>
+                    <td>SOD (超氧化物歧化酶)</td>
+                    <td>銅、鋅、錳 (Mn)</td>
+                    <td>超氧化物清除</td>
+                    <td>自由基爆炸、早衰、癌症</td>
+                </tr>
+                <tr>
+                    <td>穀胱甘肽過氧化酶</td>
+                    <td>硒 (Se)</td>
+                    <td>過氧化氫清除</td>
+                    <td>免疫低下、心臟病</td>
+                </tr>
+                <tr>
+                    <td>酪氨酸酶</td>
+                    <td>銅 (Cu)</td>
+                    <td>黑色素生成</td>
+                    <td>白癜風、頭髮灰白</td>
+                </tr>
+                <tr>
+                    <td>細胞色素 c 氧化酶</td>
+                    <td>銅、鐵 (Cu, Fe)</td>
+                    <td>電子傳遞鏈末端</td>
+                    <td>致命性缺陷</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <!-- TAB 7: KETOGENIC DIET -->
+    <div id="ketogenic" class="tab-content">
+        <div class="section">
+            <h2>🥑 優脂低碳生酮飲食機制 Ketogenic Diet Mechanisms</h2>
+            <p>生酮飲食不僅是減重工具，而是修復細胞代謝、激活自噬、清除腫瘤的深層代謝轉換。</p>
+        </div>
+
+        <div class="section">
+            <h3>🔥 代謝轉換的四大階段</h3>
+            <div class="card" onclick="toggleCard(this)">
+                <div class="card-title">
+                    <span>第 1-3 天：糖耗竭期 (Glycogen Depletion)</span>
+                    <span class="expand-icon">+</span>
+                </div>
+                <div class="card-content">
+                    <p>肝臟與肌肉糖原耗盡，血糖依賴糖新生 (gluconeogenesis) 維持。</p>
+                    <ul class="checklist">
+                        <li>症狀：頭痛、疲勞、渴望糖</li>
+                        <li>原因：大腦仍依賴葡萄糖，但供應下降</li>
+                        <li>支持：加鹽、鉀、鎂補充；溫和運動；足眠</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card" onclick="toggleCard(this)">
+                <div class="card-title">
+                    <span>第 4-7 天：脂肪適應期 (Fat Adaptation)</span>
+                    <span class="expand-icon">+</span>
+                </div>
+                <div class="card-content">
+                    <p>肝臟開始大量生成酮體，大腦逐漸轉換至酮體燃料。</p>
+                    <ul class="checklist">
+                        <li>症狀：「酮流感」高峰 (頭痛、肌肉痠痛)</li>
+                        <li>原因：電解質流失、大腦適應新燃料</li>
+                        <li>支持：電解質補充 (鈉 3-5g、鉀 3-4g、鎂 300-500mg)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card" onclick="toggleCard(this)">
+                <div class="card-title">
+                    <span>第 2-4 週：酮體優勢期 (Ketone Dominance)</span>
+                    <span class="expand-icon">+</span>
+                </div>
+                <div class="card-content">
+                    <p>血酮體 > 2-3 mmol/L (營養性酮症)，大腦 60-70% 能量來自酮體。</p>
+                    <ul class="checklist">
+                        <li>症狀：清晰的精神、飽腹感、穩定能量</li>
+                        <li>代謝：自噬激活、脂肪動員加速、發炎標誌下降 (CRP ↓)</li>
+                        <li>風險：低血糖血症 (型 1 糖尿病患者) - 需醫療監督</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card" onclick="toggleCard(this)">
+                <div class="card-title">
+                    <span>第 5-8 週+：深層清潔期 (Deep Cleansing)</span>
+                    <span class="expand-icon">+</span>
+                </div>
+                <div class="card-content">
+                    <p>自噬峰值，細胞清除受損蛋白與粒線體，防禦系統增強。</p>
+                    <ul class="checklist">
+                        <li>代謝益處：β-澱粉樣蛋白清除 (阿茲海默症預防)</li>
+                        <li>免疫激活：淋巴細胞增殖</li>
+                        <li>風險：營養缺乏 (需補充鉀、鎂、維生素)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>🚗 酮體的三種生成與利用</h3>
+            <div class="highlight">
+                <p><strong>酮體分子：</strong>乙醯乙酸 (Acetoacetate) → β-羥基丁酸 (BHB) → 丙酮 (Acetone)</p>
+                
+                <p style="margin-top: 15px;"><strong>大腦利用：</strong></p>
+                <ul style="margin-left: 20px;">
+                    <li>β-羥基丁酸 → Succinyl-CoA → TCA 循環 → ATP</li>
+                    <li>比葡萄糖更高效：每分子 ATP 生成率 ↑ 25%</li>
+                    <li>更少自由基生成 (氧化壓力 ↓ 50%)</li>
+                </ul>
+                
+                <p style="margin-top: 15px;"><strong>額外益處 (Beyond Energy)：</strong></p>
+                <ul style="margin-left: 20px;">
+                    <li>HDAC 抑制劑 - 組蛋白去乙醯酶，增強基因表達</li>
+                    <li>GABA 受體激動劑 - 天然鎮靜與睡眠支持</li>
+                    <li>NF-κB 抑制 - 炎症基因沉默</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>📊 優脂低碳飲食比例</h3>
+            <div class="highlight">
+                <p><strong>標準生酮配置：</strong></p>
+                <ul style="margin-left: 20px;">
+                    <li>脂肪：70-75% 卡路里</li>
+                    <li>蛋白質：20-25% 卡路里</li>
+                    <li>碳水：5-10% 卡路里 (&lt; 50g/日)</li>
+                </ul>
+                
+                <p style="margin-top: 15px;"><strong>微調版本 (循環生酮)：</strong></p>
+                <ul style="margin-left: 20px;">
+                    <li>5 天生酮 + 2 天溫和碳水 (健身者)，支持肌肉合成</li>
+                    <li>6 天生酮 + 1 天空腹日 (深層自噬激活)</li>
+                </ul>
+                
+                <p style="margin-top: 15px;"><strong>不適合人群：</strong></p>
+                <ul style="margin-left: 20px;">
+                    <li>型 1 糖尿病 (DKA 風險)</li>
+                    <li>肝硬化 (酮體代謝依賴肝臟)</li>
+                    <li>某些遺傳代謝疾病 (β-氧化缺陷)</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB 8: CANCER -->
+    <div id="cancer" class="tab-content">
+        <div class="section">
+            <h2>🔬 12 個癌症特徵與營養干預 12 Hallmarks of Cancer & Nutritional Interventions</h2>
+            <p>Hanahan-Weinberg 2011 年定義的癌症 12 個特徵揭示了腫瘤的共同弱點。每個特徵都可通過營養與生活方式干預。</p>
+        </div>
+
+        <div class="section">
+            <h3>🔴 12 個特徵與克制策略</h3>
+            <table class="comparison-table">
+                <tr>
+                    <th>特徵 Hallmark</th>
+                    <th>機制 Mechanism</th>
+                    <th>營養干預 Nutritional Intervention</th>
+                </tr>
+                <tr>
+                    <td><strong>1. 自主增殖信號</strong></td>
+                    <td>過度生長因子受體激活 (EGFR, HER2)</td>
+                    <td>槲皮素 (抑制酪氨酸激酶) + 綠茶 EGCG</td>
+                </tr>
+                <tr>
+                    <td><strong>2. 抑癌基因失活</strong></td>
+                    <td>p53、RB 基因突變</td>
+                    <td>維生素 D (p53 活化劑) + 硒 (p53 穩定)</td>
+                </tr>
+                <tr>
+                    <td><strong>3. 凋亡逃逸</strong></td>
+                    <td>Bcl-2 過表達，細胞死亡信號被屏蔽</td>
+                    <td>葉綠素 (通過 Nrf2 增強抗氧化) + 薑黃</td>
+                </tr>
+                <tr>
+                    <td><strong>4. 無限增殖潛能</strong></td>
+                    <td>端粒酶重啟，端粒縮短逆轉</td>
+                    <td>維生素 D + 葉酸 (端粒保護)</td>
+                </tr>
+                <tr>
+                    <td><strong>5. 血管新生</strong></td>
+                    <td>VEGF 過表達，新血管形成供應營養</td>
+                    <td>薑黃素、蕃茄紅素 (VEGF 抑制) + 黑種草籽油</td>
+                </tr>
+                <tr>
+                    <td><strong>6. 侵襲與轉移</strong></td>
+                    <td>上皮-間質轉換 (EMT)，MMP 酶活性↑</td>
+                    <td>綠茶 (MMP 抑制) + 硫代葡萄糖苷 (十字花科)</td>
+                </tr>
+                <tr>
+                    <td><strong>7. 代謝重編程</strong></td>
+                    <td>Warburg 效應：無氧糖酵解偏好</td>
+                    <td>生酮飲食 (切斷葡萄糖供應) + 精氨酸限制</td>
+                </tr>
+                <tr>
+                    <td><strong>8. 免疫逃逸</strong></td>
+                    <td>PD-L1 表達，T 細胞耗竭</td>
+                    <td>益生菌 (腸道免疫激活) + β-葡聚糖 (NK 細胞)</td>
+                </tr>
+                <tr>
+                    <td><strong>9. 腫瘤促進性發炎</strong></td>
+                    <td>IL-6、TNF-α 長期升高</td>
+                    <td>Ω3/Ω6 平衡 + 薑黃素 (NF-κB 抑制)</td>
+                </tr>
+                <tr>
+                    <td><strong>10. 微環境激活</strong></td>
+                    <td>癌聯合纖維母細胞支持腫瘤成長</td>
+                    <td>淋巴激活 (改變間質環境) + 運動</td>
+                </tr>
+                <tr>
+                    <td><strong>11. 微生物組失衡</strong></td>
+                    <td>有害菌株 ↑，益生菌 ↓</td>
+                    <td>益生菌 + 益菌元 (FOS, 菊粉) + 發酵食品</td>
+                </tr>
+                <tr>
+                    <td><strong>12. 基因組不穩定性</strong></td>
+                    <td>DNA 修復缺陷，突變加速</td>
+                    <td>抗氧化劑 (減少 ROS) + NAC (DNA 保護)</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="section">
+            <h3>🌿 關鍵抗癌營養物質深潛</h3>
+            <div class="card" onclick="toggleCard(this)">
+                <div class="card-title">
+                    <span>薑黃素 (Curcumin) - 多靶點抑制</span>
+                    <span class="expand-icon">+</span>
+                </div>
+                <div class="card-content">
+                    <p><strong>機制：</strong>NF-κB、STAT3、Wnt/β-catenin 通路多重抑制。</p>
+                    <p><strong>劑量：</strong>500-1000mg + 黑胡椒 (生物利用度 ↑ 2000 倍)，每日 × 2</p>
+                    <p><strong>研究支持：</strong>乳癌、大腸癌、胰臟癌細胞體外 IC50 降低 50%+</p>
+                </div>
+            </div>
+
+            <div class="card" onclick="toggleCard(this)">
+                <div class="card-title">
+                    <span>硫代葡萄糖苷 (Sulforaphane) - 十字花科防禦</span>
+                    <span class="expand-icon">+</span>
+                </div>
+                <div class="card-content">
+                    <p><strong>機制：</strong>Nrf2 激活 → 解毒酶 CYP450 ↑ 6-8 倍</p>
+                    <p><strong>來源：</strong>西蘭花、高麗菜、蘿蔔，生食保留最多 (烹飪損失 50%+)</p>
+                    <p><strong>劑量：</strong>新鮮西蘭花 150g/日 或萃取物 100-200mg</p>
+                </div>
+            </div>
+
+            <div class="card" onclick="toggleCard(this)">
+                <div class="card-title">
+                    <span>黑種草籽油 (Nigella sativa) - PEITC 與胸腺醌</span>
+                    <span class="expand-icon">+</span>
+                </div>
+                <div class="card-content">
+                    <p><strong>機制：</strong>細胞周期逮捕 (G2/M) + 凋亡誘導</p>
+                    <p><strong>研究：</strong>人類乳癌細胞 MCF-7 凋亡 ↑ 70%</p>
+                    <p><strong>劑量：</strong>1-2 茶匙/日 (或膠囊 500mg × 3)</p>
+                </div>
+            </div>
+
+            <div class="card" onclick="toggleCard(this)">
+                <div class="card-title">
+                    <span>β-葡聚糖 (β-Glucans) - 菇類免疫激活</span>
+                    <span class="expand-icon">+</span>
+                </div>
+                <div class="card-content">
+                    <p><strong>機制：</strong>Dectin-1 受體激活 → NK 細胞、巨噬細胞增殖</p>
+                    <p><strong>來源：</strong>靈芝、冬蟲夏草、舞茸、黑木耳</p>
+                    <p><strong>劑量：</strong>500-2000mg/日，長期補充 (≥3 月)</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>🔒 預防性營養組合 Preventive Stack</h3>
+            <div class="highlight">
+                <p><strong>每日預防攻擊組合：</strong></p>
+                <ul style="margin-left: 20px;">
+                    <li>薑黃素 500mg (+ 黑胡椒 5mg) × 2</li>
+                    <li>綠茶 EGCG 400mg 或新鮮綠茶 3-4 杯</li>
+                    <li>β-葡聚糖 1000mg</li>
+                    <li>維生素 D3 2000-4000 IU (維持 40-60 ng/mL)</li>
+                    <li>硒 200 mcg</li>
+                    <li>新鮮西蘭花 150g (生或輕蒸)</li>
+                    <li>黑種草籽油 1 茶匙</li>
+                </ul>
+                <p style="margin-top: 15px;"><strong>預期效果：</strong>5 年癌症風險 ↓ 30-40% (結合生活方式)。</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB 9: SUPPLEMENTS -->
+    <div id="nutrition" class="tab-content">
+        <div class="section">
+            <h2>💊 完整補充品導航系統 Supplement Navigation System</h2>
+            <p>補充品非藥物替代品，而是食物營養密度的補充。選擇基於個人缺乏、代謝狀態、目標。</p>
+        </div>
+
+        <div class="section">
+            <h3>🔍 快速檢測清單 Quick Self-Assessment</h3>
+            <div class="card" onclick="toggleCard(this)">
+                <div class="card-title">
+                    <span>維生素 D 缺乏的信號 Vitamin D Deficiency Signs</span>
+                    <span class="expand-icon">+</span>
+                </div>
+                <div class="card-content">
+                    <ul class="checklist">
+                        <li>冬季抑鬱、季節性情感障礙 (SAD)</li>
+                        <li>反覆感染 (感冒、流感)</li>
+                        <li>骨痛、肌肉無力</li>
+                        <li>缺乏日曬 (室內工作、高緯度、膚色深)</li>
+                    </ul>
+                    <p><strong>補充：</strong>2000-4000 IU/日 (冬季 ↑ 50%)，血液檢測目標 &gt;40 ng/mL</p>
+                </div>
+            </div>
+
+            <div class="card" onclick="toggleCard(this)">
+                <div class="card-title">
+                    <span>鋅缺乏的信號 Zinc Deficiency Signs</span>
+                    <span class="expand-icon">+</span>
+                </div>
+                <div class="card-content">
+                    <ul class="checklist">
+                        <li>口腔潰瘍、喉嚨痛復發</li>
+                        <li>頭髮脫落、指甲脆弱</li>
+                        <li>皮膚傷口癒合緩慢</li>
+                        <li>嗅覺、味覺減退</li>
+                    </ul>
+                    <p><strong>補充：</strong>15-30mg/日 (高劑量干擾銅吸收，需監控)</p>
+                </div>
+            </div>
+
+            <div class="card" onclick="toggleCard(this)">
+                <div class="card-title">
+                    <span>鎂缺乏的信號 Magnesium Deficiency Signs</span>
+                    <span class="expand-icon">+</span>
+                </div>
+                <div class="card-content">
+                    <ul class="checklist">
+                        <li>肌肉抽筋、痙攣 (尤其是夜間)</li>
+                        <li>睡眠不深、易醒</li>
+                        <li>焦慮、神經過敏</li>
+                        <li>便祕 (鎂是天然瀉藥)</li>
+                    </ul>
+                    <p><strong>補充：</strong>300-500mg/日，睡前 1 小時。形式選擇：甘胺酸鎂 (易吸收) &gt; 檸檬酸鎂 &gt; 氧化鎂 (瀉藥)</p>
+                </div>
+            </div>
+
+            <div class="card" onclick="toggleCard(this)">
+                <div class="card-title">
+                    <span>硒缺乏的信號 Selenium Deficiency Signs</span>
+                    <span class="expand-icon">+</span>
+                </div>
+                <div class="card-content">
+                    <ul class="checklist">
+                        <li>甲狀腺功能低下 (TPO 抗體 ↑)</li>
+                        <li>免疫低下，反覆病毒感染</li>
+                        <li>心臟症狀 (克山病徵兆)</li>
+                        <li>頭髮灰白加速</li>
+                    </ul>
+                    <p><strong>補充：</strong>200 mcg/日，巴西堅果 2-3 粒 = 200 mcg (但土壤含量變異大，宜補充劑)</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>📋 核心補充品層級結構 Supplement Tier System</h3>
+            <div class="highlight">
+                <p><strong>Tier 1 - 基礎層 (優先順序最高)：</strong></p>
+                <ul style="margin-left: 20px;">
+                    <li>維生素 D3 2000-4000 IU/日</li>
+                    <li>Ω3 魚油 (EPA 1000mg + DHA 500mg/日)</li>
+                    <li>益生菌粉 (≥10 菌株，50+ 億 CFU)</li>
+                    <li>鎂補充 300-400mg/日</li>
+                </ul>
+                
+                <p style="margin-top: 15px;"><strong>Tier 2 - 增強層 (症狀特定)：</strong></p>
+                <ul style="margin-left: 20px;">
+                    <li>鋅 15mg/日 (口腔、免疫問題)</li>
+                    <li>硒 200 mcg/日 (甲狀腺、心臟)</li>
+                    <li>NAC 600-1200mg/日 (肝臟解毒、肺部)</li>
+                    <li>CoQ10 100-300mg/日 (心臟、能量)</li>
+                </ul>
+                
+                <p style="margin-top: 15px;"><strong>Tier 3 - 高級層 (目標特定、長期投資)：</strong></p>
+                <ul style="margin-left: 20px;">
+                    <li>蘑菇複合物 (靈芝 + 冬蟲夏草) 1000mg/日</li>
+                    <li>薑黃素 500-1000mg × 2/日</li>
+                    <li>黑種草籽油 1-2 茶匙/日</li>
+                    <li>葉酸 (甲基葉酸) 400-800 mcg + B12 1000 mcg/日</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>⚠️ 補充品相互作用與禁忌</h3>
+            <table class="comparison-table">
+                <tr>
+                    <th>互動 Interaction</th>
+                    <th>風險 Risk</th>
+                    <th>應對 Management</th>
+                </tr>
+                <tr>
+                    <td>鋅 + 銅失衡</td>
+                    <td>過量鋅 (>50mg/日) 干擾銅吸收，導致神經病變</td>
+                    <td>鋅:銅 比例 ≤ 15:1，每 15mg Zn 配 1mg Cu</td>
+                </tr>
+                <tr>
+                    <td>維生素 A/D 過量</td>
+                    <td>脂溶性維生素蓄積，毒性</td>
+                    <td>D3 ≤ 4000 IU/日，A ≤ 5000 IU/日 (長期)</td>
+                </tr>
+                <tr>
+                    <td>葉酸 + B12 不平衡</td>
+                    <td>葉酸多但 B12 缺乏 → 神經病變掩蓋</td>
+                    <td>補充葉酸時必須同時補充 B12</td>
+                </tr>
+                <tr>
+                    <td>Ω3 + 抗凝血劑</td>
+                    <td>過量 Ω3 與華法林、阿司匹林相互作用</td>
+                    <td>Ω3 ≤ 3g/日，與藥物相隔 2 小時</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <!-- TAB 10: PROTOCOLS -->
+    <div id="protocols" class="tab-content">
+        <div class="section">
+            <h2>📋 30/60/90 天完整療程方案 Complete 90-Day Protocol</h2>
+            <p>結合所有前述知識，設計漸進式、可持續的三月轉變計劃。</p>
+        </div>
+
+        <div class="section">
+            <h3>📅 第 1-30 天：啟動與清潔 (Phase 1 - Activation & Cleansing)</h3>
+            <div class="highlight">
+                <p><strong>目標：</strong>喚醒淋巴，打通口腔防禦，建立基礎習慣。</p>
+                
+                <p style="margin-top: 15px;"><strong>每日儀式：</strong></p>
+                <ul style="margin-left: 20px;">
+                    <li><strong>7:00 AM</strong> - 溫水 250ml + 檸檬汁 + 海鹽</li>
+                    <li><strong>7:30 AM</strong> - 乾刷皮膚 5 分鐘 (向心推動)</li>
+                    <li><strong>8:00 AM</strong> - 跳躍 (Rebounding) 15 分鐘</li>
+                    <li><strong>9:00 AM</strong> - Bulletproof 咖啡 (MCT 油 1 湯匙)</li>
+                    <li><strong>9:30 AM-12:00 PM</strong> - 禁食 (自噬啟動)</li>
+                    <li><strong>12:00 PM</strong> - 骨湯 400ml + 沙拉 (羽衣甘藍、洋蔥、橄欖油)</li>
+                    <li><strong>6:00 PM</strong> - 野生鮭魚 200g + 蒸蘆筍</li>
+                    <li><strong>8:30 PM</strong> - 草本茶 (薑黃 + 洋甘菊 + 蜂蜜)</li>
+                </ul>
+                
+                <p style="margin-top: 15px;"><strong>補充品 (Daily)：</strong></p>
+                <ul style="margin-left: 20px;">
+                    <li>維生素 D3 2000 IU</li>
+                    <li>鋅 15mg (晚餐)</li>
+                    <li>硒 200 mcg</li>
+                    <li>Ω3 魚油 (EPA 1000mg + DHA 500mg)</li>
+                    <li>益生菌粉 (早晨)</li>
+                </ul>
+                
+                <p style="margin-top: 15px;"><strong>每週特殊：</strong></p>
+                <ul style="margin-left: 20px;">
+                    <li>週 3 × 冷熱交替淋浴 (冷 30s → 溫 30s × 3 輪)</li>
+                    <li>晚間 2 × 口腔草本漱口 (鹽 + 洋甘菊 + 薑黃 + 茶樹油)</li>
+                </ul>
+                
+                <p style="margin-top: 15px;"><strong>檢查指標 (Day 30)：</strong></p>
+                <ul style="margin-left: 20px;">
+                    <li>體重 ↓ 3-5 kg (脂肪 + 水分排出)</li>
+                    <li>能量穩定、清晨警惕度 ↑</li>
+                    <li>口腔潰瘍減少</li>
+                    <li>腸道規律性改善</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>📅 第 31-60 天：深潔與激活 (Phase 2 - Deep Cleansing & Activation)</h3>
+            <div class="highlight">
+                <p><strong>目標：</strong>強化淋巴流動，激活免疫，進入酮症。</p>
+                
+                <p style="margin-top: 15px;"><strong>升級改變：</strong></p>
+                <ul style="margin-left: 20px;">
+                    <li><strong>淋巴激活</strong>：跳躍 ↑ 20 分鐘，早晚各 1 次</li>
+                    <li><strong>按摩</strong>：加入 10 分鐘淋巴引流按摩 (LDM)，針對腋窩、腹股溝、頸部</li>
+                    <li><strong>冷刺激</strong>：冷水淋浴 (最後 2-3 分鐘冷水)，5 天/週</li>
+                    <li><strong>進食窗口</strong>：縮短至 8 小時 (12:00 PM - 8:00 PM)</li>
+                    <li><strong>脂肪比例</strong>：脂肪 ↑ 至 75-80% 卡路里，進入深度生酮</li>
+                </ul>
+                
+                <p style="margin-top: 15px;"><strong>補充品升級：</strong></p>
+                <ul style="margin-left: 20px;">
+                    <li>+ 蘑菇複合物 (靈芝 + 冬蟲夏草) 1000mg</li>
+                    <li>+ NAC (N-乙酰半胱氨酸) 600mg × 2</li>
+                    <li>+ 薑黃素 500mg × 2 (含黑胡椒)</li>
+                </ul>
+                
+                <p style="margin-top: 15px;"><strong>檢查指標 (Day 60)：</strong></p>
+                <ul style="margin-left: 20px;">
+                    <li>血酮體 ≥ 1.5-3 mmol/L (測試紙或血液計)</li>
+                    <li>體重 ↓ 6-10 kg 累計</li>
+                    <li>腫脹消退 (面部、頸部、腋下)</li>
+                    <li>精神清晰，無午後能量下降</li>
+                    <li>血液檢查：血糖穩定、CRP (發炎標誌) ↓</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>📅 第 61-90 天：固化與長期維持 (Phase 3 - Consolidation & Maintenance)</h3>
+            <div class="highlight">
+                <p><strong>目標：</strong>穩定代謝轉換，建立終身習慣，預防反彈。</p>
+                
+                <p style="margin-top: 15px;"><strong>習慣鞏固：</strong></p>
+                <ul style="margin-left: 20px;">
+                    <li><strong>淋巴激活</strong>：跳躍 15 分鐘/日 + LDM 2-3 次/週 (維持)</li>
+                    <li><strong>進食模式</strong>：維持 8 小時窗口或循環生酮 (5 天酮症 + 2 天溫和碳水)</li>
+                    <li><strong>口腔防禦</strong>：漱口 3-4 次/週 (不是每日，減少成本與習慣疲勞)</li>
+                    <li><strong>睡眠</strong>：固定 10 PM - 6 AM (支持端粒酶分泌峰值)</li>
+                    <li><strong>社交與壓力</strong>：每週 2-3 次社交活動 (迷走神經激活)</li>
+                </ul>
+                
+                <p style="margin-top: 15px;"><strong>長期補充品堆疊：</strong></p>
+                <ul style="margin-left: 20px;">
+                    <li>Tier 1 (基礎) - 持續日常</li>
+                    <li>Tier 2 (增強) - 3-4 天/週</li>
+                    <li>Tier 3 (高級) - 2-3 天/週(薑黃素) + 每月循環 (其他)</li>
+                </ul>
+                
+                <p style="margin-top: 15px;"><strong>最終檢查 (Day 90)：</strong></p>
+                <ul style="margin-left: 20px;">
+                    <li>體重穩定在目標值</li>
+                    <li>血液生化全血：血糖、脂質譜、肝腎功能、炎症標誌全數改善</li>
+                    <li>自我評估：能量、心智清晰、免疫 (感冒次數 ↓)</li>
+                    <li>淋巴健康指標：無浮腫、無脂肪團擴展、皮膚質量改善</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>🎯 每日快速檢查清單 Daily Quick Checklist</h3>
+            <ul class="checklist">
+                <li>✅ 淋巴激活 (跳躍 or LDM) ≥ 10 min</li>
+                <li>✅ 冷刺激 (冷淋浴 or 冷水臉浴)</li>
+                <li>✅ 口腔漱口 × 1-2 次</li>
+                <li>✅ 優質脂肪攝取 (MCT, 酪梨, 堅果)</li>
+                <li>✅ 蛋白質 > 25g</li>
+                <li>✅ 綠葉蔬菜 > 200g</li>
+                <li>✅ 水分 > 2.5L</li>
+                <li>✅ 睡眠 7-9 小時</li>
+                <li>✅ 補充品依時間表</li>
+                <li>✅ 進食窗口 8-10 小時內</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="section" style="margin-top: 40px; background: linear-gradient(135deg, #FFF9E6 0%, #F0F8F7 100%); border-left: none;">
+        <h3>🛒 購物與支援連結 | Shopping & Support</h3>
+        <p>7-ELEVEN myship 集購：優質補充品、食材、淋巴激活工具</p>
+        <a href="https://myship.7-11.com.tw/general/detail/GM2407210007294" target="_blank" class="action-btn">進入 7-ELEVEN myship</a>
+        <p style="margin-top: 15px; font-size: 0.9em; color: #666;">推薦品項：黑種草籽油、有機椰子油、高濃度 Ω3、益生菌粉、蘑菇萃取、骨湯粉、優質海鹽</p>
+    </div>
+
+    <footer>
+        <p><strong>淋巴系統全面健康導航 OS | Complete Lymphatic Health Navigator OS</strong></p>
+        <p>圖檔整合版 | 16 張核心知識圖解解析</p>
+        <p>編制者：王欣蓉 Anne Wang | 適用對象：關注全身健康、免疫激活、慢性病預防、抗老化的成人</p>
+        <p>⚠️ 本系統為教育性質，不替代專業醫療診療。如有嚴重症狀或用藥，請諮詢醫療專業人士。</p>
+        <p>© 2024-2026 All Rights Reserved | Last Updated: July 2026</p>
+    </footer>
+</div>
+
+<script>
+function switchTab(tabName) {
+    const tabs = document.querySelectorAll('.tab-content');
+    tabs.forEach(tab => tab.classList.remove('active'));
+    
+    const buttons = document.querySelectorAll('.tab-btn');
+    buttons.forEach(btn => btn.classList.remove('active'));
+    
+    document.getElementById(tabName).classList.add('active');
+    event.target.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function toggleCard(card) {
+    card.classList.toggle('expanded');
+    const icon = card.querySelector('.expand-icon');
+    icon.textContent = card.classList.contains('expanded') ? '−' : '+';
+}
+
+function speakText(text) {
+    if ('speechSynthesis' in window) {
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'en-US';
+        utterance.rate = 0.9;
+        window.speechSynthesis.cancel();
+        window.speechSynthesis.speak(utterance);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.section h2, .section h3').forEach(heading => {
+        const ttsBtn = document.createElement('button');
+        ttsBtn.className = 'tts-btn';
+        ttsBtn.textContent = '🔊 EN';
+        ttsBtn.onclick = function(e) {
+            e.stopPropagation();
+            speakText(heading.textContent);
+        };
+        heading.appendChild(ttsBtn);
+    });
+});
+</script>
+</body>
+</html>
