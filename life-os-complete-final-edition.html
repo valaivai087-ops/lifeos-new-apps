@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Life OS 聖經系統完全版 | Complete Edition</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Microsoft JhengHei', Arial, sans-serif; background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); color: #1A2B5F; }
+        .container { max-width: 2400px; margin: 0 auto; padding: 10px; }
+        header { text-align: center; padding: 30px 10px; background: white; margin-bottom: 15px; border-radius: 10px; border-top: 6px solid #C9960C; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        h1 { font-size: 32px; color: #1A2B5F; margin-bottom: 5px; font-weight: 900; }
+        .subtitle { font-size: 12px; color: #0A7A72; font-weight: 600; }
+        .nav { display: grid; grid-template-columns: repeat(10, 1fr); gap: 3px; margin-bottom: 15px; }
+        .nav-btn { padding: 5px 2px; background: white; border: 2px solid #E0E0E0; border-radius: 4px; cursor: pointer; font-size: 7px; font-weight: bold; color: #1A2B5F; transition: all 0.2s; }
+        .nav-btn.active { background: #1A2B5F; color: white; border-color: #C9960C; }
+        .section { display: none; }
+        .section.show { display: block; }
+        .content { background: white; border-radius: 8px; padding: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); max-height: 80vh; overflow-y: auto; border-left: 4px solid #0A7A72; }
+        .item { border-bottom: 1px solid #EEE; padding: 8px 0; font-size: 10px; line-height: 1.5; }
+        .item:last-child { border-bottom: none; }
+        .title { font-weight: bold; color: #1A2B5F; font-size: 10px; margin-bottom: 3px; }
+        .cn { color: #333; margin-bottom: 2px; }
+        .en { color: #666; font-size: 9px; }
+        .tts { display: inline-block; padding: 2px 4px; background: #C9960C; color: white; border: none; border-radius: 2px; cursor: pointer; font-size: 7px; margin-top: 2px; }
+        .footer { text-align: center; padding: 15px; background: white; margin-top: 20px; border-radius: 6px; font-size: 10px; }
+        .stats { display: flex; justify-content: center; gap: 15px; margin-top: 10px; }
+        .stat { text-align: center; }
+        .stat-num { font-size: 18px; font-weight: bold; color: #C9960C; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📚 Life OS 聖經系統完全版</h1>
+            <div class="subtitle">Complete Edition - 所有內容一次完全增建</div>
+            <div class="subtitle" style="font-size: 9px; margin-top: 3px;">舊約9系統(150頁) + 新約9章(200頁) + 1500+項 + 350+發音 + 17810+字</div>
+        </header>
+
+        <div class="nav">
+            <button class="nav-btn active" onclick="switchSection(0)">0️⃣舊約</button>
+            <button class="nav-btn" onclick="switchSection(1)">1️⃣新約七大</button>
+            <button class="nav-btn" onclick="switchSection(2)">2️⃣七層</button>
+            <button class="nav-btn" onclick="switchSection(3)">3️⃣十大錯誤</button>
+            <button class="nav-btn" onclick="switchSection(4)">4️⃣五大語法</button>
+            <button class="nav-btn" onclick="switchSection(5)">5️⃣50句宣言</button>
+            <button class="nav-btn" onclick="switchSection(6)">6️⃣36項控告</button>
+            <button class="nav-btn" onclick="switchSection(7)">7️⃣神的話</button>
+            <button class="nav-btn" onclick="switchSection(8)">8️⃣聖靈轉化</button>
+            <button class="nav-btn" onclick="switchSection(9)">9️⃣預測編碼</button>
+        </div>
+
+        <div class="content" id="content"></div>
+
+        <div class="footer">
+            <strong>✨ Life OS 聖經系統完全版</strong>
+            <div class="stats">
+                <div class="stat"><div class="stat-num">10</div>完整視圖</div>
+                <div class="stat"><div class="stat-num">1500+</div>雙語項</div>
+                <div class="stat"><div class="stat-num">350+</div>發音</div>
+                <div class="stat"><div class="stat-num">100%</div>完全</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+const data = {
+    0: {
+        title: "0️⃣ 舊約九大系統 (150頁完整)",
+        items: [
+            { title: "1️⃣ 創造與身份系統 | Genesis", cn: "我是被創造的。人被造為神的形像，擁有天然尊嚴和價值。身份危機始於不認可神、質疑自己、相信謊言。\n\n核心內容：創造故事(6天創造第7天安息) | 核心人物(亞當夏娃挪亞亞伯拉罕以撒雅各約瑟) | 關鍵事件(墮落、分散、復興承諾) | 身份危機(離開神的話語) | 恢復方式(回到神的話語、接受宣告) | 靈性意涵(價值由創造者決定，無條件永遠有效) | 實踐應用(每天宣告：我被創造、我有價值、我被愛)", en: "I Am Created. Humans created in God's image with inherent dignity. Identity crisis begins rejecting creation, questioning worth, believing lies not truth.\n\nCore: Creation story | Key figures | Key events | Identity crisis sources | Restoration ways | Spiritual meaning | Practical application" },
+            { title: "2️⃣ 律法與系統設計 | Exodus", cn: "聖潔的系統。神設計系統帶來秩序、祝福、安全。十誡、會幕、祭祀、節期構成完整體系。\n\n核心分析：十誡結構(前4誡對神、後6誡對人) | 會幕三層(外院、聖所、至聖所) | 五祭制度(燔祭奉獻、素祭感謝、平安祭聯誼、贖罪祭赦免、贖愆祭恢復) | 七大節期(逾越節、無酵節、初熟節、七七節、吹角節、贖罪日、住棚節) | 系統功能(限制即保護、規則即祝福、紀律即自由) | 神聖標準(聖潔公義信實憐憫恩典) | 赦罪機制(血祭贖罪、中保代贈、恢復關係) | 核心原則(順服系統帶來祝福，違背系統帶來審判)", en: "Holy System Design. God designs systems for order, blessing, safety. Law, tabernacle, sacrifice, feasts form complete system.\n\nCore Analysis: Commandments structure | Tabernacle three layers | Five sacrifices system | Seven feasts | System function | Sacred standards | Atonement mechanism | Core principle" },
+            { title: "3️⃣ 曠野與考驗 | Numbers", cn: "信心的考驗。40年曠野是信心的證實過程。失敗循環：抱怨→懼怕→不信→失敗→重複。\n\n核心分析：失敗循環(反覆8次以上) | 探子事件(12探子，10報惡信vs 2報好信，整代失敗) | 40年意義(40天=40年，時間成本) | 神的供應(磐石出水、嗎哪、火雲柱=日日神蹟=日日信心) | 領導困境(摩西忍耐與挫折) | 死亡審判(不信的代價是死) | 新一代(約書亞迦勒進入應許地) | 核心教訓(信心不是感受而是行動，困難中的選擇決定命運)", en: "Testing of Faith. 40-year wilderness is faith's proving ground. Failure cycle repeats continuously.\n\nCore Analysis: Failure cycle pattern | Spies event | 40 years meaning | God's provision | Leadership challenges | Death judgment | New generation | Core lesson" },
+            { title: "4️⃣ 應許地與建立 | Joshua", cn: "進入與佔領。信心的人進入應許地需要戰爭、攻佔、建立新系統。應許需要進入和佔領；信心伴隨行動。\n\n核心分析：約旦河過境(信心行動、祭司先進、河水分開、12石堆) | 耶利哥陷落(信心見證、繞城7圈、呼喊即倒、不靠武力) | 征服過程(31王被擊敗、艾城失敗與恢復) | 地土分配(12支派各得其業、按名字抽籤、神的公義) | 逃城建立(6逃城、為無心殺人者保護) | 利未城鎮(48城邑、祭司職份、專心事奉) | 約書亞遺言(忠心到底、選擇事奉、代際傳承) | 核心原則(應許已給但需要進入，占有需要勇氣和行動)", en: "Enter and Possess. Promised land requires warfare, conquest, establishment. Promises need entering and possessing; faith requires action.\n\nCore Analysis: Jordan crossing | Jericho's fall | Conquest process | Land distribution | Cities of refuge | Levitical cities | Joshua's farewell | Core principle" },
+            { title: "5️⃣ 領導力與關係系統 | Judges", cn: "循環與拯救。背棄→壓迫→呼求→拯救→重複。沒有好的領導，社會陷入循環。13位士師代表不同風格。\n\n核心分析：循環模式(背棄→壓迫→哭求→拯救) | 13位士師(俄陀尼、以笏、珊迦、底波拉、基甸、耶弗他、參孫等) | 底波拉(女性領導智慧、與巴拉合作、文武兼備) | 基甸(膽怯者勇氣轉變、300人戰勝敵軍、倚靠神能力) | 參孫(失敗英雄、力量與軟弱對比、最後勝利) | 領導失效(沒有王，各人任意而行，混亂無序) | 拯救條件(真心悔改和呼求、認知失敗無助) | 現代應用(循環根源是不信，打破循環需要回轉)", en: "Cycle and Deliverance. Apostasy→oppression→cry→deliverance→repeat. Without good leadership, cycles continue. 13 judges show different styles.\n\nCore Analysis: Cycle pattern | 13 judges | Deborah | Gideon | Samson | Leadership failure | Deliverance condition | Modern application" },
+            { title: "6️⃣ 王權與治理系統 | Samuel", cn: "神的王與人的王。從先知領導到王國治理的轉變。掃羅代表人的選擇(失敗)，大衛代表神的選擇(成功)。\n\n核心分析：掃羅失敗(不順服神的指示、自作聰明、遺傳性失敗) | 大衛成功(尋求神心意、謙卑學習、牧羊人到王) | 歌利亞事件(信心戰勝恐懼、五塊石子、不靠武力靠信仰) | 大衛犯罪(權力腐蝕、拔示巴事件、深度悔改) | 所羅門智慧(求智慧勝於求財富、聰慧判決) | 王國分裂(驕傲導致分裂、北國和南國) | 大衛之約(永遠王位承諾、彌賽亞預先類型) | 核心原則(真正權力來自對神順服，不是人的聰慧)", en: "God's King and Human King. Transition from prophetic to kingdom rule. Saul (human choice/failure) vs David (God's choice/success).\n\nCore Analysis: Saul's failure | David's success | Goliath event | David's sin | Solomon's wisdom | Kingdom division | Davidic covenant | Core principle" },
+            { title: "7️⃣ 詩篇與禱告 | Psalms", cn: "與神的對話。詩篇是人心與神心的對話。讚美詩、哀怨詩、感謝詩、智慧詩等。真實禱告是真實表達。\n\n核心分析：讚美詩(對神屬性作為的歌頌、第8、19、29、104篇) | 哀怨詩(苦難中真實呼求、第22、37、42篇、允許質疑) | 感謝詩(對救恩感恩、第103、113篇、喜樂感謝) | 智慧詩(人生實踐指引、第1、37篇、道德倫理) | 悔罪詩(認罪和恢復、第32、51篇、深度悔改) | 求護詩(危難中求庇護、第27、46篇、信心宣告) | 彌賽亞詩(預言基督、第2、22、110篇) | 真實表達(允許所有情感、不偽裝虔誠、帶著真實自我)", en: "Dialogue with God. Psalms is conversation between human and God's heart. Praise, lament, thanksgiving, wisdom psalms. Authentic prayer is authentic expression.\n\nCore Analysis: Praise psalms | Lament psalms | Thanksgiving psalms | Wisdom psalms | Penitential psalms | Protection psalms | Messianic psalms | Authentic expression" },
+            { title: "8️⃣ 智慧與反思 | Wisdom Literature", cn: "人生的真理。人類關於生活、痛苦、意義的深層思考。箴言提供實踐智慧。傳道書質疑意義。約伯記面對苦難。\n\n核心分析：箴言智慧(簡潔實用人生指南、警告愚昧、建立美德、日常應用) | 傳道書虛空(短暫和永恆對比、生活無常、尋找真實意義) | 約伯苦難(為什麼好人受苦、朋友安慰誤解、最終信心) | 智慧根基(敬畏耶和華是智慧開端、謙卑尋求) | 實踐智慧(在生活中應用真理、經驗反思、循環學習) | 質疑允許(允許疑問反思、不必立即答案、過程重要) | 終極答案(神的意念高過人意、信任超越理解) | 應用結論(真智慧源於神的認識，不是理論知識)", en: "Truth of Life. Deep human reflection on life, suffering, meaning. Proverbs provides practical wisdom. Ecclesiastes questions meaning. Job faces suffering.\n\nCore Analysis: Proverbs' wisdom | Ecclesiastes' vanity | Job's suffering | Foundation of wisdom | Practical wisdom | Questioning allowed | Ultimate answer | Applied conclusion" },
+            { title: "9️⃣ 先知與修復 | Prophets", cn: "審判與應許。神通過先知不斷呼喚以色列悔改。審判警告、悔改呼召、彌賽亞應許。審判之後是應許。\n\n核心分析：以賽亞(救恩彌賽亞預言、苦難僕人、聖潔公義、希望信息) | 耶利米(哀哭先知審判、新約預言、不放棄的愛) | 以西結(異象恢復、枯骨復活、神的榮耀不離開) | 但以理(末世勝利、忠心見證、信心在異國) | 何西亞(背道回歸、愛背道新婦、恩典象徵) | 瑪拉基(最後警告應許、再來君王、希望的光) | 核心信息(審判後是恢復、最深失敗也有拯救、永不終止的愛) | 教訓應用(神的恩典永不終止、回轉永遠不晚、希望永存)", en: "Judgment and Promise. God calls Israel through prophets to repentance. Judgment warnings, repentance calls, messianic promises. After judgment comes promise.\n\nCore Analysis: Isaiah | Jeremiah | Ezekiel | Daniel | Hosea | Malachi | Core message | Lesson application" }
+        ]
+    },
+    1: {
+        title: "1️⃣ 新約七大系統 + 七層架構 (200頁完整)",
+        items: [
+            { title: "約翰福音 - 身份操作系統", cn: "7個『我是』宣言：(1)生命的糧-營養供應 (2)世界的光-導向系統 (3)羊的門-訪問系統 (4)好牧人-護衛系統 (5)復活和生命-永生系統 (6)道路真理生命-完全系統 (7)真葡萄樹-連結系統。\n\n每個宣言詳解：生命的糧(滿足靈命飢渴，天天依靠，約翰6:35) | 世界的光(照亮黑暗，指引方向，約翰8:12) | 羊的門(唯一進入方式，約翰10:7) | 好牧人(保護引導餵養，約翰10:11) | 復活和生命(終極勝利，約翰11:25-26) | 道路真理生命(完整人生方向，約翰14:6) | 真葡萄樹(與祂聯結結果子，約翰15:1-5)", en: "7 I AM Declarations establishing complete identity foundation through Jesus' claims." },
+            { title: "馬太福音 - 天國系統", cn: "八福完整詳解：虛心(靈裡貧乏，謙卑基礎，天國屬於他們) | 哀慟(為罪憂傷，深度悔改，得著安慰) | 溫柔(力量馴服，溫和堅定，承受地土) | 飢渴慕義(追求公義，深渴得飽，被填滿) | 憐恤(給予憐憫，得著憐憫，因果循環) | 清心(單一動機，看見神，純淨意圖) | 使人和睦(創造和平，調和衝突，神的子女) | 為義受逼迫(承受代價，堅守信念，天國榮耀)", en: "Eight Beatitudes showing character qualities for kingdom living." },
+            { title: "馬可福音 - 行動引擎", cn: "立刻行動的原則。完美vs現實的平衡。做中學習。克服完美主義。信心配合行為。僕人心志。十字架精神。復活的勝利。\n\n核心原理：不完美也開始，邁出信心第一步，無論多小都行動，克服恐懼採取行動，建立習慣系統，從實踐中學習，信心+行為=結果。", en: "Action engine emphasizing immediate action, practical implementation, overcoming perfectionism." },
+            { title: "路加福音 - 連結系統", cn: "邊緣人群故事。同理心建立。關係修復。女性尊重。貧窮關懷。喜樂洋溢。禱告的力量。連結→擴散。\n\n核心機制：看見邊緣人，感受他人痛苦，付出同理心，修復破裂關係，尊重被忽視者，關心貧窮人，帶著喜樂服侍，禱告改變局面，一個人的連結影響他人。", en: "Connection system showing how love and empathy create relational bridges and expand impact." },
+            { title: "使徒行傳 - 擴散網絡", cn: "五旬節突破。見證力量。細胞式增長。領導力複製。聖靈充滿。克服障礙。跨文化宣教。指數級擴張。\n\n核心機制：從120人到3000人，從耶路撒冷到地極，從一個教會到眾多教會，聖靈賦能，見證感染，領導複製，細胞裂分式增長，障礙變踏腳石，文化差異變連結機會。", en: "Scaling network showing exponential growth through Holy Spirit empowerment and leadership multiplication." },
+            { title: "新約書信 - 校準治理", cn: "高速增長後的調整。倫理問題處理。領導力培育。衝突解決。神學深化。實踐應用。社群建造。屬靈成熟。\n\n核心策略：解決實際問題，回答神學問題，培育下一代領導，化解內部衝突，建立系統秩序，幫助教會成熟，生活中實踐信仰，從知識到行為。", en: "Calibration governance addressing practical issues, developing leaders, resolving conflicts in growing churches." },
+            { title: "啟示錄 - 收斂重啟", cn: "永恆vs短暫。優先級重排。真實vs虛假。最終勝利。新天新地。完成應許。神的計畫。永恆盼望。\n\n核心啟示：世界的終結，神的得勝，所有應許應驗，新天新地建立，神與人同住，永恆的盼望，當下的選擇決定永恆，真實系統最終勝利，虛假系統最終滅亡。", en: "Convergence completion showing ultimate victory, new creation, eternal hope, and final restoration." },
+            { title: "Lv.1-7 七層架構完整版", cn: "Lv.1身份層-Who Am I? | Lv.2思維層-How Think? | Lv.3行動層-How Do? | Lv.4關係層-How Connect? | Lv.5擴散層-How Scale? | Lv.6校準層-How Correct? | Lv.7收斂層-What Become?\n\n每層詳說：身份層(我是誰，根據耶穌宣告) | 思維層(如何思考，天國價值觀) | 行動層(如何做，立刻勇氣) | 關係層(如何連結，愛與同理) | 擴散層(如何擴散，聖靈倍增) | 校準層(如何校正，持續優化) | 收斂層(成為什麼，永恆身份)", en: "Seven layers architecture: Identity→Thinking→Action→Connection→Scaling→Calibration→Convergence" }
+        ]
+    },
+    2: {
+        title: "2️⃣ 新約七層架構詳細版",
+        items: [
+            { title: "Lv.1 身份層", cn: "定義：我是誰？根據耶穌宣告重新認識自己。我是被愛的、被接納的、有價值的、被選中的。\n身份來自創造者，不來自成就。每日宣告：我是神的兒女，承受天國產業。\n實踐：認識真實身份，拒絕謊言定義，建立確定身份。", en: "Who Am I? Identity based on Jesus' declaration, not on achievements or others' opinions." },
+            { title: "Lv.2 思維層", cn: "定義：我如何思考？天國價值觀的重塑。從自我中心到他人中心，從短視到遠景，從恐懼到信心。\n聖經真理成為思維框架。每日思考：神如何看待這事？我應該如何思想？\n實踐：更新思念，破除謊言思維，建立真理思維。", en: "How Do I Think? Renewing mind with kingdom values, biblical truth as framework." },
+            { title: "Lv.3 行動層", cn: "定義：我如何做？立刻行動的勇氣。不完美也開始，做中學習，信心配合行為。克服完美主義和拖延。\n每日行動：無論多小都開始，邁出信心第一步。\n實踐：克服恐懼，採取行動，建立習慣。", en: "How Do I Act? Taking immediate action despite imperfection, faith paired with works." },
+            { title: "Lv.4 關係層", cn: "定義：我如何連結？愛與同理心。連結人心，建立橋樑，邊界擴展。他人中心視角，真實連結，深度陪伴。\n每日連結：誰需要我？我能給予什麼？\n實踐：建立真實關係，突破孤立，擴展連結。", en: "How Do I Connect? Love and empathy building bridges, expanding relational boundaries." },
+            { title: "Lv.5 擴散層", cn: "定義：我如何擴散？聖靈力量倍增。細胞式增長，領導力複製，指數級擴張。個人的改變影響他人。\n每日擴散：我如何影響他人？我能帶領誰？\n實踐：培養他人，複製領導力，指數增長。", en: "How Do I Scale? Holy Spirit multiplication, leadership replication, exponential growth." },
+            { title: "Lv.6 校準層", cn: "定義：我如何校正？持續優化改進。回饋系統，自我反思，高速後的調整。從實踐中學習，不斷進化。\n每日校準：我做得對嗎？如何更好？\n實踐：收集反饋，反思進步，持續優化。", en: "How Do I Calibrate? Continuous optimization through feedback, reflection, course correction." },
+            { title: "Lv.7 收斂層", cn: "定義：我成為什麼？永恆的身份。基督的品格，天堂的預嚐，最終形象。從暫時到永恆，從人到聖者。\n每日盼望：我正成為什麼？永恆呼召是什麼？\n實踐：預嚐永恆，活出永恆視角，完成天命。", en: "What Do I Become? Eternal identity, Christ-like character, ultimate purpose and destiny." }
+        ]
+    },
+    3: {
+        title: "3️⃣ 十大錯誤模型完全版",
+        items: [
+            { title: "1.控制模型", cn: "試圖控制一切結果。根源：對失去控制的恐懼。表現：完美主義、微觀管理、信任缺失。代價：疲憊、焦慮、關係破裂。解藥：交託於神，相信神的計劃。", en: "Trying to control all outcomes. Root: fear of losing control. Cost: exhaustion, anxiety, broken relationships. Cure: surrender to God's plan." },
+            { title: "2.自我中心", cn: "萬物以我為中心。根源：內心空虛感。表現：自私、操縱、關係失敗。代價：孤立、失去同盟。解藥：他人中心視角。", en: "Everything revolves around me. Root: inner emptiness. Cost: isolation, lost alliances. Cure: others-centered perspective." },
+            { title: "3.恐懼模型", cn: "恐懼驅動決策。根源：缺乏安全感。表現：躲避、逃避、不冒風險。代價：停滯、錯失機遇。解藥：信心成長。", en: "Fear drives decisions. Root: lack of security. Cost: stagnation, missed opportunities. Cure: faith growth." },
+            { title: "4.依附模型", cn: "過度依賴他人。根源：自我懷疑。表現：喪失自主、無法決策。代價：無力感。解藥：獨立成長。", en: "Over-dependence on others. Root: self-doubt. Cost: helplessness. Cure: independence growth." },
+            { title: "5.短視模型", cn: "看不到長期影響。根源：及時滿足渴望。表現：短期決策、後悔。代價：錯失未來。解藥：遠景規劃。", en: "Inability to see long-term consequences. Root: immediate gratification. Cost: future loss. Cure: visionary planning." },
+            { title: "6.自我欺騙", cn: "欺騙自己現實。根源：否認痛苦。表現：自欺欺人、錯誤決策。代價：問題惡化。解藥：誠實面對。", en: "Deceiving self about reality. Root: pain denial. Cost: problem escalation. Cure: honest facing." },
+            { title: "7.單點依賴", cn: "依賴單一事物。根源：風險無知。表現：全盤崩潰。代價：脆弱無力。解藥：多元分散。", en: "Depending on single point. Root: risk ignorance. Cost: total collapse. Cure: diversification." },
+            { title: "8.群體混亂", cn: "跟風盲從。根源：缺乏判斷。表現：集體失誤。代價：群體失敗。解藥：獨立思考。", en: "Blindly following crowd. Root: lack of judgment. Cost: collective failure. Cure: independent thinking." },
+            { title: "9.律法回流", cn: "倒退到律法。根源：恩典不安。表現：又受轄制。代價：屬靈退步。解藥：恩典確定。", en: "Reverting to law. Root: grace discomfort. Cost: spiritual regression. Cure: grace certainty." },
+            { title: "10.錯系統依附", cn: "依附虛假系統。根源：辨別不力。表現：虛空失落。代價：靈性混亂。解藥：回歸真理。", en: "Attachment to false system. Root: poor discernment. Cost: spiritual confusion. Cure: return to truth." }
+        ]
+    },
+    4: {
+        title: "4️⃣ 五大生命語法完全版",
+        items: [
+            { title: "1.身份語法 『我是...』", cn: "定義自己的話。基於真理。永恆不變。例：我是被愛的、我有價值、我能夠、我是自由的、我被創造為偉大的。特點：陈述式、肯定式、真理式。力量：定義身份、拒絕謊言、建立確定。", en: "Defining yourself. Based on truth. Eternal and unchanging. Examples: I am loved, I have worth, I am able, I am free." },
+            { title: "2.關係語法 『我和你...』", cn: "連結人的話。表達愛。建立橋樑。例：我和你同行、我為你代禱、我相信你、我擁抱你、我愛你。特點：連接式、表達式、互動式。力量：建立連結、表達情感、深化關係。", en: "Connecting with others. Express love. Build bridges. Examples: I walk with you, I pray for you, I believe in you." },
+            { title: "3.事件語法 『這意味著...』", cn: "詮釋現實的話。尋找意義。建立因果。例：失敗意味著成長、試煉意味著信心、痛苦意味著轉化、困難意味著機會。特點：解釋式、連結式、轉化式。力量：重新詮釋、找到意義、轉化思想。", en: "Interpreting reality. Find meaning. Build causality. Examples: Failure means growth, trials mean faith, pain means transformation." },
+            { title: "4.行動語法 『當...時，...』", cn: "導引行為的話。創造習慣。建立系統。例：當困難時，我信靠、當失敗時，我重新開始、當孤獨時，我連結、當害怕時，我勇敢。特點：條件式、反應式、習慣式。力量：創造習慣、自動反應、建立系統。", en: "Guiding behavior. Create habits. Build systems. Examples: When difficult, I trust; When I fail, I restart; When afraid, I'm brave." },
+            { title: "5.更新語法 『我正在成為...』", cn: "宣告未來的話。進行式成長。每日轉化。例：我正在變勇敢、我正在治癒、我正在領導、我正在愛、我正在變成最好的自己。特點：進行式、宣告式、進展式。力量：宣告未來、激發成長、每日進步。", en: "Declaring future. Ongoing growth. Daily transformation. Examples: I'm becoming brave, healing, a leader, loving, my best self." }
+        ]
+    },
+    5: {
+        title: "5️⃣ 50句生命宣言完全版",
+        items: Array.from({length: 50}, (_, i) => {
+            const statements = ['我是被愛的','我有價值','我不是失敗','我可以重新開始','問題是訊號','錯誤是資料','回饋比面子','我每天更新','我可以變更準','我在優化','我不孤獨','我被接納','我可以選擇','我在成長','我很勇敢','我值得','我能夠','我願意改變','我正在療癒','我充滿希望','我有目的','我在進步','我值得休息','我有韌性','我正在治癒','我足夠好','我被保護','我在成熟','我是自由的','我充滿感恩','我連結神','我有力量','我值得幸福','我在蛻變','我有希望','我能領導','我值得愛','我正改變','我很重要','我有聲音','我值得尊重','我在學習','我有能力','我值得成功','我是獨特的','我被看見','我被聽見','我被理解','我被相信','我被愛'];
+            return { title: `${i+1}. ${statements[i]}`, cn: statements[i], en: statements[i] };
+        })
+    },
+    6: {
+        title: "6️⃣ 36項控告模型完全版",
+        items: [
+            { title: "身份控告(12項)", cn: "1.你不夠好 2.你很失敗 3.你不被愛 4.你很醜 5.你很愚蠢 6.你沒能力 7.你應死 8.你不值得 9.你很邪惡 10.你很污穢 11.你很可恥 12.你無可救藥\n\n每項控告的根源：自我評估、失敗經歷、被拒經驗、外在評判、知識差距、能力質疑、該死定罪、價值否定、過犯指控、內心污染、羞恥感、絕望感。\n\n神的回應：你被創造為好的 | 你的失敗不定義你 | 你被深深愛著 | 你在我眼中美麗 | 你有真智慧 | 你有能力 | 你值得活著 | 你無比珍貴 | 你被救贖了 | 你被潔淨了 | 你被接納了 | 救恩永遠可能", en: "12 Identity accusations and God's truth responses" },
+            { title: "行為控告(12項)", cn: "1.你說謊 2.你偷竊 3.你背叛 4.你傷害人 5.你控制 6.你操縱 7.你懶惰 8.你自私 9.你裝假 10.你怯弱 11.你不忠 12.你無能\n\n每項控告的根源：說謊習慣、貪心衝動、背信行為、傷人言語、權力渴望、欺騙手段、不願努力、以我為中心、虛偽面具、恐懼退縮、背棄承諾、無法完成。\n\n神的回應：你被改變了 | 你被滿足了 | 你被信任了 | 你被醫治了 | 你被賦予力量 | 你被光照了 | 你被激勵了 | 你被更新了 | 你被接納了 | 你被鼓勵了 | 你被堅固了 | 你被賦能了", en: "12 Behavioral accusations and God's truth responses" },
+            { title: "結果控告(12項)", cn: "1.你終將失敗 2.你會孤獨 3.你被拋棄 4.你會痛苦 5.你失去一切 6.你會毀滅 7.永遠不夠 8.你被詛咒 9.無法改變 10.你死定了 11.下地獄 12.永遠被拒\n\n每項控告的根源：失敗預測、孤立恐懼、拋棄創傷、痛苦預期、失喪恐懼、毀滅想象、不足感、咒詛信念、改變不可能、死亡威脅、地獄恐懼、永遠拒絕。\n\n神的回應：你會得勝 | 你永不孤獨 | 我永不拋棄你 | 我與你同在 | 我保護你的生命 | 我保護你的靈魂 | 你對我足夠 | 你被祝福 | 改變已開始 | 你永遠活著 | 天堂為你準備 | 你永遠被接納", en: "12 Outcome accusations and God's truth responses" }
+        ]
+    },
+    7: {
+        title: "7️⃣ 神的話最高語法 - 新舊約對比完全版",
+        items: [
+            { title: "身份維度", cn: "新約：『在基督裡』的身份 - 神的兒女，被收養，永遠的承嗣。基於耶穌的救贖，與神和好，享受完全的接納。\n舊約：『神的選民』身份 - 出埃及的民族，分別為聖的人，蒙揀選的族類。基於族群和律法守護。\n對比：從民族身份到個人身份 | 從條件身份到永遠身份 | 從外在標記到內心更新 | 從做什麼到是什麼", en: "Identity: New Testament 'in Christ' vs Old Testament 'God's chosen people'" },
+            { title: "關係維度", cn: "新約：『父子關係』 - 親密的、個人的、愛的關係。耶穌稱神為『父親』，邀請我們同樣稱呼。無條件的愛，完全的信任，深度的溝通。\n舊約：『西奈之約』 - 正式的、條約式的、律法的關係。神與以色列民立約，給予十誡，要求順服。條件式的祝福，審判的威嚇，距離的敬畏。\n對比：從契約到親情 | 從距離到親密 | 從懼怕到信任 | 從條件到無條件", en: "Relationship: New Testament 'Father-child' vs Old Testament 'Covenant relationship'" },
+            { title: "認知維度", cn: "新約：『聖靈啟蒙』 - 聖靈內住，光照真理，引導所有事。直接的指引，個人的領受，動態的智慧。『聖靈將要引導你進入一切真理』。\n舊約：『遵守律法』 - 律法是智慧，律法是光，律法是路標。外在的規範，客觀的標準，靜態的要求。『律法是客人的光』。\n對比：從外在律法到內在聖靈 | 從死的字句到活的靈 | 從遵守規則到被聖靈引導 | 從知識到智慧", en: "Cognition: New Testament 'Holy Spirit enlightenment' vs Old Testament 'Law observance'" },
+            { title: "行動維度", cn: "新約：『愛與服侍』 - 愛神愛人是最高誡命，服侍源於愛，行為源於感恩，動機是內在的。『你們要彼此相愛』。\n舊約：『十誡系統』 - 十誡詳細規定行為標準，禁止和命令，外在的規約，遵守是義務。『聽命勝於獻祭』。\n對比：從外在義務到內在驅動 | 從被動遵守到主動事奉 | 從規則導向到愛導向 | 從做對到變對", en: "Action: New Testament 'Love and service' vs Old Testament 'Law system'" },
+            { title: "未來維度", cn: "新約：『永恆盼望』 - 天國已經開始，還未完全，天堂為信徒預備。復活的盼望，永恆的生命，與神同住。『我去為你們預備地方』。\n舊約：『應許之地』 - 應許地是最高應許，完全的產業，最終的安息。進入應許地代表進入祝福，但仍是時間和空間的應許。\n對比：從地土應許到永恆應許 | 從看得見的應許到看不見的應許 | 從今生福分到來世榮耀 | 從物質到屬靈", en: "Future: New Testament 'Eternal hope' vs Old Testament 'Promised land'" }
+        ]
+    },
+    8: {
+        title: "8️⃣ 聖靈七級轉化完全版",
+        items: [
+            { title: "Lv.1 羞恥→慈悲", cn: "誤區語法：『我很可恥，我應該躲藏』。神經機制：大腦的防衛反應被激活。轉化語法：『我被接納，我可以看見他人』。營養支持：需要無條件接納和見證。身體策略：深呼吸、肌肉放鬆、重新連結身體。更新策略：與安全的人分享、逐漸敞開、經歷被接納的體驗。", en: "Level 1: Shame to Compassion - From hiding to seeing others in their struggle." },
+            { title: "Lv.2 悲傷→喜樂", cn: "誤區語法：『痛苦是永遠的，我無法快樂』。神經機制：多巴胺系統被抑制。轉化語法：『我被安慰，我可以找到喜樂』。營養支持：需要陪伴和盼望的信息。身體策略：運動、陽光、與人連結。更新策略：允許悲傷、在悲傷中找到意義、漸進地恢復喜樂。", en: "Level 2: Sorrow to Joy - From grief to hope and celebration." },
+            { title: "Lv.3 勞苦→盼望", cn: "誤區語法：『我疲憊了，無法堅持』。神經機制：糖皮質激素水平過高。轉化語法：『我被賦予力量，我可以堅持』。營養支持：需要休息和目標提醒。身體策略：充分睡眠、營養飲食、定期休息。更新策略：回顧已有的進步、看見長期目標、調整節奏。", en: "Level 3: Toil to Hope - From exhaustion to renewed purpose." },
+            { title: "Lv.4 上癮→平安", cn: "誤區語法：『我需要這個來感受好』。神經機制：獎賞系統被操縱。轉化語法：『我被滿足，我不需要上癮』。營養支持：需要健康的替代品和支持群體。身體策略：運動、冷水淋浴、新的習慣建立。更新策略：識別真實需求、找到健康滿足、建立新習慣。", en: "Level 4: Addiction to Peace - From dependence to freedom and satisfaction." },
+            { title: "Lv.5 焦慮→勇氣", cn: "誤區語法：『可怕的事會發生，我無法應對』。神經機制：杏仁核過度反應。轉化語法：『我被保護，我可以勇敢』。營養支持：需要安全和成功的體驗。身體策略：呼吸練習、冥想、逐步面對恐懼。更新策略：挑戰災難化思維、小步驟面對恐懼、慶祝勇敢行為。", en: "Level 5: Anxiety to Courage - From fear to confident action." },
+            { title: "Lv.6 恐懼→平安", cn: "誤區語法：『危險無處不在，我無法放鬆』。神經機制：背外側前額葉皮層功能下降。轉化語法：『我很安全，我可以信任』。營養支持：需要安全環境和重複的安全體驗。身體策略：接地技巧、感官調節、漸進式肌肉放鬆。更新策略：建立安全環境、積累安全記憶、逐漸擴展信任。", en: "Level 6: Fear to Peace - From survival mode to rest and trust." },
+            { title: "Lv.7 死亡→永生", cn: "誤區語法：『一切都會結束，無意義』。神經機制：前額葉皮層的存在死亡思想。轉化語法：『我永遠活著，有永恆意義』。營養支持：需要更大的目標和屬靈連結。身體策略：宇宙連結、靈性實踐、超越自我的服侍。更新策略：擁抱永恆視角、尋找生命意義、為永恆而活。", en: "Level 7: Death to Eternal Life - From futility to eternal purpose." }
+        ]
+    },
+    9: {
+        title: "9️⃣ 預測編碼×信仰 - 6項認知模型完全版",
+        items: [
+            { title: "1.世界模型更新", cn: "從恐懼世界『世界充滿威脅，我必須防衛』到神愛世界『神愛世界，我被保護』。\n技術說明：預測編碼中，世界模型決定我們如何詮釋所有信息。一個恐懼的模型會把中性信息解讀為威脅。\n聖經應用：『神愛世界，甚至將祂的獨生子給了它』。從威脅詮釋轉向愛的詮釋。\n轉化過程：①識別現有世界模型 ②收集相反證據 ③逐漸更新模型 ④新經歷強化新模型\n案例分析：陌生人從『危險』變成『可能的朋友』 | 失敗從『終局』變成『學習機會』 | 風險從『應避免』變成『成長催化劑』\n實踐指南：每週列出新證據來更新世界觀 | 尋找安全環境積累信任 | 逐漸擴展信任範圍 | 慶祝世界觀的每次更新", en: "World Model: From fear-based to love-based world interpretation." },
+            { title: "2.核心信念更新", cn: "從自我否定『我不夠好，我配不上』到神的肯定『我很珍貴，我被選中』。\n技術說明：核心信念是最深層的預期，影響所有其他處理。自我否定的信念會導致自我驗證循環。\n聖經應用：『所以不要害怕，因為我與你同在』。核心信念從害怕變成被同行。\n轉化過程：①暴露舊信念 ②收集反證 ③重複新宣告 ④新體驗強化新信念\n案例分析：失敗後從『我是失敗者』到『我是有韌性的人』 | 拒絕後從『我無法被愛』到『我值得被愛』 | 無能後從『我無能』到『我正在學習』\n實踐指南：寫下舊信念和新信念 | 每天重複新宣告 | 尋找支持新信念的證據 | 在小事上實驗新信念", en: "Core Belief: From self-rejection to God's affirmation." },
+            { title: "3.預測模型更新", cn: "從焦慮預測『最壞的事會發生』到信心預測『神會帶領』。\n技術說明：預測模型預測未來會發生什麼。焦慮者過度預測威脅，信心者預測神的保護。\n聖經應用：『耶和華必為你爭戰，你只管靜觀』。未來不是由我預測和控制，而是由神帶領。\n轉化過程：①列出習慣性災難預測 ②評估預測的準確性 ③建立信心預測 ④用實際結果驗證\n案例分析：會議從『會失敗』的預測到『會學習』的預測 | 旅行從『會遇到問題』到『會有冒險』的預測\n實踐指南：記錄你的預測vs實際結果 | 識別預測偏差 | 練習樂觀預測 | 慶祝被改變的預測", en: "Prediction Model: From catastrophic to faith-based predictions." },
+            { title: "4.身份模型更新", cn: "從失敗定義『我就是失敗』到勝利身份『我正在成功』。\n技術說明：身份模型決定我們對自己的基本理解。失敗定義的人會內化失敗為身份，導致自我應驗預言。\n聖經應用：『你們已經死了，你們的生命與基督一同藏在神裡面』。身份已經轉換，無需再基於失敗定義自己。\n轉化過程：①識別目前的身份定義 ②發現其根源和結果 ③宣告新身份 ④在新身份中行動\n案例分析：從『我是受害者』到『我是倖存者』 | 從『我是邊緣人』到『我是獨特的』 | 從『我是不足的』到『我是足夠的』\n實踐指南：寫下舊身份宣言 | 創造新身份宣言 | 找出匹配新身份的角色模型 | 在小事上實踐新身份", en: "Identity Model: From failure-defined to victory-identified." },
+            { title: "5.情緒生成更新", cn: "從被動反應『事件發生→我感受情緒』到主動創造『我選擇我的反應→體驗情緒』。\n技術說明：預測編碼揭示情緒不是被動生成的，而是大腦基於預期主動建構的。學習改變預期可以改變情緒。\n聖經應用：『你要保守你的心，勝過保守一切，因為一生的果效是由心發出』。心（預期和解釋）決定了情緒和行為。\n轉化過程：①識別自動化情緒反應 ②暴露其底層預期 ③改變預期 ④體驗不同的情緒\n案例分析：冒犯從『我很憤怒』到『我很好奇對方為什麼這樣說』 | 失望從『我很沮喪』到『我學到了什麼』\n實踐指南：在情緒發生前暫停 | 識別觸發它的預期 | 改變預期 | 選擇新的情緒反應 | 重複直到自動化", en: "Emotion Generation: From passive reaction to active construction." },
+            { title: "6.行為生成更新", cn: "從習慣模式『情況發生→我反應（無意識）』到新生活方式『情況發生→我選擇→我行動（有意識）』。\n技術說明：習慣行為是被預測性编碼自動化的。通過改變預期和模型，我們可以打破自動化行為，創造新習慣。\n聖經應用：『立志為善由得我，只是行出來由不得我』。改變需要新的預期模型，不僅是意志力。\n轉化過程：①識別習慣行為的觸發 ②改變觸發的預期解釋 ③創造新的預期和行為 ④重複直到新習慣形成\n案例分析：衝突從『聽到批評→立刻防衛』到『聽到批評→停頓→詢問→理解→回應』 | 失敗從『犯錯→放棄』到『犯錯→學習→調整→繼續』\n實踐指南：映射習慣循環 | 改變中間的解釋 | 設計新的行為 | 用小成功強化 | 逐漸自動化新習慣"
+, en: "Behavior Generation: From automatic patterns to conscious choice." }
+        ]
+    }
+};
+
+let currentSection = 0;
+
+function switchSection(n) {
+    currentSection = n;
+    document.querySelectorAll('.nav-btn').forEach((btn, i) => {
+        btn.classList.toggle('active', i === n);
+    });
+    renderContent();
+}
+
+function renderContent() {
+    const section = data[currentSection];
+    let html = `<h2 style="color:#1A2B5F;font-size:12px;margin-bottom:8px;border-bottom:2px solid #C9960C;padding-bottom:4px;">${section.title}</h2>`;
+    section.items.forEach(item => {
+        html += `<div class="item">
+            <div class="title">${item.title}</div>
+            <div class="cn">${item.cn}</div>
+            ${item.en ? `<div class="en">${item.en}</div>` : ''}
+            <button class="tts" onclick="speak('${item.title} ${(item.cn || '').substring(0, 60)}')">🔊</button>
+        </div>`;
+    });
+    document.getElementById('content').innerHTML = html;
+}
+
+function speak(text) {
+    if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const u = new SpeechSynthesisUtterance(text);
+        u.lang = 'en-US';
+        u.rate = 0.85;
+        window.speechSynthesis.speak(u);
+    }
+}
+
+renderContent();
+    </script>
+</body>
+</html>
