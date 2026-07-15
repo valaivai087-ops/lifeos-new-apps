@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>壓縮OS - 把混亂變有序</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --navy: #1A2B5F;
+            --gold: #C9960C;
+            --teal: #0A7A72;
+            --light-bg: #F5F3F0;
+            --border: #D4C5B9;
+        }
+
+        body {
+            font-family: 'Microsoft JhengHei', 'PingFang TC', sans-serif;
+            background: white;
+            color: var(--navy);
+            line-height: 1.8;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--navy) 0%, var(--teal) 100%);
+            color: white;
+            padding: 24px 16px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 16px;
+        }
+
+        .tab-btn {
+            padding: 10px 16px;
+            border: none;
+            background: transparent;
+            color: var(--navy);
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn.active {
+            color: var(--gold);
+            border-bottom-color: var(--gold);
+        }
+
+        .tab-btn:hover {
+            color: var(--teal);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .search-bar {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .search-bar input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: 'Microsoft JhengHei', sans-serif;
+        }
+
+        .search-bar input:focus {
+            outline: none;
+            border-color: var(--teal);
+            box-shadow: 0 0 0 3px rgba(10, 122, 114, 0.1);
+        }
+
+        .btn {
+            padding: 12px 20px;
+            background: var(--navy);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-family: 'Microsoft JhengHei', sans-serif;
+        }
+
+        .btn:hover {
+            background: var(--teal);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(10, 122, 114, 0.2);
+        }
+
+        .btn-gold {
+            background: var(--gold);
+            color: white;
+        }
+
+        .btn-gold:hover {
+            background: #B8860B;
+        }
+
+        .node-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 16px;
+            margin-bottom: 40px;
+        }
+
+        .node-card {
+            background: var(--light-bg);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .node-card:hover {
+            border-color: var(--gold);
+            box-shadow: 0 8px 20px rgba(201, 150, 12, 0.15);
+            transform: translateY(-4px);
+        }
+
+        .node-card.saved {
+            border-color: var(--gold);
+            background: rgba(201, 150, 12, 0.05);
+        }
+
+        .node-num {
+            display: inline-block;
+            background: var(--navy);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .node-zh {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--navy);
+            margin-bottom: 12px;
+            line-height: 1.6;
+        }
+
+        .node-en {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 16px;
+            line-height: 1.6;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        .node-actions {
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+            border-top: 1px solid var(--border);
+            padding-top: 12px;
+        }
+
+        .icon-btn {
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .icon-btn:hover {
+            background: var(--teal);
+            color: white;
+            border-color: var(--teal);
+        }
+
+        .icon-btn.saved {
+            background: var(--gold);
+            color: white;
+            border-color: var(--gold);
+        }
+
+        .stats {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .stat-box {
+            background: linear-gradient(135deg, var(--navy) 0%, var(--teal) 100%);
+            color: white;
+            padding: 16px 20px;
+            border-radius: 8px;
+            flex: 1;
+            min-width: 150px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            opacity: 0.9;
+            margin-top: 4px;
+        }
+
+        .category-section {
+            margin-bottom: 32px;
+        }
+
+        .category-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--navy);
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 3px solid var(--gold);
+            display: inline-block;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+        }
+
+        .empty-state p {
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--border);
+            border-radius: 4px;
+            margin-top: 12px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--navy) 0%, var(--gold) 100%);
+            transition: width 0.3s ease;
+        }
+
+        .tts-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: none;
+            background: var(--teal);
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .tts-btn:hover {
+            background: var(--navy);
+            transform: scale(1.1);
+        }
+
+        .tts-btn.playing {
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+        }
+
+        .filter-chips {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .chip {
+            padding: 6px 12px;
+            background: var(--light-bg);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.2s ease;
+        }
+
+        .chip:hover {
+            border-color: var(--teal);
+            background: rgba(10, 122, 114, 0.05);
+        }
+
+        .chip.active {
+            background: var(--teal);
+            color: white;
+            border-color: var(--teal);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 32px;
+            border-radius: 12px;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .modal-close {
+            float: right;
+            font-size: 24px;
+            cursor: pointer;
+            color: #999;
+            border: none;
+            background: none;
+        }
+
+        .modal-close:hover {
+            color: var(--navy);
+        }
+
+        @media (max-width: 768px) {
+            .node-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 22px;
+            }
+
+            .tabs {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .tab-btn {
+                white-space: nowrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>壓縮 OS</h1>
+        <p>把混亂變有序、把疼痛變成長 —— 340 個節點啟發你</p>
+    </div>
+
+    <div class="container">
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="explore">🔍 探索節點</button>
+            <button class="tab-btn" data-tab="categories">📚 分類瀏覽</button>
+            <button class="tab-btn" data-tab="saved">❤️ 我的收藏</button>
+            <button class="tab-btn" data-tab="progress">📊 學習進度</button>
+        </div>
+
+        <!-- 探索節點 Tab -->
+        <div class="tab-content active" id="explore">
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="搜尋關鍵字...例如：情緒、系統、成功...">
+                <button class="btn btn-gold" onclick="clearSearch()">清空</button>
+            </div>
+            <div id="exploreNodes" class="node-grid"></div>
+        </div>
+
+        <!-- 分類瀏覽 Tab -->
+        <div class="tab-content" id="categories">
+            <div class="filter-chips" id="categoryChips"></div>
+            <div id="categorizedNodes"></div>
+        </div>
+
+        <!-- 我的收藏 Tab -->
+        <div class="tab-content" id="saved">
+            <div class="stats">
+                <div class="stat-box">
+                    <span class="stat-value" id="savedCount">0</span>
+                    <span class="stat-label">收藏節點</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-value" id="visitedCount">0</span>
+                    <span class="stat-label">已瀏覽</span>
+                </div>
+            </div>
+            <div id="savedNodes" class="node-grid"></div>
+        </div>
+
+        <!-- 學習進度 Tab -->
+        <div class="tab-content" id="progress">
+            <div class="stats">
+                <div class="stat-box">
+                    <span class="stat-value" id="progressPercent">0%</span>
+                    <span class="stat-label">完成進度</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-value" id="ttsCount">0</span>
+                    <span class="stat-label">已發音</span>
+                </div>
+            </div>
+            <div style="margin-top: 30px;">
+                <h3 style="margin-bottom: 16px; color: var(--navy); font-size: 18px;">本週學習節奏</h3>
+                <div id="weeklyChart" style="display: flex; gap: 12px; align-items: flex-end; height: 200px;"></div>
+            </div>
+            <div style="margin-top: 40px;">
+                <h3 style="margin-bottom: 16px; color: var(--navy); font-size: 18px;">主題掌握度</h3>
+                <div id="categoryProgress"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 核心數據
+        const nodesData = [
+            // 第一部分：基礎概念
+            { id: 1, zh: "把混亂壓縮成規律。", en: "Compress chaos into order.", category: "基礎" },
+            { id: 2, zh: "把痛苦壓縮成提醒。", en: "Compress pain into reminders.", category: "基礎" },
+            { id: 3, zh: "把失敗壓縮成能力缺口。", en: "Compress failure into skill gaps.", category: "基礎" },
+            { id: 4, zh: "把經驗壓縮成判斷模型。", en: "Compress experience into decision models.", category: "基礎" },
+            { id: 5, zh: "把知識壓縮成行動能力。", en: "Compress knowledge into action.", category: "基礎" },
+            { id: 6, zh: "把人生壓縮成智慧結構。", en: "Compress life into wisdom systems.", category: "基礎" },
+            
+            // 第二部分：情緒與訊號
+            { id: 7, zh: "把情緒壓縮成訊號。", en: "Compress emotions into signals.", category: "情緒" },
+            { id: 8, zh: "把訊號壓縮成需求。", en: "Compress signals into needs.", category: "情緒" },
+            { id: 9, zh: "把需求壓縮成目標。", en: "Compress needs into goals.", category: "系統" },
+            { id: 10, zh: "把目標壓縮成策略。", en: "Compress goals into strategies.", category: "系統" },
+            { id: 11, zh: "把策略壓縮成流程。", en: "Compress strategies into processes.", category: "系統" },
+            { id: 12, zh: "把流程壓縮成系統。", en: "Compress processes into systems.", category: "系統" },
+            { id: 13, zh: "把系統壓縮成複利。", en: "Compress systems into compound returns.", category: "系統" },
+            { id: 14, zh: "把複利壓縮成自由。", en: "Compress compound growth into freedom.", category: "自由" },
+            
+            // 第三部分：焦慮與恐懼
+            { id: 15, zh: "把焦慮壓縮成未完成的預測。", en: "Compress anxiety into incomplete forecasts.", category: "情緒" },
+            { id: 16, zh: "把恐懼壓縮成未知風險。", en: "Compress fear into unknown risks.", category: "情緒" },
+            { id: 17, zh: "把未知壓縮成驗證假設。", en: "Compress unknowns into testable hypotheses.", category: "思維" },
+            { id: 18, zh: "把假設壓縮成實驗。", en: "Compress hypotheses into experiments.", category: "思維" },
+            { id: 19, zh: "把實驗壓縮成證據。", en: "Compress experiments into evidence.", category: "思維" },
+            { id: 20, zh: "把證據壓縮成模型。", en: "Compress evidence into models.", category: "模型" },
+            { id: 21, zh: "把模型壓縮成預測能力。", en: "Compress models into predictive power.", category: "能力" },
+            
+            // 第四部分：錯誤與進步
+            { id: 22, zh: "把錯誤壓縮成回饋。", en: "Compress mistakes into feedback.", category: "成長" },
+            { id: 23, zh: "把回饋壓縮成修正。", en: "Compress feedback into corrections.", category: "成長" },
+            { id: 24, zh: "把修正壓縮成進步。", en: "Compress corrections into progress.", category: "成長" },
+            { id: 25, zh: "把限制壓縮成條件。", en: "Compress constraints into conditions.", category: "思維" },
+            { id: 26, zh: "把條件壓縮成設計。", en: "Compress conditions into designs.", category: "設計" },
+            { id: 27, zh: "把障礙壓縮成入口。", en: "Compress obstacles into opportunities.", category: "機遇" },
+            { id: 28, zh: "把危機壓縮成轉機。", en: "Compress crises into turning points.", category: "機遇" },
+            
+            // 第五部分：壓力與挑戰
+            { id: 29, zh: "把壓力壓縮成適應。", en: "Compress pressure into adaptation.", category: "韌性" },
+            { id: 30, zh: "把挑戰壓縮成訓練。", en: "Compress challenges into training.", category: "成長" },
+            { id: 31, zh: "把競爭壓縮成價值提升。", en: "Compress competition into value creation.", category: "價值" },
+            { id: 32, zh: "把風險壓縮成機率管理。", en: "Compress risk into probability management.", category: "決策" },
+            { id: 33, zh: "把機率壓縮成決策品質。", en: "Compress probabilities into decision quality.", category: "決策" },
+            { id: 34, zh: "把時間壓縮成優先順序。", en: "Compress time into priorities.", category: "時間" },
+            { id: 35, zh: "把效率壓縮成流程優化。", en: "Compress efficiency into process optimization.", category: "效率" },
+            
+            // 第六部分：資源與選擇
+            { id: 36, zh: "把忙碌壓縮成資源配置。", en: "Compress busyness into resource allocation.", category: "管理" },
+            { id: 37, zh: "把選擇壓縮成價值排序。", en: "Compress choices into value ranking.", category: "價值" },
+            { id: 38, zh: "把誘惑壓縮成延遲滿足能力。", en: "Compress temptation into delayed gratification.", category: "自律" },
+            { id: 39, zh: "把拖延壓縮成系統缺口。", en: "Compress procrastination into system gaps.", category: "系統" },
+            { id: 40, zh: "把習慣壓縮成自動化。", en: "Compress habits into automation.", category: "習慣" },
+            { id: 41, zh: "把自律壓縮成環境設計。", en: "Compress self-discipline into environment design.", category: "設計" },
+            
+            // 第七部分：學習與理解
+            { id: 42, zh: "把閱讀壓縮成理解能力。", en: "Compress reading into comprehension.", category: "學習" },
+            { id: 43, zh: "把理解壓縮成判斷能力。", en: "Compress understanding into judgment.", category: "能力" },
+            { id: 44, zh: "把思考壓縮成第一性原理。", en: "Compress thinking into first principles.", category: "思維" },
+            { id: 45, zh: "把問題壓縮成核心矛盾。", en: "Compress problems into core contradictions.", category: "問題" },
+            { id: 46, zh: "把矛盾壓縮成槓桿點。", en: "Compress contradictions into leverage points.", category: "系統" },
+            { id: 47, zh: "把複雜壓縮成簡單原理。", en: "Compress complexity into simple principles.", category: "思維" },
+            
+            // 第八部分：信息與知識
+            { id: 48, zh: "把資料壓縮成資訊。", en: "Compress data into information.", category: "信息" },
+            { id: 49, zh: "把資訊壓縮成知識。", en: "Compress information into knowledge.", category: "知識" },
+            { id: 50, zh: "把知識壓縮成智慧。", en: "Compress knowledge into wisdom.", category: "智慧" },
+            { id: 51, zh: "把智慧壓縮成決策品質。", en: "Compress wisdom into decision quality.", category: "決策" },
+            { id: 52, zh: "把語言壓縮成世界模型。", en: "Compress language into world models.", category: "模型" },
+            { id: 53, zh: "把信念壓縮成預測模型。", en: "Compress beliefs into predictive models.", category: "信念" },
+            { id: 54, zh: "把觀點壓縮成認知框架。", en: "Compress perspectives into cognitive frames.", category: "認知" },
+            
+            // 第九部分：經驗與成長
+            { id: 55, zh: "把偏見壓縮成有限樣本。", en: "Compress bias into limited samples.", category: "認知" },
+            { id: 56, zh: "把經歷壓縮成生命教材。", en: "Compress experience into life lessons.", category: "成長" },
+            { id: 57, zh: "把失去壓縮成珍惜能力。", en: "Compress loss into appreciation.", category: "情緒" },
+            { id: 58, zh: "把等待壓縮成耐心資本。", en: "Compress waiting into patience capital.", category: "品質" },
+            { id: 59, zh: "把孤獨壓縮成內在成長。", en: "Compress solitude into inner growth.", category: "成長" },
+            { id: 60, zh: "把關係壓縮成共同生成。", en: "Compress relationships into co-creation.", category: "關係" },
+            
+            // 第十部分：衝突與合作
+            { id: 61, zh: "把衝突壓縮成模型差異。", en: "Compress conflict into model differences.", category: "溝通" },
+            { id: 62, zh: "把合作壓縮成價值互補。", en: "Compress cooperation into value complementarity.", category: "合作" },
+            { id: 63, zh: "把成功壓縮成可複製系統。", en: "Compress success into replicable systems.", category: "系統" },
+            { id: 64, zh: "把成長壓縮成持續更新。", en: "Compress growth into continuous updates.", category: "成長" },
+            { id: 65, zh: "把生命壓縮成演化過程。", en: "Compress life into evolution.", category: "人生" },
+            { id: 66, zh: "把今天壓縮成明天的基礎。", en: "Compress today into tomorrow's foundation.", category: "時間" },
+            
+            // 11-60 節點
+            { id: 67, zh: "把每天壓縮成一個進步。", en: "Compress each day into one improvement.", category: "進步" },
+            { id: 68, zh: "把進步壓縮成能力累積。", en: "Compress progress into capability accumulation.", category: "能力" },
+            { id: 69, zh: "把能力壓縮成競爭優勢。", en: "Compress abilities into competitive advantage.", category: "優勢" },
+            { id: 70, zh: "把競爭優勢壓縮成長期價值。", en: "Compress competitive advantage into lasting value.", category: "價值" },
+            { id: 71, zh: "把價值壓縮成信任。", en: "Compress value into trust.", category: "信任" },
+            { id: 72, zh: "把信任壓縮成品牌。", en: "Compress trust into brand.", category: "品牌" },
+            { id: 73, zh: "把品牌壓縮成影響力。", en: "Compress brand into influence.", category: "影響" },
+            { id: 74, zh: "把影響力壓縮成責任。", en: "Compress influence into responsibility.", category: "責任" },
+            { id: 75, zh: "把責任壓縮成使命。", en: "Compress responsibility into mission.", category: "使命" },
+            { id: 76, zh: "把使命壓縮成一生方向。", en: "Compress mission into life direction.", category: "人生" },
+            
+            // 71-100 節點
+            { id: 77, zh: "把希望壓縮成行動。", en: "Compress hope into action.", category: "行動" },
+            { id: 78, zh: "把夢想壓縮成計畫。", en: "Compress dreams into plans.", category: "計畫" },
+            { id: 79, zh: "把計畫壓縮成今天。", en: "Compress plans into today.", category: "時間" },
+            { id: 80, zh: "把今天壓縮成下一步。", en: "Compress today into next step.", category: "步驟" },
+            { id: 81, zh: "把下一步壓縮成現在開始。", en: "Compress next step into starting now.", category: "行動" },
+            { id: 82, zh: "把未來壓縮成今日選擇。", en: "Compress future into today's choices.", category: "選擇" },
+            { id: 83, zh: "把結果壓縮成每日習慣。", en: "Compress outcomes into daily habits.", category: "習慣" },
+            { id: 84, zh: "把習慣壓縮成身份認同。", en: "Compress habits into identity.", category: "身份" },
+            { id: 85, zh: "把身份壓縮成行為模式。", en: "Compress identity into behavior patterns.", category: "行為" },
+            { id: 86, zh: "把行為壓縮成神經迴路。", en: "Compress behavior into neural pathways.", category: "神經" },
+            
+            // 81-120 節點
+            { id: 87, zh: "把神經迴路壓縮成自動反應。", en: "Compress neural pathways into automatic responses.", category: "自動化" },
+            { id: 88, zh: "把自動反應壓縮成可更新程式。", en: "Compress automatic responses into updatable programs.", category: "更新" },
+            { id: 89, zh: "把程式壓縮成核心信念。", en: "Compress programs into core beliefs.", category: "信念" },
+            { id: 90, zh: "把核心信念壓縮成一句語言。", en: "Compress core beliefs into one sentence.", category: "語言" },
+            { id: 91, zh: "把一句語言壓縮成一個世界。", en: "Compress one sentence into one world.", category: "世界模型" },
+            { id: 92, zh: "把世界壓縮成一套模型。", en: "Compress world into one model.", category: "模型" },
+            { id: 93, zh: "把模型壓縮成生成規則。", en: "Compress models into generative rules.", category: "規則" },
+            { id: 94, zh: "把生成規則壓縮成底層結構。", en: "Compress generative rules into underlying structure.", category: "結構" },
+            { id: 95, zh: "把底層結構壓縮成第一性原理。", en: "Compress underlying structure into first principles.", category: "原理" },
+            { id: 96, zh: "把第一性原理壓縮成核心真相。", en: "Compress first principles into core truths.", category: "真相" },
+            
+            // 91-140 節點
+            { id: 97, zh: "把觀察壓縮成洞察。", en: "Compress observations into insights.", category: "洞察" },
+            { id: 98, zh: "把洞察壓縮成智慧。", en: "Compress insights into wisdom.", category: "智慧" },
+            { id: 99, zh: "把智慧壓縮成一句提醒。", en: "Compress wisdom into one reminder.", category: "提醒" },
+            { id: 100, zh: "把提醒壓縮成每天實踐。", en: "Compress reminders into daily practice.", category: "實踐" },
+            { id: 101, zh: "把實踐壓縮成生活方式。", en: "Compress practice into lifestyle.", category: "生活" },
+            { id: 102, zh: "把生活方式壓縮成命運方向。", en: "Compress lifestyle into destiny direction.", category: "命運" },
+            { id: 103, zh: "把命運壓縮成長期選擇。", en: "Compress destiny into long-term choices.", category: "選擇" },
+            { id: 104, zh: "把選擇壓縮成價值函數。", en: "Compress choices into value functions.", category: "價值" },
+            { id: 105, zh: "把價值函數壓縮成優先順序。", en: "Compress value functions into priorities.", category: "優先" },
+            { id: 106, zh: "把優先順序壓縮成聚焦能力。", en: "Compress priorities into focus.", category: "專注" },
+            
+            // 101-150 節點
+            { id: 107, zh: "把聚焦壓縮成深度。", en: "Compress focus into depth.", category: "深度" },
+            { id: 108, zh: "把深度壓縮成專業。", en: "Compress depth into expertise.", category: "專業" },
+            { id: 109, zh: "把專業壓縮成不可取代。", en: "Compress expertise into irreplaceability.", category: "稀缺性" },
+            { id: 110, zh: "把不可取代壓縮成核心競爭力。", en: "Compress irreplaceability into core competence.", category: "競爭力" },
+            { id: 111, zh: "把核心競爭力壓縮成社會價值。", en: "Compress core competence into social value.", category: "社會" },
+            { id: 112, zh: "把社會價值壓縮成影響世界。", en: "Compress social value into world impact.", category: "影響" },
+            { id: 113, zh: "把資源壓縮成槓桿。", en: "Compress resources into leverage.", category: "槓桿" },
+            { id: 114, zh: "把槓桿壓縮成倍增成果。", en: "Compress leverage into multiplied results.", category: "倍增" },
+            { id: 115, zh: "把成果壓縮成可驗證證據。", en: "Compress results into verifiable evidence.", category: "證據" },
+            { id: 116, zh: "把證據壓縮成可信度。", en: "Compress evidence into credibility.", category: "信譽" },
+            
+            // 151-200 節點
+            { id: 117, zh: "把可信度壓縮成長期信任。", en: "Compress credibility into lasting trust.", category: "信任" },
+            { id: 118, zh: "把金錢壓縮成價值交換。", en: "Compress money into value exchange.", category: "經濟" },
+            { id: 119, zh: "把收入壓縮成現金流。", en: "Compress income into cash flow.", category: "財務" },
+            { id: 120, zh: "把現金流壓縮成抗風險能力。", en: "Compress cash flow into resilience.", category: "風險" },
+            { id: 121, zh: "把財富壓縮成選擇自由。", en: "Compress wealth into freedom of choice.", category: "自由" },
+            { id: 122, zh: "把健康壓縮成修復能力。", en: "Compress health into recovery capacity.", category: "健康" },
+            { id: 123, zh: "把修復壓縮成穩態能力。", en: "Compress recovery into homeostasis.", category: "穩態" },
+            { id: 124, zh: "把穩態壓縮成適應能力。", en: "Compress homeostasis into adaptability.", category: "適應" },
+            { id: 125, zh: "把適應壓縮成演化能力。", en: "Compress adaptability into evolutionary capacity.", category: "演化" },
+            { id: 126, zh: "把演化壓縮成更新能力。", en: "Compress evolution into renewal.", category: "更新" },
+            
+            // 201-250 節點
+            { id: 127, zh: "把更新壓縮成生命力。", en: "Compress renewal into vitality.", category: "生命力" },
+            { id: 128, zh: "把生命力壓縮成能量品質。", en: "Compress vitality into energy quality.", category: "能量" },
+            { id: 129, zh: "把能量壓縮成粒線體效率。", en: "Compress energy into mitochondrial efficiency.", category: "生物" },
+            { id: 130, zh: "把粒線體壓縮成代謝核心。", en: "Compress mitochondria into metabolic core.", category: "代謝" },
+            { id: 131, zh: "把代謝壓縮成能量流。", en: "Compress metabolism into energy flow.", category: "代謝" },
+            { id: 132, zh: "把能量流壓縮成生命流。", en: "Compress energy flow into life flow.", category: "流動" },
+            { id: 133, zh: "把發炎壓縮成修復訊號。", en: "Compress inflammation into repair signals.", category: "健康" },
+            { id: 134, zh: "把修復訊號壓縮成健康提醒。", en: "Compress repair signals into health reminders.", category: "健康" },
+            { id: 135, zh: "把症狀壓縮成系統警報。", en: "Compress symptoms into system alerts.", category: "診斷" },
+            { id: 136, zh: "把警報壓縮成改善方向。", en: "Compress alerts into improvement directions.", category: "改善" },
+            
+            // 251-300 節點
+            { id: 137, zh: "把檢驗壓縮成回饋儀表板。", en: "Compress testing into feedback dashboard.", category: "測量" },
+            { id: 138, zh: "把數據壓縮成決策依據。", en: "Compress data into decision basis.", category: "數據" },
+            { id: 139, zh: "把AI壓縮成認知放大器。", en: "Compress AI into cognitive amplifier.", category: "科技" },
+            { id: 140, zh: "把工具壓縮成能力延伸。", en: "Compress tools into capability extension.", category: "工具" },
+            { id: 141, zh: "把科技壓縮成智慧槓桿。", en: "Compress technology into wisdom leverage.", category: "科技" },
+            { id: 142, zh: "把教育壓縮成能力生成。", en: "Compress education into capability generation.", category: "教育" },
+            { id: 143, zh: "把教學壓縮成理解重建。", en: "Compress teaching into understanding reconstruction.", category: "教學" },
+            { id: 144, zh: "把領導壓縮成方向校準。", en: "Compress leadership into direction alignment.", category: "領導" },
+            { id: 145, zh: "把管理壓縮成系統協調。", en: "Compress management into system coordination.", category: "管理" },
+            { id: 146, zh: "把人生壓縮成持續更新的生成系統。", en: "Compress life into continuous generative system.", category: "系統" },
+            
+            // 301-350 節點
+            { id: 147, zh: "把挫折壓縮成成長燃料。", en: "Compress setbacks into growth fuel.", category: "挫折" },
+            { id: 148, zh: "把逆境壓縮成韌性訓練。", en: "Compress adversity into resilience training.", category: "韌性" },
+            { id: 149, zh: "把失望壓縮成重新校準。", en: "Compress disappointment into recalibration.", category: "調整" },
+            { id: 150, zh: "把遺憾壓縮成未來提醒。", en: "Compress regret into future reminders.", category: "學習" },
+            { id: 151, zh: "把錯過壓縮成選擇成本。", en: "Compress missed chances into opportunity cost.", category: "機會" },
+            { id: 152, zh: "把代價壓縮成學費。", en: "Compress costs into tuition fees.", category: "投資" },
+            { id: 153, zh: "把風暴壓縮成穩定能力。", en: "Compress storms into stability.", category: "穩定" },
+            { id: 154, zh: "把危險壓縮成風險地圖。", en: "Compress dangers into risk maps.", category: "風險" },
+            { id: 155, zh: "把風險壓縮成預防策略。", en: "Compress risks into prevention strategies.", category: "風險" },
+            { id: 156, zh: "把預防壓縮成每日習慣。", en: "Compress prevention into daily habits.", category: "習慣" },
+            
+            // 351-400 節點（最後補足）
+            { id: 157, zh: "把懷疑壓縮成求證能力。", en: "Compress doubt into verification.", category: "懷疑" },
+            { id: 158, zh: "把相信壓縮成驗證結果。", en: "Compress belief into verified results.", category: "信仰" },
+            { id: 159, zh: "把直覺壓縮成長期經驗。", en: "Compress intuition into experience.", category: "直覺" },
+            { id: 160, zh: "把經驗壓縮成模式辨識。", en: "Compress experience into pattern recognition.", category: "模式" },
+            { id: 161, zh: "把模式壓縮成預測能力。", en: "Compress patterns into prediction.", category: "預測" },
+            { id: 162, zh: "把預測壓縮成決策優勢。", en: "Compress prediction into decision advantage.", category: "決策" },
+            { id: 163, zh: "把決策壓縮成行動品質。", en: "Compress decisions into action quality.", category: "行動" },
+            { id: 164, zh: "把行動壓縮成成果累積。", en: "Compress action into result accumulation.", category: "成果" },
+            { id: 165, zh: "把成果壓縮成人生資本。", en: "Compress results into life capital.", category: "資本" },
+            { id: 166, zh: "把資本壓縮成自由空間。", en: "Compress capital into freedom space.", category: "自由" },
+            
+            { id: 167, zh: "把對手壓縮成學習對象。", en: "Compress opponents into learning objects.", category: "競爭" },
+            { id: 168, zh: "把批評壓縮成改善建議。", en: "Compress criticism into improvement advice.", category: "反饋" },
+            { id: 169, zh: "把稱讚壓縮成責任提醒。", en: "Compress praise into responsibility reminders.", category: "責任" },
+            { id: 170, zh: "把嫉妒壓縮成努力方向。", en: "Compress envy into effort direction.", category: "情緒" },
+            { id: 171, zh: "把羨慕壓縮成能力地圖。", en: "Compress admiration into capability maps.", category: "願景" },
+            { id: 172, zh: "把比較壓縮成自我更新。", en: "Compress comparison into self-renewal.", category: "成長" },
+            { id: 173, zh: "把競賽壓縮成能力驗證。", en: "Compress competition into capability verification.", category: "驗證" },
+            { id: 174, zh: "把排名壓縮成回饋資訊。", en: "Compress ranking into feedback information.", category: "反饋" },
+            { id: 175, zh: "把輸贏壓縮成模型修正。", en: "Compress winning and losing into model correction.", category: "學習" },
+            { id: 176, zh: "把勝利壓縮成新的起點。", en: "Compress victory into new starting point.", category: "新開始" },
+            
+            { id: 177, zh: "把天分壓縮成起始條件。", en: "Compress talent into starting conditions.", category: "潛能" },
+            { id: 178, zh: "把努力壓縮成長期複利。", en: "Compress effort into compound returns.", category: "努力" },
+            { id: 179, zh: "把堅持壓縮成時間槓桿。", en: "Compress persistence into time leverage.", category: "堅持" },
+            { id: 180, zh: "把耐心壓縮成複利力量。", en: "Compress patience into compound power.", category: "耐心" },
+            { id: 181, zh: "把專注壓縮成深度學習。", en: "Compress focus into deep learning.", category: "學習" },
+            { id: 182, zh: "把好奇壓縮成探索能力。", en: "Compress curiosity into exploration.", category: "探索" },
+            { id: 183, zh: "把探索壓縮成知識邊界。", en: "Compress exploration into knowledge frontier.", category: "知識" },
+            { id: 184, zh: "把未知壓縮成未來機會。", en: "Compress unknowns into future opportunities.", category: "機會" },
+            { id: 185, zh: "把機會壓縮成行動窗口。", en: "Compress opportunities into action windows.", category: "行動" },
+            { id: 186, zh: "把窗口壓縮成決策時機。", en: "Compress windows into decision timing.", category: "時機" },
+            
+            { id: 187, zh: "把資訊落差壓縮成學習方向。", en: "Compress information gaps into learning directions.", category: "學習" },
+            { id: 188, zh: "把知識落差壓縮成能力缺口。", en: "Compress knowledge gaps into skill gaps.", category: "能力" },
+            { id: 189, zh: "把能力落差壓縮成訓練清單。", en: "Compress skill gaps into training list.", category: "訓練" },
+            { id: 190, zh: "把訓練壓縮成每日任務。", en: "Compress training into daily tasks.", category: "任務" },
+            { id: 191, zh: "把任務壓縮成今日完成。", en: "Compress tasks into today completion.", category: "執行" },
+            { id: 192, zh: "把完成壓縮成自信累積。", en: "Compress completion into confidence building.", category: "信心" },
+            { id: 193, zh: "把自信壓縮成可信能力。", en: "Compress confidence into credible capability.", category: "能力" },
+            { id: 194, zh: "把能力壓縮成解決問題。", en: "Compress capabilities into problem solving.", category: "問題解決" },
+            { id: 195, zh: "把問題壓縮成真正需求。", en: "Compress problems into true needs.", category: "需求" },
+            { id: 196, zh: "把需求壓縮成價值創造。", en: "Compress needs into value creation.", category: "價值" },
+            
+            { id: 197, zh: "把價值創造壓縮成影響力。", en: "Compress value creation into influence.", category: "影響" },
+            { id: 198, zh: "把影響力壓縮成改變世界。", en: "Compress influence into changing world.", category: "改變" },
+            { id: 199, zh: "把混沌壓縮成秩序。", en: "Compress chaos into order.", category: "秩序" },
+            { id: 200, zh: "把秩序壓縮成規則。", en: "Compress order into rules.", category: "規則" },
+            
+            { id: 201, zh: "把規則壓縮成演算法。", en: "Compress rules into algorithms.", category: "系統" },
+            { id: 202, zh: "把演算法壓縮成智慧。", en: "Compress algorithms into wisdom.", category: "智慧" },
+            { id: 203, zh: "把智慧壓縮成洞見。", en: "Compress wisdom into insight.", category: "洞察" },
+            { id: 204, zh: "把洞見壓縮成一句話。", en: "Compress insight into one sentence.", category: "語言" },
+            { id: 205, zh: "把一句話壓縮成一個方向。", en: "Compress one sentence into one direction.", category: "方向" },
+            { id: 206, zh: "把方向壓縮成終身使命。", en: "Compress direction into lifetime mission.", category: "使命" },
+            { id: 207, zh: "把複雜系統壓縮成核心節點。", en: "Compress complex systems into key nodes.", category: "系統" },
+            { id: 208, zh: "把核心節點壓縮成最大槓桿。", en: "Compress key nodes into maximum leverage.", category: "槓桿" },
+            { id: 209, zh: "把最大槓桿壓縮成關鍵動作。", en: "Compress maximum leverage into key actions.", category: "行動" },
+            { id: 210, zh: "把關鍵動作壓縮成每日一件事。", en: "Compress key actions into one daily thing.", category: "日常" },
+            
+            { id: 211, zh: "把每日一件事壓縮成長期複利。", en: "Compress one daily thing into compound returns.", category: "複利" },
+            { id: 212, zh: "把演化壓縮成適者更新。", en: "Compress evolution into continuous adaptation.", category: "演化" },
+            { id: 213, zh: "把適應壓縮成持續校正。", en: "Compress adaptation into continuous calibration.", category: "調整" },
+            { id: 214, zh: "把校正壓縮成回饋循環。", en: "Compress calibration into feedback loops.", category: "反饋" },
+            { id: 215, zh: "把回饋循環壓縮成控制系統。", en: "Compress feedback loops into control systems.", category: "系統" },
+            { id: 216, zh: "把控制系統壓縮成穩態能力。", en: "Compress control systems into homeostasis.", category: "穩態" },
+            { id: 217, zh: "把穩態壓縮成生命品質。", en: "Compress homeostasis into quality of life.", category: "品質" },
+            { id: 218, zh: "把生命品質壓縮成幸福能力。", en: "Compress life quality into happiness capacity.", category: "幸福" },
+            { id: 219, zh: "把幸福壓縮成內在穩定。", en: "Compress happiness into inner stability.", category: "穩定" },
+            { id: 220, zh: "把穩定壓縮成安全感。", en: "Compress stability into sense of security.", category: "安全感" },
+            
+            { id: 221, zh: "把安全感壓縮成自我信任。", en: "Compress security into self-trust.", category: "信任" },
+            { id: 222, zh: "把自我信任壓縮成持續行動。", en: "Compress self-trust into continuous action.", category: "行動" },
+            { id: 223, zh: "把持續行動壓縮成長期成果。", en: "Compress continuous action into long-term results.", category: "成果" },
+            { id: 224, zh: "把長期成果壓縮成生命作品。", en: "Compress long-term results into life work.", category: "作品" },
+            { id: 225, zh: "把生命作品壓縮成存在價值。", en: "Compress life work into existential value.", category: "價值" },
+            { id: 226, zh: "把存在價值壓縮成利他精神。", en: "Compress existential value into altruism.", category: "利他" },
+            { id: 227, zh: "把利他壓縮成共同成長。", en: "Compress altruism into mutual growth.", category: "成長" },
+            { id: 228, zh: "把共同成長壓縮成生態系。", en: "Compress mutual growth into ecosystems.", category: "生態" },
+            { id: 229, zh: "把生態系壓縮成互利網路。", en: "Compress ecosystems into mutual benefit networks.", category: "網路" },
+            { id: 230, zh: "把互利網路壓縮成文明。", en: "Compress networks into civilization.", category: "文明" },
+            
+            { id: 231, zh: "把文明壓縮成集體智慧。", en: "Compress civilization into collective wisdom.", category: "集體" },
+            { id: 232, zh: "把集體智慧壓縮成文化演化。", en: "Compress collective wisdom into cultural evolution.", category: "文化" },
+            { id: 233, zh: "把文化演化壓縮成世代傳承。", en: "Compress cultural evolution into generational legacy.", category: "傳承" },
+            { id: 234, zh: "把世代傳承壓縮成教育。", en: "Compress generational legacy into education.", category: "教育" },
+            { id: 235, zh: "把教育壓縮成能力複製。", en: "Compress education into capability replication.", category: "複製" },
+            { id: 236, zh: "把能力複製壓縮成文明延續。", en: "Compress capability replication into civilizational continuity.", category: "延續" },
+            { id: 237, zh: "把語言壓縮成思維工具。", en: "Compress language into thinking tool.", category: "思維" },
+            { id: 238, zh: "把思維壓縮成世界模型。", en: "Compress thinking into world models.", category: "模型" },
+            { id: 239, zh: "把世界模型壓縮成生成規則。", en: "Compress world models into generative rules.", category: "規則" },
+            { id: 240, zh: "把生成規則壓縮成宇宙秩序。", en: "Compress generative rules into cosmic order.", category: "秩序" },
+            
+            { id: 241, zh: "把宇宙秩序壓縮成自然法則。", en: "Compress cosmic order into natural laws.", category: "自然" },
+            { id: 242, zh: "把自然法則壓縮成第一性原理。", en: "Compress natural laws into first principles.", category: "原理" },
+            { id: 243, zh: "把第一性原理壓縮成真理探索。", en: "Compress first principles into truth seeking.", category: "真理" },
+            { id: 244, zh: "把真理探索壓縮成終身學習。", en: "Compress truth seeking into lifelong learning.", category: "學習" },
+            { id: 245, zh: "把終身學習壓縮成持續更新。", en: "Compress lifelong learning into continuous renewal.", category: "更新" },
+            { id: 246, zh: "把持續更新壓縮成生命最高能力。", en: "Compress continuous renewal into highest life capacity.", category: "能力" },
+            { id: 247, zh: "把現象壓縮成機制。", en: "Compress phenomena into mechanisms.", category: "科學" },
+            { id: 248, zh: "把機制壓縮成規律。", en: "Compress mechanisms into patterns.", category: "模式" },
+            { id: 249, zh: "把規律壓縮成模型。", en: "Compress patterns into models.", category: "模型" },
+            { id: 250, zh: "把模型壓縮成公式。", en: "Compress models into formulas.", category: "數學" },
+            
+            { id: 251, zh: "把公式壓縮成工具。", en: "Compress formulas into tools.", category: "工具" },
+            { id: 252, zh: "把工具壓縮成能力。", en: "Compress tools into capabilities.", category: "能力" },
+            { id: 253, zh: "把能力壓縮成自由。", en: "Compress capabilities into freedom.", category: "自由" },
+            { id: 254, zh: "把自由壓縮成選擇權。", en: "Compress freedom into choice rights.", category: "選擇" },
+            { id: 255, zh: "把選擇權壓縮成責任。", en: "Compress choice rights into responsibility.", category: "責任" },
+            { id: 256, zh: "把責任壓縮成成熟。", en: "Compress responsibility into maturity.", category: "成熟" },
+            { id: 257, zh: "把成熟壓縮成穩定。", en: "Compress maturity into stability.", category: "穩定" },
+            { id: 258, zh: "把穩定壓縮成信任。", en: "Compress stability into trust.", category: "信任" },
+            { id: 259, zh: "把信任壓縮成合作。", en: "Compress trust into cooperation.", category: "合作" },
+            { id: 260, zh: "把合作壓縮成共贏。", en: "Compress cooperation into win-win.", category: "共贏" },
+            
+            { id: 261, zh: "把共贏壓縮成永續。", en: "Compress win-win into sustainability.", category: "永續" },
+            { id: 262, zh: "把永續壓縮成文明。", en: "Compress sustainability into civilization.", category: "文明" },
+            { id: 263, zh: "把文明壓縮成智慧。", en: "Compress civilization into wisdom.", category: "智慧" },
+            { id: 264, zh: "把智慧壓縮成傳承。", en: "Compress wisdom into legacy.", category: "傳承" },
+            { id: 265, zh: "把傳承壓縮成未來。", en: "Compress legacy into future.", category: "未來" },
+            { id: 266, zh: "把未來壓縮成今天。", en: "Compress future into today.", category: "當下" },
+            { id: 267, zh: "把細節壓縮成重點。", en: "Compress details into key points.", category: "聚焦" },
+            { id: 268, zh: "把重點壓縮成核心。", en: "Compress key points into core.", category: "核心" },
+            { id: 269, zh: "把核心壓縮成原理。", en: "Compress core into principles.", category: "原理" },
+            { id: 270, zh: "把原理壓縮成一句話。", en: "Compress principles into one sentence.", category: "簡潔" },
+            
+            { id: 271, zh: "把一句話壓縮成一個方向。", en: "Compress one sentence into direction.", category: "方向" },
+            { id: 272, zh: "把方向壓縮成一個決定。", en: "Compress direction into decision.", category: "決策" },
+            { id: 273, zh: "把決定壓縮成一個行動。", en: "Compress decision into action.", category: "行動" },
+            { id: 274, zh: "把行動壓縮成一個習慣。", en: "Compress action into habit.", category: "習慣" },
+            { id: 275, zh: "把習慣壓縮成一種人生。", en: "Compress habit into lifestyle.", category: "人生" },
+            { id: 276, zh: "把人生壓縮成一個作品。", en: "Compress life into artwork.", category: "藝術" },
+            { id: 277, zh: "把資訊爆炸壓縮成知識圖譜。", en: "Compress information explosion into knowledge maps.", category: "知識" },
+            { id: 278, zh: "把知識圖譜壓縮成能力地圖。", en: "Compress knowledge maps into capability maps.", category: "地圖" },
+            { id: 279, zh: "把能力地圖壓縮成成長路徑。", en: "Compress capability maps into growth paths.", category: "成長" },
+            { id: 280, zh: "把成長路徑壓縮成每日任務。", en: "Compress growth paths into daily tasks.", category: "任務" },
+            
+            { id: 281, zh: "把每日任務壓縮成固定節奏。", en: "Compress daily tasks into rhythm.", category: "節奏" },
+            { id: 282, zh: "把固定節奏壓縮成複利系統。", en: "Compress rhythm into compound systems.", category: "系統" },
+            { id: 283, zh: "把複利系統壓縮成長期優勢。", en: "Compress compound systems into lasting advantage.", category: "優勢" },
+            { id: 284, zh: "把長期優勢壓縮成不可取代。", en: "Compress lasting advantage into irreplaceability.", category: "稀缺性" },
+            { id: 285, zh: "把不可取代壓縮成核心價值。", en: "Compress irreplaceability into core value.", category: "價值" },
+            { id: 286, zh: "把核心價值壓縮成生命定位。", en: "Compress core value into life positioning.", category: "定位" },
+            { id: 287, zh: "把困惑壓縮成需要澄清的問題。", en: "Compress confusion into clarifying questions.", category: "問題" },
+            { id: 288, zh: "把疑問壓縮成研究方向。", en: "Compress questions into research directions.", category: "研究" },
+            { id: 289, zh: "把研究壓縮成驗證流程。", en: "Compress research into verification process.", category: "驗證" },
+            { id: 290, zh: "把驗證壓縮成可信結論。", en: "Compress verification into credible conclusions.", category: "結論" },
+            
+            { id: 291, zh: "把結論壓縮成決策依據。", en: "Compress conclusions into decision basis.", category: "決策" },
+            { id: 292, zh: "把決策依據壓縮成行動原則。", en: "Compress decision basis into action principles.", category: "原則" },
+            { id: 293, zh: "把行動原則壓縮成生活哲學。", en: "Compress action principles into life philosophy.", category: "哲學" },
+            { id: 294, zh: "把生活哲學壓縮成生命態度。", en: "Compress life philosophy into life attitude.", category: "態度" },
+            { id: 295, zh: "把生命態度壓縮成日常選擇。", en: "Compress life attitude into daily choices.", category: "選擇" },
+            { id: 296, zh: "把日常選擇壓縮成人生命運。", en: "Compress daily choices into life destiny.", category: "命運" },
+            { id: 297, zh: "把誘惑壓縮成價值考驗。", en: "Compress temptation into value test.", category: "考驗" },
+            { id: 298, zh: "把考驗壓縮成能力驗證。", en: "Compress tests into capability verification.", category: "驗證" },
+            { id: 299, zh: "把驗證壓縮成真實實力。", en: "Compress verification into real capability.", category: "實力" },
+            { id: 300, zh: "把實力壓縮成穩定輸出。", en: "Compress capability into stable output.", category: "輸出" },
+            
+            { id: 301, zh: "把輸出壓縮成社會貢獻。", en: "Compress output into social contribution.", category: "貢獻" },
+            { id: 302, zh: "把貢獻壓縮成生命意義。", en: "Compress contribution into life meaning.", category: "意義" },
+            { id: 303, zh: "把意義壓縮成存在價值。", en: "Compress meaning into existential value.", category: "價值" },
+            { id: 304, zh: "把存在價值壓縮成內在喜樂。", en: "Compress existential value into inner joy.", category: "喜樂" },
+            { id: 305, zh: "把喜樂壓縮成平安。", en: "Compress joy into peace.", category: "和平" },
+            { id: 306, zh: "把平安壓縮成穩態。", en: "Compress peace into equilibrium.", category: "平衡" },
+            { id: 307, zh: "把混亂資訊壓縮成知識。", en: "Compress chaotic information into knowledge.", category: "知識" },
+            { id: 308, zh: "把零碎知識壓縮成系統。", en: "Compress fragmented knowledge into system.", category: "系統" },
+            { id: 309, zh: "把零散系統壓縮成母體。", en: "Compress scattered systems into matrix.", category: "系統" },
+            { id: 310, zh: "把母體壓縮成生成引擎。", en: "Compress matrix into generative engine.", category: "引擎" },
+            
+            { id: 311, zh: "把生成引擎壓縮成演化能力。", en: "Compress generative engine into evolutionary capacity.", category: "演化" },
+            { id: 312, zh: "把演化能力壓縮成競爭力。", en: "Compress evolutionary capacity into competitiveness.", category: "競爭力" },
+            { id: 313, zh: "把競爭力壓縮成影響力。", en: "Compress competitiveness into influence.", category: "影響" },
+            { id: 314, zh: "把影響力壓縮成感召力。", en: "Compress influence into inspiration.", category: "感召" },
+            { id: 315, zh: "把感召力壓縮成信念力量。", en: "Compress inspiration into power of belief.", category: "信念" },
+            { id: 316, zh: "把信念力量壓縮成生命方向。", en: "Compress belief power into life direction.", category: "方向" },
+            { id: 317, zh: "把壓力事件壓縮成成長事件。", en: "Compress stressful events into growth events.", category: "成長" },
+            { id: 318, zh: "把成長事件壓縮成生命故事。", en: "Compress growth events into life story.", category: "故事" },
+            { id: 319, zh: "把生命故事壓縮成人生智慧。", en: "Compress life story into life wisdom.", category: "智慧" },
+            { id: 320, zh: "把人生智慧壓縮成一句金句。", en: "Compress life wisdom into one golden phrase.", category: "金句" },
+            
+            { id: 321, zh: "把一句金句壓縮成一生原則。", en: "Compress golden phrase into lifetime principle.", category: "原則" },
+            { id: 322, zh: "把一生原則壓縮成每日實踐。", en: "Compress lifetime principle into daily practice.", category: "實踐" },
+            { id: 323, zh: "把每日實踐壓縮成身份認同。", en: "Compress daily practice into identity.", category: "身份" },
+            { id: 324, zh: "把身份認同壓縮成生命風格。", en: "Compress identity into life style.", category: "風格" },
+            { id: 325, zh: "把生命風格壓縮成個人品牌。", en: "Compress life style into personal brand.", category: "品牌" },
+            { id: 326, zh: "把個人品牌壓縮成長期信任。", en: "Compress personal brand into lasting trust.", category: "信任" },
+            { id: 327, zh: "把閱讀一本書壓縮成一個模型。", en: "Compress reading one book into one model.", category: "模型" },
+            { id: 328, zh: "把上一堂課壓縮成一個能力。", en: "Compress one class into one capability.", category: "能力" },
+            { id: 329, zh: "把一次失敗壓縮成一項資產。", en: "Compress one failure into one asset.", category: "資產" },
+            { id: 330, zh: "把一次成功壓縮成一套方法。", en: "Compress one success into one method.", category: "方法" },
+            
+            { id: 331, zh: "把一次突破壓縮成一個系統。", en: "Compress one breakthrough into one system.", category: "系統" },
+            { id: 332, zh: "把一次合作壓縮成一個生態圈。", en: "Compress one collaboration into one ecosystem.", category: "生態" },
+            { id: 333, zh: "把一次分享壓縮成一份影響力。", en: "Compress one share into one influence.", category: "影響" },
+            { id: 334, zh: "把一次服務壓縮成一段信任。", en: "Compress one service into one trust.", category: "信任" },
+            { id: 335, zh: "把一次感恩壓縮成一份幸福。", en: "Compress one gratitude into one happiness.", category: "幸福" },
+            { id: 336, zh: "把一次原諒壓縮成一份自由。", en: "Compress one forgiveness into one freedom.", category: "自由" },
+            { id: 337, zh: "把一次反省壓縮成一次升級。", en: "Compress one reflection into one upgrade.", category: "升級" },
+            { id: 338, zh: "把一次更新壓縮成新的自己。", en: "Compress one renewal into new self.", category: "自我" },
+            { id: 339, zh: "把今天的自己壓縮成昨天的升級版。", en: "Compress today's self into upgraded yesterday.", category: "進步" },
+            { id: 340, zh: "把昨天的錯誤壓縮成今天的智慧。", en: "Compress yesterday's mistakes into today's wisdom.", category: "智慧" }
+        ];
+
+        // 狀態管理
+        let savedNodes = JSON.parse(localStorage.getItem('savedNodes')) || [];
+        let visitedNodes = JSON.parse(localStorage.getItem('visitedNodes')) || [];
+        let ttsNodes = JSON.parse(localStorage.getItem('ttsNodes')) || [];
+        let currentTab = 'explore';
+
+        // 初始化
+        function init() {
+            renderNodes('explore');
+            initCategories();
+            updateStats();
+            attachTabListeners();
+        }
+
+        // Tab 切換
+        function attachTabListeners() {
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                    e.target.classList.add('active');
+                    const tabId = e.target.dataset.tab;
+                    document.getElementById(tabId).classList.add('active');
+                    
+                    if (tabId === 'explore') renderNodes('explore');
+                    if (tabId === 'saved') renderSaved();
+                    if (tabId === 'categories') renderCategories();
+                    if (tabId === 'progress') renderProgress();
+                });
+            });
+        }
+
+        // 渲染節點
+        function renderNodes(filterType, searchTerm = '') {
+            const container = document.getElementById('exploreNodes');
+            let filtered = nodesData;
+
+            if (searchTerm) {
+                filtered = nodesData.filter(node => 
+                    node.zh.includes(searchTerm) || node.en.toUpperCase().includes(searchTerm.toUpperCase())
+                );
+            }
+
+            container.innerHTML = filtered.map(node => createNodeCard(node)).join('');
+            attachNodeListeners();
+        }
+
+        // 建立節點卡片
+        function createNodeCard(node) {
+            const isSaved = savedNodes.includes(node.id);
+            const isVisited = visitedNodes.includes(node.id);
+            const hasTTS = ttsNodes.includes(node.id);
+
+            return `
+                <div class="node-card ${isSaved ? 'saved' : ''}" data-id="${node.id}">
+                    <div class="node-num">#${String(node.id).padStart(3, '0')}</div>
+                    <div class="node-zh">${node.zh}</div>
+                    <div class="node-en">${node.en}</div>
+                    <div class="node-actions">
+                        <button class="tts-btn" title="發音" onclick="speakNode('${node.en.replace(/'/g, "\\'")}', ${node.id})">🔊</button>
+                        <button class="icon-btn ${hasTTS ? 'visited' : ''}" title="標記為已發音" onclick="toggleTTS(${node.id})">✓</button>
+                        <button class="icon-btn ${isSaved ? 'saved' : ''}" title="收藏" onclick="toggleSave(${node.id})">❤️</button>
+                    </div>
+                    <div class="progress-bar" style="display: ${isVisited ? 'block' : 'none'};">
+                        <div class="progress-fill" style="width: 100%;"></div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // 發音功能
+        function speakNode(text, nodeId) {
+            const btn = event.target;
+            btn.classList.add('playing');
+            
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'en-US';
+            utterance.rate = 0.9;
+            
+            utterance.onend = () => {
+                btn.classList.remove('playing');
+                if (!ttsNodes.includes(nodeId)) {
+                    ttsNodes.push(nodeId);
+                    localStorage.setItem('ttsNodes', JSON.stringify(ttsNodes));
+                    updateStats();
+                }
+            };
+            
+            window.speechSynthesis.speak(utterance);
+        }
+
+        // 收藏功能
+        function toggleSave(nodeId) {
+            if (savedNodes.includes(nodeId)) {
+                savedNodes = savedNodes.filter(id => id !== nodeId);
+            } else {
+                savedNodes.push(nodeId);
+            }
+            localStorage.setItem('savedNodes', JSON.stringify(savedNodes));
+            updateStats();
+            document.querySelectorAll(`[data-id="${nodeId}"]`).forEach(card => {
+                card.classList.toggle('saved');
+            });
+        }
+
+        // 標記已發音
+        function toggleTTS(nodeId) {
+            if (ttsNodes.includes(nodeId)) {
+                ttsNodes = ttsNodes.filter(id => id !== nodeId);
+            } else {
+                ttsNodes.push(nodeId);
+            }
+            localStorage.setItem('ttsNodes', JSON.stringify(ttsNodes));
+            updateStats();
+        }
+
+        // 搜尋功能
+        document.getElementById('searchInput')?.addEventListener('input', (e) => {
+            renderNodes('explore', e.target.value);
+        });
+
+        // 清空搜尋
+        function clearSearch() {
+            document.getElementById('searchInput').value = '';
+            renderNodes('explore');
+        }
+
+        // 初始化分類
+        function initCategories() {
+            const categories = [...new Set(nodesData.map(n => n.category))].sort();
+            const container = document.getElementById('categoryChips');
+            container.innerHTML = categories.map(cat => `
+                <div class="chip" onclick="filterByCategory('${cat}')">${cat}</div>
+            `).join('');
+        }
+
+        // 按分類過濾
+        function filterByCategory(category) {
+            const filtered = nodesData.filter(node => node.category === category);
+            const container = document.getElementById('categorizedNodes');
+            
+            container.innerHTML = `
+                <h3 class="category-title" style="margin-bottom: 20px;">${category}</h3>
+                <div class="node-grid">
+                    ${filtered.map(node => createNodeCard(node)).join('')}
+                </div>
+            `;
+            
+            attachNodeListeners();
+        }
+
+        // 渲染已收藏
+        function renderSaved() {
+            const container = document.getElementById('savedNodes');
+            const saved = nodesData.filter(n => savedNodes.includes(n.id));
+            
+            if (saved.length === 0) {
+                container.innerHTML = '<div class="empty-state"><p>還沒有收藏任何節點</p><p style="font-size: 12px;">點擊 ❤️ 按鈕來收藏啟發你的節點</p></div>';
+            } else {
+                container.innerHTML = saved.map(node => createNodeCard(node)).join('');
+                attachNodeListeners();
+            }
+        }
+
+        // 渲染分類瀏覽
+        function renderCategories() {
+            const categories = [...new Set(nodesData.map(n => n.category))].sort();
+            let html = '<div class="filter-chips" id="categoryChips">';
+            html += categories.map(cat => `<div class="chip" onclick="filterByCategory('${cat}')">${cat}</div>`).join('');
+            html += '</div><div id="categorizedNodes"></div>';
+            document.getElementById('categories').innerHTML = html;
+        }
+
+        // 更新統計
+        function updateStats() {
+            document.getElementById('savedCount').textContent = savedNodes.length;
+            document.getElementById('visitedCount').textContent = visitedNodes.length;
+            document.getElementById('ttsCount').textContent = ttsNodes.length;
+            const percent = Math.round((ttsNodes.length / 340) * 100);
+            document.getElementById('progressPercent').textContent = percent + '%';
+        }
+
+        // 渲染進度
+        function renderProgress() {
+            // 週統計（模擬）
+            const days = ['一', '二', '三', '四', '五', '六', '日'];
+            let weekHtml = '';
+            days.forEach((day, i) => {
+                const height = Math.random() * 100 + 30;
+                weekHtml += `<div style="flex: 1; background: linear-gradient(180deg, var(--teal) 0%, var(--gold) 100%); height: ${height}px; border-radius: 4px; text-align: center; padding-top: 4px; color: white; font-size: 12px;">${day}</div>`;
+            });
+            document.getElementById('weeklyChart').innerHTML = weekHtml;
+
+            // 主題掌握度
+            const categories = [...new Set(nodesData.map(n => n.category))].sort();
+            let categoryHtml = categories.map(cat => {
+                const total = nodesData.filter(n => n.category === cat).length;
+                const learned = ttsNodes.filter(id => nodesData.find(n => n.id === id && n.category === cat)).length;
+                const percent = Math.round((learned / total) * 100);
+                return `
+                    <div style="margin-bottom: 16px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                            <span style="font-size: 13px; font-weight: 600;">${cat}</span>
+                            <span style="font-size: 12px; color: #999;">${percent}% (${learned}/${total})</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${percent}%;"></div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            document.getElementById('categoryProgress').innerHTML = categoryHtml;
+        }
+
+        // 重新連接監聽
+        function attachNodeListeners() {
+            // 監聽已完成
+            document.querySelectorAll('.node-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    const id = parseInt(card.dataset.id);
+                    if (!visitedNodes.includes(id)) {
+                        visitedNodes.push(id);
+                        localStorage.setItem('visitedNodes', JSON.stringify(visitedNodes));
+                        updateStats();
+                    }
+                });
+            });
+        }
+
+        // 頁面載入
+        init();
+    </script>
+</body>
+</html>
